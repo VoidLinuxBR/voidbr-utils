@@ -1,0 +1,35 @@
+# bash completion for vservice
+
+_vservice_completion() {
+    local cur prev opts services
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+
+    # Lista de comandos disponíveis no vservice
+    opts="add enable install disable remove rm start st up stop down restart reload status list once pause exit"
+
+    # Se estivermos no primeiro argumento após o comando 'vservice'
+    if [[ ${COMP_CWORD} -eq 1 ]]; then
+        COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+        return 0
+    fi
+
+    # Se o comando anterior for um dos que manipulam serviços
+    case "${prev}" in
+        add|enable|install)
+            # Lista serviços disponíveis em /etc/sv que AINDA NÃO estão em /var/service
+            services=$(ls /etc/sv)
+            COMPREPLY=( $(compgen -W "${services}" -- "${cur}") )
+            ;;
+        remove|rm|start|st|up|stop|down|restart|reload|status|once|pause|exit)
+            # Lista apenas serviços que já estão habilitados em /var/service
+            services=$(ls /var/service)
+            COMPREPLY=( $(compgen -W "${services}" -- "${cur}") )
+            ;;
+        *)
+            ;;
+    esac
+}
+
+complete -F _vservice_completion vservice

@@ -6,38 +6,22 @@
 #  Wrapper para o sv
 #  Created: 18.09.2022 15:10:00 -04
 #  Altered: sex 06 fev 2026 04:24:23 -04
-#  Updated: sex 13 fev 2026 19:43:49 -04
+#  Updated: qui 30 abr 2026 07:30:00 -04
+#  Version: 1.3.6
 #
 #  Copyright (c) 2026-2026, Vilmar Catafesta <vcatafesta@gmail.com>
 #  Assembled By Vilmar Catafesta for the ChiliLinux project.
-#  All rights reserved.
-#
-#  Redistribution and use in source and binary forms, with or without
-#  modification, are permitted provided that the following conditions
-#  are met:
-#  1. Redistributions of source code must retain the above copyright
-#     notice, this list of conditions and the following disclaimer.
-#  2. Redistributions in binary form must reproduce the above copyright
-#     notice, this list of conditions and the following disclaimer in the
-#     documentation and/or other materials provided with the distribution.
-#
-#  THIS SOFTWARE IS PROVIDED BY Vilmar Catafesta ''AS IS'' AND ANY EXPRESS OR
-#  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-#  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-#  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
-#  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-#  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-#  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-#  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-#  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-#  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ##############################################################################
-#export LANGUAGE=pt_BR
+
 export TEXTDOMAINDIR=/usr/share/locale
 export TEXTDOMAIN=vservice
 
 SV_DIR="/etc/sv"
 ACTIVE_DIR="/var/service"
+LOG_FILE="/var/log/vservice.log"
+
+# Serviços críticos protegidos contra parada acidental
+PROTECTED_SERVICES=("dbus" "udevd" "socklog-unix" "nanoklogd" "agetty-tty1")
 
 # ─────────────────────────────
 # Cores
@@ -54,11 +38,29 @@ err() { echo -e "${RED}✘${RESET} $*" >&2; }
 info() { echo -e "${BLUE}➜${RESET} $*"; }
 
 # ─────────────────────────────
-# Root check
+# Auditoria e Logs
 # ─────────────────────────────
+
+sh_log() {
+	local type="$1"
+	local msg="$2"
+	local timestamp
+	timestamp=$(date "+%Y-%m-%d %H:%M:%S")
+
+	# Log para o socklog/syslog
+	logger -p user.notice -t vservice "$type: $msg por $USER"
+
+	# Log para o arquivo amigável local
+	[[ -f "$LOG_FILE" ]] || touch "$LOG_FILE" 2>/dev/null
+	echo "[$timestamp] [$type] $msg (user: $USER)" >>"$LOG_FILE" 2>/dev/null
+}
+
+# ─────────────────────────────
+# Funções Auxiliares
+# ─────────────────────────────
+
 sh_checkroot() {
 	((EUID == 0)) && return 0
-
 	if command -v sudo >/dev/null 2>&1; then
 		exec sudo bash "$0" "$@"
 	elif command -v su >/dev/null 2>&1; then
@@ -69,46 +71,48 @@ sh_checkroot() {
 	fi
 }
 
-usage() {
-	echo -e "${BLUE}vservice${RESET} — gerenciador simples de serviços (${YELLOW}runit${RESET})"
-	echo
-	echo -e "${GREEN}Uso:${RESET}"
-	echo -e "  ${BLUE}vservice${RESET} ${YELLOW}{add|install|enable|disable|remove|rm||start|stop|st|restart|status|list}${RESET} ${GREEN}[service]${RESET}"
-	echo
-	echo -e "${GREEN}Comandos:${RESET}"
-	echo -e "  ${YELLOW}enable${RESET}   — habilita o serviço (cria link em ${BLUE}/var/service${RESET})"
-	echo -e "  ${YELLOW}disable${RESET}  — para o serviço sem remover"
-	echo -e "  ${YELLOW}remove${RESET}   — para e remove o serviço"
-	echo -e "  ${YELLOW}start${RESET}    — inicia um serviço já habilitado"
-	echo -e "  ${YELLOW}stop${RESET}     — para o serviço"
-	echo -e "  ${YELLOW}restart${RESET}  — reinicia o serviço"
-	echo -e "  ${YELLOW}status${RESET}   — mostra o status do serviço"
-	echo -e "  ${YELLOW}list${RESET}     — lista todos os serviços ativos"
-	echo
-	exit 1
+check_exists() {
+	[[ -d "$SV_DIR/$1" ]]
 }
 
-# ─────────────────────────────
-# Argumentos
-# ─────────────────────────────
-[[ $# -eq 1 && $1 == list ]] || [[ $# -eq 2 ]] || usage
+suggest_service() {
+	local typed="$1"
+	local match
+	match=$(ls "$SV_DIR" | grep -m1 "$typed")
+	[[ -n "$match" ]] && info "Você quis dizer: ${YELLOW}$match${RESET}?"
+}
 
-sh_checkroot "$@"
+is_protected() {
+	local s="$1"
+	for p in "${PROTECTED_SERVICES[@]}"; do
+		[[ "$s" == "$p" ]] && return 0
+	done
+	return 1
+}
 
-ACTION="$1"
-SERVICE="$2"
+# Checagem dinâmica: evita o sleep fixo de 7s
+wait_for_service() {
+	local s="$1"
+	local count=0
+	local timeout=14 # 14 * 0.5s = 7s máximo
 
-SV_PATH="$SV_DIR/$SERVICE"
-ACTIVE_PATH="$ACTIVE_DIR/$SERVICE"
+	echo -ne "${BLUE}Aguardando inicialização de ${YELLOW}$s${BLUE}... ${RESET}"
 
-check_service_exists() {
-	[[ -d "$SV_PATH" ]] || {
-		err "serviço '$SERVICE' não existe em $SV_DIR"
-		exit 1
-	}
+	while [ $count -lt $timeout ]; do
+		# Verifica se o sv status contém "run" e tem um PID numérico ativo
+		if sv status "$s" 2>/dev/null | grep -qP 'run:.*\(pid \d+\)'; then
+			echo -e "${GREEN}OK${RESET}"
+			return 0
+		fi
+		sleep 0.5
+		((count++))
+	done
+	echo -e "${RED}TIMEOUT (Verifique os logs)${RESET}"
+	return 1
 }
 
 show_status() {
+	local SERVICE="$1"
 	if command -v vsv >/dev/null; then
 		vsv | grep -i "$SERVICE"
 	else
@@ -119,76 +123,140 @@ show_status() {
 # ─────────────────────────────
 # Ações
 # ─────────────────────────────
-case "$ACTION" in
-add | enable | install)
-	check_service_exists
 
-	if [[ -L "$ACTIVE_PATH" ]]; then
-		warn "serviço '$SERVICE' já está habilitado"
+do_enable() {
+	local s="$1"
+	local active_path="$ACTIVE_DIR/$s"
+	local sv_path="$SV_DIR/$s"
+
+	if ! check_exists "$s"; then
+		err "serviço '$s' não existe em $SV_DIR"
+		suggest_service "$s"
+		return 1
+	fi
+
+	if [[ -L "$active_path" ]]; then
+		warn "serviço '$s' já está habilitado"
 	else
-		ln -s "$SV_PATH" "$ACTIVE_PATH"
-		msg "serviço '$SERVICE' habilitado"
+		ln -s "$sv_path" "$active_path"
+		msg "serviço '$s' habilitado"
+		sh_log "ENABLE" "$s"
 	fi
 
-	sleep 7
-	show_status
-	;;
+	wait_for_service "$s"
+	show_status "$s"
+}
 
-disable)
-	if [[ -L "$ACTIVE_PATH" ]]; then
-		sv stop "$SERVICE"
-		msg "serviço '$SERVICE' parado"
+do_remove() {
+	local s="$1"
+	local active_path="$ACTIVE_DIR/$s"
+
+	if is_protected "$s"; then
+		err "operação negada: '$s' é um serviço protegido."
+		return 1
+	fi
+
+	if [[ -L "$active_path" ]]; then
+		sv stop "$s" >/dev/null 2>&1
+		rm -f "$active_path"
+		msg "serviço '$s' removido"
+		sh_log "REMOVE" "$s"
 	else
-		warn "serviço '$SERVICE' não está habilitado"
+		warn "serviço '$s' não está habilitado"
 	fi
-	;;
+}
 
-remove | rm)
-	if [[ -L "$ACTIVE_PATH" ]]; then
-		sv stop "$SERVICE"
-		rm -f "$ACTIVE_PATH"
-		msg "serviço '$SERVICE' removido"
-	else
-		warn "serviço '$SERVICE' não está habilitado"
-	fi
-	;;
+do_sv_command() {
+	local cmd="$1"
+	local s="$2"
 
-start | st | up)
-	check_service_exists
-
-	if [[ ! -L "$ACTIVE_PATH" ]]; then
-		err "serviço '$SERVICE' existe mas NÃO está habilitado"
-		err "use: vservice enable $SERVICE"
-		exit 1
+	if ! check_exists "$s"; then
+		err "serviço '$s' não encontrado"
+		suggest_service "$s"
+		return 1
 	fi
 
-	info "sv start $SERVICE"
-	sv start "$SERVICE"
+	# Bloqueio de comandos de parada em serviços críticos
+	if [[ "$cmd" =~ ^(stop|down|force-stop)$ ]] && is_protected "$s"; then
+		err "operação negada: '$s' é crítico para o sistema."
+		return 1
+	fi
 
-	sleep 7
-	# sv status "$SERVICE"
-	show_status
-	;;
+	# Verifica se está habilitado para comandos de execução
+	if [[ "$cmd" =~ ^(start|st|up|restart)$ ]] && [[ ! -L "$ACTIVE_DIR/$s" ]]; then
+		err "serviço '$s' não está habilitado. Use: vservice enable $s"
+		return 1
+	fi
 
-stop | reload | restart | shutdown | force-stop | force-reload | force-restart | force-shutdown | try-restart)
-	check_service_exists
-	info "sv $ACTION $SERVICE"
-	sv "$ACTION" "$SERVICE"
-	show_status
-	;;
+	info "sv $cmd $s"
+	sv "$cmd" "$s"
+	sh_log "COMMAND" "$cmd em $s"
 
-status | up | down | once | pause | exit)
-	check_service_exists
-	info "sv $ACTION $SERVICE"
-	sv "$ACTION" "$SERVICE"
-	show_status
-	;;
+	# Se for comando de subida, usa a espera inteligente
+	if [[ "$cmd" =~ ^(start|st|up|restart)$ ]]; then
+		wait_for_service "$s"
+	fi
 
-list)
-	command -v vsv >/dev/null && vsv || sv status /var/service/*
-	;;
+	show_status "$s"
+}
 
-*)
-	usage
-	;;
-esac
+usage() {
+	echo -e "${BLUE}vservice${RESET} — gerenciador de serviços (${YELLOW}runit${RESET})"
+	echo
+	echo -e "${GREEN}Uso:${RESET}"
+	echo -e "  ${BLUE}vservice${RESET} ${YELLOW}{comando}${RESET} ${GREEN}[serviço1] [serviço2] ...${RESET}"
+	echo
+	echo -e "${GREEN}Comandos:${RESET}"
+	echo -e "  ${YELLOW}enable, add${RESET}    — habilita o(s) serviço(s)"
+	echo -e "  ${YELLOW}disable${RESET}        — para o serviço (mantém link)"
+	echo -e "  ${YELLOW}remove, rm${RESET}     — para e remove o link do(s) serviço(s)"
+	echo -e "  ${YELLOW}start, st, up${RESET}  — inicia o(s) serviço(s)"
+	echo -e "  ${YELLOW}stop, down${RESET}     — para o(s) serviço(s)"
+	echo -e "  ${YELLOW}restart${RESET}        — reinicia o(s) serviço(s)"
+	echo -e "  ${YELLOW}status${RESET}         — status do(s) serviço(s)"
+	echo -e "  ${YELLOW}list${RESET}           — lista serviços ativos"
+	echo
+	exit 1
+}
+
+# ─────────────────────────────
+# Execução Principal
+# ─────────────────────────────
+
+[[ $# -lt 1 ]] && usage
+
+# Caso especial: list
+if [[ "$1" == "list" ]]; then
+	sh_checkroot "$@"
+	command -v vsv >/dev/null && vsv || sv status "$ACTIVE_DIR"/*
+	exit 0
+fi
+
+# Validação para comandos que exigem serviço
+[[ $# -lt 2 ]] && usage
+
+sh_checkroot "$@"
+
+ACTION="$1"
+shift
+
+for SERVICE in "$@"; do
+	case "$ACTION" in
+	add | enable | install)
+		do_enable "$SERVICE"
+		;;
+	disable)
+		do_sv_command "stop" "$SERVICE"
+		;;
+	remove | rm)
+		do_remove "$SERVICE"
+		;;
+	start | st | up | stop | down | restart | reload | status | once | pause | exit)
+		do_sv_command "$ACTION" "$SERVICE"
+		;;
+	*)
+		usage
+		;;
+	esac
+	#echo -e "${BLUE}---${RESET}"
+done
