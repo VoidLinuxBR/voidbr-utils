@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # shellcheck shell=bash disable=SC1091,SC2039,SC2166,SC2034
 #
-#  void-configure-pulseaudio
+#  voidbr-configure-pulseaudio
 #  Created: qui 12 fev 2026 06:42:06 -04
 #  Altered: qui 12 fev 2026 06:42:06 -04
 #  Updated: qui 12 fev 2026 06:42:06 -04
@@ -34,7 +34,7 @@
 ##############################################################################
 export LANGUAGE="${LANGUAGE:-pt_BR}"
 export TEXTDOMAINDIR=/usr/share/locale
-export TEXTDOMAIN=void-configure-pulseaudio
+export TEXTDOMAIN=voidbr-configure-pulseaudio
 
 #debug
 export PS4='${red}${0##*/}${green}[$FUNCNAME]${pink}[$LINENO]${reset}'
@@ -463,7 +463,7 @@ set_varcolors
 quiet=true
 
 run_cmd 'Instalando pacotes necessários' "
-    sudo xbps-install --update pulseaudio pavucontrol pasystray gst-plugins-bad1 gst-plugins-good1 gst-plugins-ugly1 gst-plugins-base1 alsa-plugins-pulseaudio alsa-utils
+    sudo xbps-install -Sfyu --ignore-file-conflicts pulseaudio pavucontrol pasystray gst-plugins-bad1 gst-plugins-good1 gst-plugins-ugly1 gst-plugins-base1 alsa-plugins-pulseaudio alsa-utils
 "
 
 # LIMPEZA GLOBAL — remover qualquer autostart do sistema
