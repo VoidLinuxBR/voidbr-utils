@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # shellcheck shell=bash disable=SC1091,SC2039,SC2166,SC2034
 #
-#  void-configure-pipewire
+#  voidbr-configure-pipewire
 #  Created: qui 12 fev 2026 06:43:56 -04
 #  Altered: qui 12 fev 2026 06:43:56 -04
 #  Updated: qui 12 fev 2026 06:43:56 -04
@@ -34,7 +34,7 @@
 ##############################################################################
 export LANGUAGE="${LANGUAGE:-pt_BR}"
 export TEXTDOMAINDIR=/usr/share/locale
-export TEXTDOMAIN=void-configure-pipewire
+export TEXTDOMAIN=voidbr-configure-pipewire
 
 #debug
 export PS4='${red}${0##*/}${green}[$FUNCNAME]${pink}[$LINENO]${reset}'
@@ -463,7 +463,7 @@ set_varcolors
 quiet=true
 
 run_cmd 'Instalando pacotes necessários' "
-    sudo xbps-install --update pipewire wireplumber alsa-pipewire pulseaudio-utils pavucontrol libspa-bluetooth libjack-pipewire alsa-plugins-pulseaudio alsa-utils
+    sudo xbps-install -Sfyu --ignore-file-conflicts pipewire wireplumber alsa-pipewire pulseaudio-utils pavucontrol libspa-bluetooth libjack-pipewire alsa-plugins-pulseaudio alsa-utils
 "
 
 # LIMPEZA GLOBAL — remover qualquer autostart do sistema
