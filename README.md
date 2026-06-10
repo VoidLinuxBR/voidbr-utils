@@ -1,3 +1,3 @@
 # voidbr-utils
 
-Utilitários do sistema essencias para uso diário no Void Linux BR
+Utilitários do sistema essencias para uso diário no VoidBR
