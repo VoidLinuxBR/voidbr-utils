@@ -52,7 +52,7 @@ package() {
 	cd ${srcdir}/${pkgname}
 	for dir in "${dirs[@]}"; do
 		if [ -d "${_pkgsrc}/${dir}" ]; then
-      log "Copyando files from ${_pkgsrc}/${dir} to ${DESTDIR}/"
+      log "Copying files from ${_pkgsrc}/${dir} to ${DESTDIR}/"
 			cp -a "${_pkgsrc}/${dir}" "$DESTDIR/"
 		fi
 	done
