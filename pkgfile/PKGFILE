@@ -48,12 +48,17 @@ package() {
 	#   echo "srcdir=$srcdir"
 	#   echo "_pkgsrc=$_pkgsrc"
 
-  log "Starting installation"
 	cd ${srcdir}/${pkgname}
 	for dir in "${dirs[@]}"; do
 		if [ -d "${_pkgsrc}/${dir}" ]; then
-      log "Copying files from ${_pkgsrc}/${dir} to ${DESTDIR}/"
 			cp -a "${_pkgsrc}/${dir}" "$DESTDIR/"
 		fi
 	done
+}
+
+pre_install() {
+  log "Starting installation"
+
+post_install() {
+  log "Ending installation"
 }
