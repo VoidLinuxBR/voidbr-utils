@@ -35,3 +35,12 @@ pre_install() {
 post_install() {
   log "Ending installation"
 }
+
+pre_upgrade() {
+  log "Starting upgrading"
+}
+
+post_upgrade() {
+  log "Ending upgrading"
+}
+

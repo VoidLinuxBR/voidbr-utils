@@ -451,8 +451,9 @@ set_varcolors
 #sh_checkroot "$@"
 
 ##########################################################################################################
-
-#!/bin/sh
+# para pipewire
+# vinstall -Sy easyeffects
+# easyeffects
 
 usage() {
   printf '%s\n' \
