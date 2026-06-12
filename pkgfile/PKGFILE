@@ -1,13 +1,14 @@
 # Maintainer  : Vilmar Catafesta <vcatafesta@gmail.com>
 
 pkgname=voidbr-utils
-pkgdesc="Utilitários do sistema essenciais para uso diário no Void Linux"
+pkgdesc="Utilitários do sistema essenciais para uso diário no VoidBR"
 pkgver=$(date +%Y%m%d)
 pkgrel=$(date +%H%M)
+provides=()
+replaces=()
 arch=('any')
 license=('GPL3')
 url="https://github.com/voidlinuxbr/$pkgname"
-provides=("$pkgname")
 source=("git+${url}.git")
 md5sums=('SKIP')
 depends=("bash>=0" smartmontools umc pigz geoip geoipupdate)
@@ -25,4 +26,12 @@ package() {
 			cp -a "${_pkgsrc}/${dir}" "$DESTDIR/"
 		fi
 	done
+}
+
+pre_install() {
+  log "Starting installation"
+}
+
+post_install() {
+  log "Ending installation"
 }
