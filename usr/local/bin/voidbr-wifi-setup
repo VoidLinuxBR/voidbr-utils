@@ -1,0 +1,2112 @@
+#!/usr/bin/env bash
+#shellcheck disable=SC2145,SC2001,SC2188,SC2015,SC2155,SC2317,SC2320,SC2291,SC2034,SC2120,SC2086,SC2319
+#shellcheck disable=SC2016,SC2154,SC2207,SC2166,SC2128,SC2059,SC2140,SC2031,SC2030,SC2036,SC2119,SC2027
+#
+#  voidbr-wifi-setup
+#  Created: qua 17 jun 2026 00:46:30 -04
+#  Updated: qua 17 jun 2026 00:46:30 -04
+#
+#  Copyright (c) 2019-2026, Vilmar Catafesta <vcatafesta@gmail.com>
+#  All rights reserved.
+#
+#  Redistribution and use in source and binary forms, with or without
+#  modification, are permitted provided that the following conditions
+#  are met:
+#  1. Redistributions of source code must retain the above copyright
+#     notice, this list of conditions and the following disclaimer.
+#  2. Redistributions in binary form must reproduce the above copyright
+#     notice, this list of conditions and the following disclaimer in the
+#     documentation and/or other materials provided with the distribution.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+#  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+#  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+#  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+#  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+#  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+#  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+#  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+#  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+#  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+##############################################################################
+export LANGUAGE="${LANGUAGE:-pt_BR}"
+export TEXTDOMAINDIR=/usr/share/locale
+export TEXTDOMAIN=voidbr-wifi-setup
+
+#todo
+#usermod -a -G bluetooth $USER
+
+#debug
+red="$(tput bold)$(tput setaf 196)"
+green="$(tput bold)$(tput setaf 2)"
+pink="$(tput setaf 5)"
+cyan="$(tput setaf 6)"
+reset="$(tput sgr0)"
+rst="$(tput sgr0)"
+export PS4='${red}${0##*/}${green}[${FUNCNAME[0]:-MAIN}]${pink}[$LINENO]${reset} '
+#set -x
+#set -eo pipefail
+shopt -s extglob
+
+#system
+readonly APP="${0##*/}"
+readonly _VERSION_='0.6.17-20260617'
+declare -g DEPENDENCIES=(dialog gettext nmcli tput awk tar sed cat grep sort tr ip)
+declare -gA PACKAGEDEP=(
+	['dialog']='dialog'
+	['gettext']='gettext'
+	['nmcli']='NetworkManager'
+	['tput']='ncurses'
+	['awk']='gawk'
+	['tar']='tar'
+	['sed']='sed'
+	['cat']='coreutils'
+	['sort']='coreutils'
+	['tr']='coreutils'
+	['grep']='grep'
+	['ip']='iproute2'
+)
+readonly LOCKFILE="/tmp/void-install.lock"
+declare -gA DISTRO_PKGS=(
+	["void"]="dialog gettext NetworkManager ncurses gawk tar sed coreutils grep iproute2"
+	["void-live"]="dialog gettext NetworkManager ncurses gawk tar sed coreutils grep iproute2"
+	["voidlinux"]="dialog gettext NetworkManager ncurses gawk tar sed coreutils grep iproute2"
+	["chili"]="dialog gettext NetworkManager ncurses gawk tar sed coreutils grep iproute2"
+	["chililinux"]="dialog gettext NetworkManager ncurses gawk tar sed coreutils grep iproute2"
+	["arch"]="dialog gettext rsync NetworkManager ncurses gawk tar sed coreutils grep iproute2"
+	["manjaro"]="dialog gettext NetworkManager ncurses gawk tar sed coreutils grep iproute2"
+	["debian"]="dialog gettext-base NetworkManager ncurses gawk tar sed coreutils grep iproute2"
+)
+declare -gA DISTRO_MGR=(
+	["void"]="xbps-install -Syu --ignore-file-conflicts"
+	["void-live"]="xbps-install -Syu --ignore-file-conflicts"
+	["voidlinux"]="xbps-install -Syu --ignore-file-conflicts"
+	["chili"]="pacman -Sy --needed --noconfirm"
+	["chililinux"]="pacman -Sy --needed --noconfirm"
+	["arch"]="pacman -Sy --needed --noconfirm"
+	["manjaro"]="pacman -Sy --needed --noconfirm"
+	["debian"]="apt-get install -y"
+)
+
+declare LCUSTOM=false
+declare LAUTOLOGIN=false
+declare LEFI=false
+declare LGRUB=false
+declare LDISK=false
+declare LMIRROR=true
+declare LSOURCE=true
+declare LKEYMAP=true
+declare LTIMEZONE=true
+declare LKERNEL=true
+declare LWM=true
+declare LDM=true
+declare LAUTO=true
+declare LMKPARTED=false
+declare LFSREVISED=false
+declare LFS=false
+declare LPARTITION=false
+declare LBIND=false
+declare LBIOS=true
+declare LOSPROBER=false
+declare LCHROOT=false
+declare LINSTALL=false
+declare HYPRLAND=false
+declare LVM=false
+declare LFDE=false
+declare LONLY_TTY=true
+declare LAUDIO=false
+declare LSERVER=false
+declare LDHCP=false
+declare LEXTRA=false
+declare LLOCALE=true
+declare LXORG=false
+#
+declare DEFITEM
+#
+declare -gi njobs=73
+declare -gi ncounter=0
+declare -gi quiet=0
+declare -gi grafico=1
+#
+declare -ga aCustomPackages=()
+declare -gA Amkfs
+declare -gA Amntpoint
+declare -gA AmntpointFDE
+declare -gA AARRAY_DSK_DEVICES
+declare -gA AARRAY_PART_DEVICES
+declare -gA AARRAY_VG_DEVICES
+#
+declare -gA AsUser=(
+	[cpass]='voidlinux'
+	[cpassroot]='voidlinux'
+	[chostname]='voidlinux'
+	[cgroups]='wheel,audio,video,tty,floppy,cdrom,optical,kvm,xbuilder'
+)
+#
+declare -gA AConfFde=(
+	[partition]=''
+	[vg]='voidvm'
+	[passphrase]='voidlinux'
+	[verifypassphrase]='voidlinux'
+	[lvroot]='25%'
+	[lvswap]='2%'
+	[lvvar]=''
+	[lvhome]='100%'
+)
+declare -gA AConfDisk=(
+	[_DEVICE]='/dev/sdX'
+	[_FILESYSTEM]='ext4'
+	[_DISKTABLE]=''
+	[_BOOTLOADER]='/dev/sdX'
+	[_OSPROBER]=false
+)
+declare -gA AConfLocale=(
+	[_TIMEZONE]='America/Sao_Paulo'
+	[_KEYMAP]='br-abnt2'
+	[_CLOCK]='UTC'
+	[_FONT]='Uni2-TerminusBold16'
+	[_LOCALE]='pt_BR.utf8'
+	[_REGION]='Portuguese Brazil'
+)
+declare -gA AConfMirror=(
+	[_SOURCE]='network'
+	#	[_MIRROR]='repo.fastly.voidlinux.org'
+	#	[url_mirror]='https://repo-fastly.voidlinux.org'
+	#	[location]='Fastly Global CDN'
+	[_MIRROR]='void.voidbr.org'
+	[url_mirror]='https://void.voidbr.org/voidlinux/'
+	[location]='M. do Paranapanema, Brazil'
+)
+declare -gA AConfAudio=(
+	[_AUDIOSERVER]='None'
+)
+declare -gA AConfKernel=(
+	[_KERNEL]='linux'
+)
+declare -gA AConfWifi=(
+	[_NETWORK]='wifi_ssid'
+	[_PASSWORD]='wifi_password'
+)
+declare -gA Alanguage=(
+	[pt_BR]=0
+	[en_US]=1
+	[de_DE]=2
+	[fr_FR]=3
+	[es_ES]=4
+	[it_IT]=5
+)
+declare -gA Alocale=(
+	[0]=pt_BR
+	[1]=en_US
+	[2]=de_DE
+	[3]=fr_FR
+	[4]=es_ES
+	[5]=it_IT
+)
+declare -gA AsDhcp=(
+	AsDhcp [IFACE]="${Asdhcp[IFACE]:-eth0}"
+	AsDhcp [IP]="${AsDhcp[IP]:-192.168.1.100}"
+	AsDhcp [CIDR]="${AsDhcp[CIDR]:-24}"
+	AsDhcp [GATEWAY]="${AsDhcp[GATEWAY]:-192.168.1.1}"
+	AsDhcp [DNS1]="${AsDhcp[DNS1]:-1.1.1.1}"
+	AsDhcp [DNS2]="${AsDhcp[DNS2]:-8.8.8.8}"
+)
+declare -gA AsDiskPercent=(
+	[_DISKTABLE]="EFI"
+	[root]="100"
+	[boot]="0"
+	[home]="0"
+	[swap]="0"
+)
+declare -gA AsDiskSize=(
+	[root]="0"
+	[boot]="0"
+	[home]="0"
+	[swap]="0"
+)
+declare -gA AsFs=(
+	[_DEVICE]='/dev/sdX'
+	[root]="ext4"
+	[boot]="ext4"
+	[home]="ext4"
+	[swap]="swap"
+)
+
+declare dialogRcFile="$HOME/.dialogrc"
+declare _DISPLAYMANAGER='None'
+declare _WINDOWMANAGER=('tty')
+declare _WM='tty'
+declare _WIFI_NETWORK="wifi_ssid"
+declare _WIFI_PASSWORD="wifi_password"
+
+detect_distro() {
+	local id=""
+
+	if [[ -r /etc/os-release ]]; then
+		# Lê ID=void|arch|debian|... exatamente como a distro declara
+		id=$(grep -E '^ID=' /etc/os-release | cut -d= -f2 | tr -d '"')
+	elif [[ -r /usr/lib/os-release ]]; then
+		id=$(grep -E '^ID=' /usr/lib/os-release | cut -d= -f2 | tr -d '"')
+	else
+		echo "unknown"
+		return
+	fi
+	echo "$id"
+}
+
+readconf() {
+	if [[ $LC_DEFAULT -eq 0 ]]; then
+		read -r -p "$@ [S/n]"
+	else
+		read -r -p "$@ [Y/n]"
+	fi
+	[[ ${REPLY^} == "" ]] && return 0
+	[[ ${REPLY^} == N ]] && return 1 || return 0
+}
+
+check_gettext() {
+	# 1. Se o gettext já estiver disponível, não faz nada e retorna sucesso
+	if command -v gettext >/dev/null; then
+		return 0
+	fi
+	# 2. Segurança: Operações de pacotes exigem root
+	if ((EUID != 0)); then
+		echo -e "${red}erro: você não pode realizar esta operação a menos que seja root.${reset}"
+		exit 1
+	fi
+	echo -e "Distro detectada: ${green}${DISTRO}${reset}"
+
+	# 3. Extração dos dados dos mapas que você definiu
+	local pkgs="${DISTRO_PKGS[$DISTRO]}"
+	local cmd="${DISTRO_MGR[$DISTRO]}"
+
+	# Se a distro atual não existir no mapa, precisamos avisar e parar
+	if [[ -z "$cmd" ]]; then
+		echo -e "${red}Erro: Nenhuma configuração de pacotes encontrada para a distro: '$DISTRO'${reset}"
+		exit 1
+	fi
+
+	# 4. Prompt ao usuário (usando sua função readconf)
+	# Se gettext não existe, as mensagens ainda precisam ser via echo/printf
+	if readconf "${red}FALHA:${reset} ${cyan}Pacote/Comando 'gettext' não encontrado. Instalar dependências base agora?${reset}"; then
+		echo -e "${blue}::${reset} Preparando ambiente para ${green}${DISTRO}${reset}..."
+		# Execução dinâmica: $cmd (gerenciador) + $pkgs (lista de pacotes)
+		if ! $cmd $pkgs; then
+			echo -e "${red}Erro Crítico:${reset} A instalação dos pacotes básicos falhou."
+			exit 1
+		fi
+		echo -e "${green}Sucesso:${reset} Dependências instaladas."
+	else
+		# Se o usuário negar a instalação de ferramentas básicas, o instalador não tem como seguir
+		echo -e "${yellow}Aviso:${reset} O gettext é indispensável para as traduções. Saindo..."
+		exit 1
+	fi
+}
+
+check_dependencies() {
+	local TMP_FILE="/tmp/$(basename "$0").restarted"
+	local d
+	local errorFound=false
+
+	clear
+	reset
+	for d in "${DEPENDENCIES[@]}"; do
+		if [[ -z $(command -v "$d") ]]; then
+			printf '%s\n' "${red} ✗ ${rst} ${cmsg_CommandNotFound} ${cyan}'$d'${reset}"
+			errorFound=true
+		fi
+	done
+
+	if ! $errorFound; then
+		return 0
+	fi
+
+	echo -e "Distro detectada: ${green}${DISTRO}${rst}"
+
+	# 3. Extração dos dados dos mapas que você definiu
+	local pkgs="${DISTRO_PKGS[$DISTRO]}"
+	local cmd="${DISTRO_MGR[$DISTRO]}"
+
+	# Se a distro atual não existir no mapa, precisamos avisar e parar
+	if [[ -z "$cmd" ]]; then
+		echo -e "${red}Erro: Nenhuma configuração de pacotes encontrada para a distro: '$DISTRO'${rst}"
+		exit 1
+	fi
+
+	echo
+	if readconf "${cyan}Instalar dependências base agora?${rst}"; then
+		echo -e "${blue}::${reset} Preparando ambiente para ${green}${DISTRO}${rst}..."
+		# Execução dinâmica: $cmd (gerenciador) + $pkgs (lista de pacotes)
+		if ! $cmd $pkgs; then
+			echo -e "${red}Erro Crítico:${reset} A instalação dos pacotes básicos falhou."
+			exit 1
+		fi
+		echo -e "${green}Sucesso:${reset} Dependências instaladas."
+		touch "$TMP_FILE"
+		exec "$0" "$@"
+	else
+		# Se o usuário negar a instalação de ferramentas básicas, o instalador não tem como seguir
+		die "${yellow}Aviso:${rst} Os comandos são indispensáveis. Saindo..."
+		exit 1
+	fi
+}
+
+###########################################################################################################
+# Corte para teste do gettext
+DISTRO="$(detect_distro)"
+check_gettext
+###########################################################################################################
+
+get_option() {
+	echo $(grep -E "^${1}.*" $app_conf | sed -e "s|${1}||")
+}
+
+die() {
+	if test $# -ge 2; then
+		evaluate_retval 1
+	fi
+	local msg=$1
+	shift
+	printf "%-75s\n" "$(DOT)${bold}${red}$msg${reset}" >&2
+	sh_enablePrintk
+	exit 1
+}
+
+msg() { echo -e "${INFO} ${*}${reset}"; }
+log_ok() { echo -e "${TICK} ${*}${reset}"; }
+log_err() { echo -e "${CROSS} ${*}${reset}"; }
+log_mid() { echo -e "${MID} ${*}${reset}"; }
+log_warn() { echo -e "${WARN} ${*}${reset}"; }
+msg_tab() { echo -e "  ${INFO} ${*}${reset}"; }
+log_ok_tab() { echo -e "  ${TICK} ${*}${reset}"; }
+log_err_tab() { echo -e "  ${CROSS} ${*}${reset}"; }
+log_mid_tab() { echo -e "  ${MID} ${*}${reset}"; }
+log_warn_tab() { echo -e "  ${WARN} ${*}${reset}"; }
+die() {
+	echo -e "${CROSS} ${red}${*}${reset}"
+	exit 1
+}
+
+DOT() {
+	printf "%s" "${blue}:: ${reset}"
+}
+
+sh_create_dialogrc() {
+	cat >"$dialogRcFile" <<-'EOF'
+		screen_color = (white,black,off)
+		dialog_color = (white,black,off)
+		title_color = (green,black,on)
+		border_color = dialog_color
+		shadow_color = (black,black,on)
+		button_inactive_color = dialog_color
+		button_key_inactive_color = dialog_color
+		button_label_inactive_color = dialog_color
+		button_active_color = (black,green,on)
+		button_key_active_color = button_active_color
+		button_label_active_color = (white,green,on)
+		tag_key_selected_color = (white,green,on)
+		item_selected_color = tag_key_selected_color
+		form_text_color = (green,black,on)
+		form_item_readonly_color = (cyan,black,on)
+		itemhelp_color = (white,green,off)
+		inputbox_color = dialog_color
+		inputbox_border_color = dialog_color
+		searchbox_color = dialog_color
+		searchbox_title_color = title_color
+		searchbox_border_color = border_color
+		position_indicator_color = title_color
+		menubox_color = dialog_color
+		menubox_border_color = border_color
+		item_color = dialog_color
+		tag_color = title_color
+		tag_selected_color = button_label_active_color
+		tag_key_color = button_key_inactive_color
+		check_color = dialog_color
+		check_selected_color = button_active_color
+		uarrow_color = screen_color
+		darrow_color = screen_color
+		form_active_text_color = button_active_color
+		gauge_color = title_color
+		border2_color = dialog_color
+		searchbox_border2_color = dialog_color
+		menubox_border2_color = dialog_color
+		separate_widget = ''
+		tab_len = 0
+		visit_items = off
+		use_shadow = off
+		use_colors = on
+	EOF
+	export DIALOGRC="$dialogRcFile"
+}
+
+info_msg() {
+	#	notify-send "$ccabec" "$@"
+	printf "\033[1m$@\n\033[m"
+}
+
+sh_setEnvironment() {
+	[[ ! -e "$dialogRcFile" ]] && sh_create_dialogrc
+
+	declare url_mirror='https://repo-fastly.voidlinux.org/'
+	declare -g app_conf='/tmp/void-install.conf'
+	declare -g dir_install='/mnt/voidlinux'
+	readonly cnickefi='Void_install'
+	readonly _TARBALL_ROOTFS=void-x86_64-base-custom-current.tar.xz
+	readonly url_tarball="https://raw.githubusercontent.com/voidlinuxbr/void-install/refs/heads/main/${_TARBALL_ROOTFS}"
+	readonly url_tarball_md5="https://raw.githubusercontent.com/voidlinuxbr/void-install/refs/heads/main/${_TARBALL_ROOTFS}.md5"
+	#
+	readonly zero=0
+	readonly one=1
+	readonly err_not_fatal=0
+	readonly err_fatal=1
+	#
+	readonly BOOTLOG="/tmp/${APP}-$(sh_diahora).log"
+	readonly LOGGER='/dev/tty8'
+	shell='/bin/sh'
+
+	# flag disk info
+	: "${DSK_NAME=1}"
+	: "${DSK_SIZE=2}"
+	: "${DSK_TRAN=3}"
+	: "${DSK_MODEL=4}"
+	: "${DSK_LABEL=5}"
+	: "${DSK_SERIAL=6}"
+	: "${DSK_PTTYPE=7}"
+	: "${DSK_FSTYPE=8}"
+	: "${DSK_PARTTYPENAME=9}"
+
+	# flag languages
+	: "${pt_BR=0}"
+	: "${PT_BR=0}"
+	: "${EN_US=1}"
+	: "${DE_DE=2}"
+	: "${FR_FR=3}"
+	: "${LC_DEFAULT=$(sh_get_Locale)}"
+
+	# flag dialog exit status codes
+	: "${D_OK=0}"
+	: "${D_DONE=0}"
+	: "${D_NO=1}"
+	: "${D_CANCEL=1}"
+	: "${D_AJUDA=2}"
+	: "${D_HELP=2}"
+	: "${D_EXTRA=3}"
+	: "${D_CONFIG=3}"
+	: "${D_ITEM_HELP=4}"
+	: "${D_ESC=255}"
+
+	# flag dialog menu
+	: "${LDISK=}"
+	: "${LFS=}"
+	: "${LPARTITION=}"
+	: "${LGRUB=}"
+	: "${LKEYMAP=}"
+	: "${LWM=}"
+	: "${LDM=}"
+	: "${LWIFI=}"
+	: "${LMIRROR=}"
+	: "${LSOURCE=}"
+	: "${LEXTRA=}"
+	: "${LAUDIO=}"
+	: "${LTIMEZONE=}"
+	: "${LKERNEL=}"
+	: "${LFILE=}"
+	: "${LCUSTOM=}"
+
+	# dialog colors
+	GREEN="\Z2"
+	MAGENTA="\Z5"
+	REVERSE="\Zr"
+	UNDERLINE="\Zu"
+	BLACK="\Z0"
+	YELLOW="\Z3"
+	WHITE="\Z7"
+	BLUE="\Z4"
+	CYAN="\Z6"
+	RED='\Z1'
+	BOLD="\Zb"
+	RESET="\Zn"
+	RST='\Zn'
+	: echo "$err_fatal"
+
+	size=$(stty size)
+	read -r MAXROW MAXCOL <<<"$size"
+	COLUMNS=$(stty size)
+	COLUMNS=${COLUMNS##* }
+	if [[ "${COLUMNS}" = "0" ]]; then
+		COLUMNS=80
+	fi
+	COL=$((COLUMNS - 8))
+	SET_COL="\\033[${COL}G" # at the $COL char
+	CURS_ZERO="\\033[0G"
+
+	: "${ccabec="${BOLD}${WHITE}${REVERSE}${APP} ${YELLOW}v$_VERSION_ ${BLUE}https://github.com/voidlinuxbr/voidbr-utils "}"
+	: "${baseccabec="${BOLD}${WHITE}${REVERSE}${APP} ${YELLOW}v$_VERSION_ ${BLUE}https://github.com/voidlinuxbr/void-install "}"
+	: "${ccabecmin="$APP v${_VERSION_}"}"
+	: "${DIALOG=${DIALOG:-dialog}}"
+	: "${ARCH:=x86_64}"
+	: "${CACHEDIR:="$(pwd -P)"/xbps-cachedir-${ARCH}}"
+	: "${XBPS_INSTALL_CMD:=xbps-install}"
+	: "${XBPS_INSTALL_UNPACK_ONLY:=xbps-install --unpack-only --yes --ignore-file-conflicts}"
+	: "${XBPS_REMOVE_CMD:=xbps-remove}"
+	: "${XBPS_QUERY_CMD:=xbps-query}"
+	: "${XBPS_RINDEX_CMD:=xbps-rindex}"
+	: "${XBPS_UHELPER_CMD:=xbps-uhelper}"
+	: "${XBPS_RECONFIGURE_CMD:=xbps-reconfigure}"
+
+}
+
+sh_touchConf() {
+	#		_WINDOWMANAGER=(${_WINDOWMANAGER[*]})
+	cat >"$app_conf" <<-EOF
+		######################################################################
+		# void-install.conf
+		# Gerado por void-install
+		######################################################################
+		WIFI_NETWORK=$_WIFI_NETWORK
+		WIFI_PASSWORD=$_WIFI_PASSWORD
+	EOF
+	{
+		declare -p aCustomPackages
+		declare -p LONLY_TTY
+		declare -p LDHCP
+		declare -p LCUSTOM
+		declare -p LDISK
+		declare -p LEFI
+		declare -p LAUDIO
+		declare -p LGRUB
+		declare -p LBIOS
+		declare -p LKERNEL
+		declare -p LMKPARTED
+		declare -p LFSREVISED
+		declare -p _WIFI_NETWORK
+		declare -p _WIFI_PASSWORD
+		declare -p _DISPLAYMANAGER
+		declare -p _WINDOWMANAGER
+		declare -p AsUser
+		declare -p Amkfs
+		declare -p AsDhcp
+		declare -p AsDiskPercent
+		declare -p AsFs
+		declare -p Amntpoint
+		declare -p AmntpointFDE
+		declare -p AConfDisk
+		declare -p AConfAudio
+		declare -p AConfKernel
+		declare -p AConfLocale
+		declare -p AConfMirror
+		declare -p AConfWifi
+		declare -p AConfFde
+		declare -p LCUSTOM
+		declare -p LAUTOLOGIN
+		declare -p HYPRLAND
+		#	declare -p AARRAY_DSK_DEVICES
+		#	declare -p AARRAY_PART_DEVICES
+		#	} | sed 's/declare -/&g/' >>"$app_conf"
+		#	} | sed -E 's/^declare (--|-g|-x)* //g' >>"$app_conf"
+		#	} | sed 's/declare -/&g/' | sed -E 's/^declare -g-* /declare -g /g' >>"$app_conf"
+	} | sed -E 's/declare -/&g/; s/^declare -g-* /declare -g /' >>"$app_conf"
+}
+
+sh_checkDisplay() {
+	local cmsg1="$(gettext "Antes de continuar, redimensione o terminal")"
+	local cmsg2="$(gettext "para que ele meça pelo menos 80 x 24 caracteres.")"
+	local cmsg3="$(gettext "Caso contrário, ")"
+	local cmsg4="$(gettext "você não poderá usar as ferramentas de partição de Disco.")"
+
+	if [ "$(tput cols)" -lt 80 ] || [ "$(tput lines)" -lt 24 ]; then
+		${DIALOG} --backtitle "$ccabec" \
+			--title "$(gettext "TERMINAL MUITO PEQUENO")" \
+			--msgbox "\
+Antes de continuar, redimensione a janela do terminal\n\
+ou diminua o tamanho da fonte até obter pelo menos\n\
+80 colunas por 24 linhas.\n\
+\n\
+Caso contrário, o instalador não conseguirá exibir\n\
+corretamente todas as informações e opções\n\
+necessárias." 0 0
+	fi
+}
+
+sh_get_Locale() {
+	# Verifica se o usuário forçou uma variável (LC_ALL, LANG, etc)
+	local current=${LC_ALL:-${LC_MESSAGES:-${LANG:-}}}
+
+	# Se não houver variável, usa o fallback do sistema
+	if [[ -z "$current" ]]; then
+		grep _ <(locale -a) | head -1 | cut -c1-5
+	else
+		# Retorna apenas o código (ex: es_AR) sem o .UTF-8
+		echo "${current%%.*}"
+	fi
+}
+
+sh_get_code_lang() {
+	local LangFilter="${LANG%%.*}"
+	local LangFilterLowercase="${LangFilter,,}"
+	local LangClean="${LangFilterLowercase%%_*}"
+	local LangCountry="${LangFilterLowercase#*_}"
+	local LangFilterLowercaseModified="${LangFilterLowercase//_/-}"
+	echo "$LangFilterLowercaseModified"
+}
+
+sh_get_lang() {
+	echo "$LANG"
+}
+
+sh_get_language_without_utf8() {
+	#	local LangFilter="${LANG%%.*}"
+	local LangFilter="${AConfLocale[_LOCALE]%%.*}"
+	local LangFilterModified="${LangFilter//_/-}"
+	echo "$LangFilterModified"
+}
+
+sh_get_code_language() {
+	local LangFilter="${LANGUAGE%%.*}"
+	local LangFilterLowercase="${LangFilter,,}"
+	local LangClean="${LangFilterLowercase%%_*}"
+	local LangCountry="${LangFilterLowercase#*_}"
+	local LangFilterLowercaseModified="${LangFilterLowercase//_/-}"
+	echo "$LangFilterLowercaseModified"
+}
+
+sh_get_language() {
+	echo "$LANGUAGE"
+}
+
+sh_catecho() {
+	echo "$(<"$1")"
+}
+
+sh_loadSavedConfig() {
+	[[ -s "$app_conf" ]] || sh_touchConf
+	if [ -f "$app_conf" ] && [ -r "$app_conf" ]; then
+		# shellcheck source=/dev/null
+		source "$app_conf"
+	else
+		die "${cmsg_falhaAbertura} $app_conf!"
+	fi
+	sh_setUser
+	sh_setAsDhcp
+	#debug $(declare -p LCUSTOM)
+}
+
+# Testa se o terminal suporta caracteres gráficos estendidos
+sh_setAsciiLines() {
+	#Isso força o dialog a usar caracteres ASCII básicos para as bordas.
+	#if [[ "$LANG" =~ 'UTF-8' ]]; then
+	if [[ "$(printf '\u250C')" =~ "┌" ]]; then
+		export NCURSES_NO_UTF8_ACS=1 # Terminal suporta ACS
+	else
+		export NCURSES_NO_UTF8_ACS=0 # Terminal NÃO suporta ACS
+	fi
+}
+
+sh_checkroot() {
+	((EUID != 0)) && elevate_to_root "$@" || return 0
+}
+
+elevate_to_root() {
+	log_ok "This script must be run as root. Elevating privileges..."
+	ccabec+='root [elevated]'
+	# Tenta usar sudo primeiro (caso esteja configurado)
+	if command -v sudo >/dev/null 2>&1; then
+		exec sudo bash "$0" "$@"
+	fi
+	# Se sudo falhar, tenta su
+	if command -v su >/dev/null 2>&1; then
+		exec su -c "$0 $*"
+	fi
+	die "Error: Unable to elevate privileges. Run manually as root."
+}
+
+sh_checkcommand() {
+	local cmd="$1"
+	command -v "$1" >/dev/null 2>&-
+	return $?
+}
+
+sh_setVarColors() {
+	#tput setaf 127 | cat -v  #capturar saida
+	# Se o reset já estiver definido, não precisamos processar novamente (Cache de execução)
+	[[ -n "$reset" ]] && return
+
+	# Verifica se o tput existe
+	if ! command -v tput >/dev/null 2>&1; then
+		sh_unsetVarColors
+		return
+	fi
+
+	# 1. Agrupamos todos os pedidos em uma única chamada de sistema.
+	# A ordem aqui deve ser rigorosamente a mesma do bloco de leitura abaixo.
+	local cache
+	cache=$(tput -S <<<$'sgr0\nbold\nsmul\nrmul\nrev\nsetaf 0\nsetaf 196\nsetaf 2\nsetaf 3\nsetaf 4\nsetaf 5\nsetaf 6\nsetaf 7\nsetaf 8\nsetaf 202\nsetaf 125\nsetaf 61\nsetaf 9\nsetaf 10\nsetaf 11\nsetaf 12\nsetaf 13\nsetaf 14\nsetaf 15')
+
+	# 2. Leitura em lote para as variáveis (Performance instantânea)
+	{
+		read -r reset
+		read -r bold
+		read -r underline
+		read -r nounderline
+		read -r reverse
+		read -r c0
+		read -r c196
+		read -r c2
+		read -r c3
+		read -r c4
+		read -r c5
+		read -r c6
+		read -r c7
+		read -r c8
+		read -r c202
+		read -r c125
+		read -r c61
+		read -r c9
+		read -r c10
+		read -r c11
+		read -r c12
+		read -r c13
+		read -r c14
+		read -r c15
+	} <<<"$cache"
+
+	# 3. Montagem das variáveis finais (mantendo sua lógica de negrito e nomes)
+	black="${bold}${c0}"
+	red="${bold}${c196}"
+	green="${bold}${c2}"
+	yellow="${bold}${c3}"
+	blue="$c4"
+	pink="$c5"
+	magenta="$c5"
+	cyan="$c6"
+	white="$c7"
+	gray="$c8"
+	orange="$c202"
+	purple="$c125"
+	violet="$c61"
+	light_red="$c9"
+	light_green="$c10"
+	light_yellow="$c11"
+	light_blue="$c12"
+	light_magenta="$c13"
+	light_cyan="$c14"
+	bright_white="$c15"
+}
+
+sh_unsetVarColors() {
+	unset reset green red bold blue cyan
+	unset orange pink white yellow violet purple
+	sh_setLogPrefix
+}
+
+sh_setLogPrefix() {
+	COL_NC='\e[0m' # No Color
+	COL_LIGHT_GREEN='\e[1;32m'
+	COL_LIGHT_RED='\e[1;31m'
+	TICK="${white}[${COL_LIGHT_GREEN}✓${COL_NC}${white}]"
+	CROSS="${white}[${COL_LIGHT_RED}✗${COL_NC}$white]"
+	INFO="[i]"
+	# shellcheck disable=SC2034
+	DONE="${COL_LIGHT_GREEN} done!${COL_NC}"
+	OVER="\\r\\033[K"
+	NORMAL="${reset}"
+	SUCCESS="${green}"
+	WARNING="${yellow}"
+	FAILURE="${red}"
+	INFO="${cyan}"
+	BRACKET="${blue}"
+	BMPREFIX=""
+	DOTPREFIX="  ${blue}::${reset} "
+	#  SUCCESS_PREFIX="${SUCCESS}  ↑  ${NORMAL}"
+	SUCCESS_PREFIX=" $TICK "
+	SUCCESS_SUFFIX="${BRACKET}[${SUCCESS}  OK  ${BRACKET}]${NORMAL}"
+	#  FAILURE_PREFIX="${FAILURE}  ↓  ${NORMAL}"
+	FAILURE_PREFIX=" $CROSS "
+	FAILURE_SUFFIX="${BRACKET}[${FAILURE} FAIL ${BRACKET}]${NORMAL}"
+	WARNING_PREFIX="${WARNING}  W  ${NORMAL}"
+	WARNING_SUFFIX="${BRACKET}[${WARNING} WARN ${BRACKET}]${NORMAL}"
+	SKIP_PREFIX="${INFO}  S  ${NORMAL}"
+	SKIP_SUFFIX="${BRACKET}[${INFO} SKIP ${BRACKET}]${NORMAL}"
+	WAIT_PREFIX="${WARNING}  R  ${NORMAL}"
+	WAIT_SUFFIX="${BRACKET}[${WARNING} WAIT ${BRACKET}]${NORMAL}"
+}
+
+replicate() {
+	local Var
+	printf -v Var %"$2s" " "
+	echo "${Var// /$1}"
+}
+
+padr() {
+	text=$1
+	COLS=$2
+	char=$3
+	if test $# -eq 1; then
+		COLS=$(tput cols)
+		char='='
+	fi
+	printf "%*s\n" "$COLS" "$text" | sed "s/ /$char/g"
+}
+
+sh_info_msg() {
+	local _msg="$1"
+	last_msg="$_msg"
+	msg "INFO" "$last_msg" "$(log_info_msg "$last_msg")"
+}
+
+msg() {
+	((++ncounter))
+	cinfo="$1"
+	cfmt="$(fmt)"
+	ufmt=$(unfmt "$cfmt")
+	last_msg="$2"
+	logmessage="$ufmt $last_msg"
+	logmessage=${logmessage/INFO /}
+	clean_logmessage="$(strip_ansi "$logmessage")"
+	printf "%s\n" "$(timespec) [ $cinfo ]$ufmt ${clean_logmessage}" 2>&1 | tee -i -a "$BOOTLOG" >$LOGGER
+
+	if ((grafico)); then
+		logmessage="$(strip_ansi "$last_msg")"
+		${DIALOG} \
+			--no-collapse \
+			--colors \
+			--title "$cinfo" \
+			--backtitle "$ccabec" \
+			--infobox "\nStep:${BOLD}${YELLOW}${ufmt} ${RESET}${BOLD}$logmessage" \
+			6 100
+	else
+		log_info_msg "$(fmt) ${logmessage}"
+	fi
+}
+
+fmt() {
+	printf "${bold}${yellow}%03d/%03d${reset}" "$njobs" "$ncounter"
+	return $?
+}
+
+mensagem() {
+	cinfo="$1"
+	last_msg="$2"
+	${DIALOG} \
+		--no-collapse \
+		--colors \
+		--title "$cinfo" \
+		--backtitle "$ccabec" \
+		--infobox "$last_msg" \
+		8 100
+}
+
+unfmt() {
+	local last_msg="$*"
+	logmessage="${last_msg/${bold}${yellow}/}"
+	logmessage="${logmessage/${reset}/}"
+	echo "$logmessage"
+}
+
+log_info_msg() {
+	last_msg="$*"
+
+	if ! ((quiet)); then
+		echo -n -e "${BMPREFIX}${*}"
+	fi
+	return 0
+}
+
+log_info_msg_level() {
+	last_msg="$*"
+
+	if ! ((quiet)); then
+		echo -n -e "   ${BMPREFIX}${*}"
+	fi
+	return 0
+}
+
+log_error() {
+	if ! ((quiet)); then
+		echo -e "   ${FAILURE_PREFIX}${*}"
+	fi
+	return 0
+}
+
+log_msg_tab() {
+	if ! ((quiet)); then
+		echo -e "   ${DOTPREFIX}${*}"
+	fi
+	return 0
+}
+
+log_msg() {
+	if ! ((quiet)); then
+		echo -e "${DOTPREFIX}${*}"
+	fi
+	return 0
+}
+
+evaluate_retval() {
+	local error_value=$? # captura retorno anterior
+	local error_fatal=${2:-$one}
+	local cmsgdie="$3"
+	local level="$4"
+
+	if [[ $# -gt 0 ]]; then
+		error_value="$1"
+	fi
+
+	if [[ "${error_value}" = 0 ]]; then
+		if [[ -n "${level}" ]]; then
+			log_success_msg_level ''
+		else
+			log_success_msg ''
+		fi
+	else
+		if [[ -n "${level}" ]]; then
+			log_failure_msg_level ''
+		else
+			log_failure_msg ''
+		fi
+	fi
+
+	if ((error_value)); then
+		if ((error_fatal)); then
+			[[ -z "$cmsgdie" ]] && die "${cmsg_InstalacaoAbortada}..." || die "$cmsgdie"
+		else
+			[[ -n "$cmsgdie" ]] && log_failure_msg_level "${cmsgdie}"
+			log_error "${cmsg_Error_not_fatal} $BOOTLOG"
+		fi
+	fi
+	[[ -n "$cmsgdie" ]] && log_success_msg_level "${cmsgdie}"
+	return "${error_value}"
+}
+
+log_failure_msg_level() {
+	if ! ((quiet)) && ! ((grafico)); then
+		echo -n -e "     ${BMPREFIX}${@}"
+		echo -e "   ${CURS_ZERO}${FAILURE_PREFIX}${SET_COL}${FAILURE_SUFFIX}"
+	fi
+	logmessage=${last_msg/$bold$red$green$yellow/}
+	printf "%s\n" "$(timespec) [ FAIL ]${logmessage}" 2>&1 | tee -i -a "$BOOTLOG" >$LOGGER
+	replicate "#" "100" | tee -i -a "$BOOTLOG" >$LOGGER
+	return 0
+}
+
+log_success_msg_level() {
+	if ! ((quiet)) && ! ((grafico)); then
+		echo -n -e "     ${BMPREFIX}${green}=>${reset} ${*}"
+		echo -e "   ${CURS_ZERO}${SUCCESS_PREFIX}${SET_COL}${SUCCESS_SUFFIX}"
+	fi
+
+	logmessage=$(unfmt "$last_msg")
+	printf "%s\n" "$(timespec) [  OK  ]${logmessage}" 2>&1 | tee -i -a "$BOOTLOG" >$LOGGER
+	replicate "#" "100" | tee -i -a "$BOOTLOG" >$LOGGER
+	return 0
+}
+
+log_failure_msg() {
+	if ! ((quiet)) && ! ((grafico)); then
+		echo -n -e "${BMPREFIX}${@}"
+		echo -e "${CURS_ZERO}${FAILURE_PREFIX}${SET_COL}${FAILURE_SUFFIX}"
+	fi
+	logmessage=${last_msg/$bold$red$green$yellow/}
+	printf "%s\n" "$(timespec) [ FAIL ]${logmessage}" 2>&1 | tee -i -a "$BOOTLOG" >$LOGGER
+	replicate "#" "100" | tee -i -a "$BOOTLOG" >$LOGGER
+	return 0
+}
+
+log_success_msg() {
+	if ! ((quiet)) && ! ((grafico)); then
+		echo -n -e "${BMPREFIX}${@}"
+		echo -e "${CURS_ZERO}${SUCCESS_PREFIX}${SET_COL}${SUCCESS_SUFFIX}"
+	fi
+	logmessage=$(unfmt "$last_msg")
+	printf "%s\n" "$(timespec) [  OK  ]${logmessage}" 2>&1 | tee -i -a "$BOOTLOG" >$LOGGER
+	replicate "#" "100" | tee -i -a "$BOOTLOG" >$LOGGER
+	return 0
+}
+
+timespec() {
+	STAMP="$(date +"%b %d %T %:z") $(hostname)"
+	echo "$STAMP"
+	return 0
+}
+
+function debug() {
+	whiptail \
+		--fb \
+		--clear \
+		--backtitle "[debug]$0" \
+		--title "[debug]$0" \
+		--yesno "${*}\n" \
+		0 40
+	result=$?
+	if ((result)); then
+		exit
+	fi
+	return $result
+}
+
+info() {
+	msg "${fmt} $@"
+	evaluate_retval 0
+
+	${DIALOG} \
+		--colors \
+		--title "$1" \
+		--backtitle "$ccabec" \
+		--ok-label "${cmsg_ok}" \
+		--msgbox "$2\n$3\n$4\n$5\n$6\n$7\n$8\n$9\n${10}" \
+		0 0
+}
+
+infoextended() {
+	xtitle="$1"
+	shift
+	msg "${fmt} $@"
+	evaluate_retval 0
+
+	${DIALOG} \
+		--colors \
+		--title "${xtitle}" \
+		--backtitle "$ccabec" \
+		--ok-label "${cmsg_ok}" \
+		--msgbox "$*" \
+		0 0
+}
+
+infobox() {
+	${DIALOG} \
+		--colors \
+		--no-shadow \
+		--no-mouse \
+		--backtitle "${BOLD}${WHITE}${ccabec}${RESET}" \
+		--title "${TITLE}" \
+		--aspect 20 \
+		--infobox "$@"
+}
+
+alerta() {
+	msg "${fmt} $@"
+	evaluate_retval 0
+
+	${DIALOG} \
+		--colors \
+		--clear \
+		--no-collapse \
+		--no-cr-wrap \
+		--title "$1" \
+		--backtitle "$ccabec" \
+		--ok-label "${cmsg_ok}" \
+		--msgbox "\n$2\n$3\n$4\n$5\n$6" \
+		10 81
+}
+
+conf() {
+	xtitle="$1"
+	shift
+	${DIALOG} \
+		--colors \
+		--title "$xtitle" \
+		--backtitle "$ccabec" \
+		--no-collapse \
+		--no-cr-wrap \
+		--clear \
+		--yes-label "${cmsg_yeslabel}" \
+		--no-label "${cmsg_nolabel}" \
+		--yesno "$*" \
+		0 0
+	nchoice=$?
+	return "$nchoice"
+}
+
+confRevisar() {
+	xtitle="$1"
+	shift
+	${DIALOG} \
+		--colors \
+		--title "$xtitle" \
+		--backtitle "$ccabec" \
+		--no-collapse \
+		--no-cr-wrap \
+		--clear \
+		--yes-label "${cmsg_ButtonProsseguir}" \
+		--no-label "${cmsg_ButtonRevisar}" \
+		--yesno "$*" \
+		0 0
+	nchoice=$?
+	return "$nchoice"
+}
+
+infoconf() {
+	infotitle=$1
+	inforesult=$2
+	conftitle=$3
+	shift 3
+	${DIALOG} --title "$infotitle" \
+		--begin 03 10 --infobox "$inforesult" 14 75 \
+		--and-widget \
+		--begin 17 10 \
+		--colors \
+		--no-collapse \
+		--no-cr-wrap \
+		--title "$conftitle" \
+		--backtitle "$ccabec" \
+		--yes-label "${cmsg_yeslabel}" \
+		--no-label "${cmsg_nolabel}" \
+		--yesno "$*" \
+		10 75
+	nchoice=$?
+	return "$nchoice"
+}
+
+sh_cmd_job_infobox() {
+	local cmsg="$1"
+	local cjob="$2"
+	local erro_fatal="$3"
+	local lretval=0
+
+	# Cria um log temporário exclusivo
+	local tmp_log=$(mktemp)
+
+	# Executa o comando localmente e captura o código de saída
+	eval "$cjob" >"$tmp_log" 2>&1 &
+	local pid_job=$!
+
+	# Exibe o log em tempo real usando dialog --infobox
+	if ((grafico)); then
+		while kill -0 "$pid_job" 2>/dev/null; do
+			${DIALOG} \
+				--no-collapse \
+				--colors \
+				--title "$cmsg - (log realtime)" \
+				--backtitle "$ctitle" \
+				--infobox "$(tail -n 13 "$tmp_log")" \
+				15 100
+			sleep 0.3
+		done
+	fi
+
+	# Aguarda o término do comando e captura o código de saída
+	wait "$pid_job"
+	lretval=$?
+
+	# Remove o log temporário
+	rm -f "$tmp_log"
+
+	# Avalia o resultado da execução
+	[[ -z "$erro_fatal" ]] && return "$lretval" || return "$erro_fatal"
+}
+
+sh_msg_job() {
+	local cmsg="$1"
+	local cjob="$2"
+	local erro_fatal="$3"
+	local lretval=0
+
+	last_msg="$cmsg"
+	msg "INFO" "$last_msg" "$(log_info_msg "$last_msg")"
+	lretval=0
+	evaluate_retval "$lretval" "$erro_fatal"
+	return "$lretval"
+}
+
+display_result() {
+	${DIALOG} \
+		--colors \
+		--title "$2" \
+		--backtitle "$ccabec" \
+		--no-collapse \
+		--no-cr-wrap \
+		--no-nl-expand \
+		--ok-label "${cmsg_ok}" \
+		--msgbox "$1" \
+		0 0
+}
+
+#			15 100
+
+notconf() {
+	xtitle="$1"
+	shift
+	${DIALOG} \
+		--colors \
+		--title "$xtitle" \
+		--backtitle "$ccabec" \
+		--yes-label "${cmsg_nolabel}" \
+		--no-label "${cmsg_yeslabel}" \
+		--yesno "$*" \
+		10 100
+	return $?
+}
+
+sh_update_wpa_suplicant() {
+	sh_cmd_job "${cmsg_Ajustando} wpa_supplicant.conf" "
+      cat >"$dir_install/etc/wpa_supplicant/wpa_supplicant.conf" <<-EOF
+ctrl_interface=/run/wpa_supplicant
+ctrl_interface_group=wheel
+update_config=1
+fast_reauth=1
+
+network={
+   ssid=P"$_WIFI_NETWORK"
+   psk="$_WIFI_PASSWORD"
+   mesh_fwding=1
+}
+EOF
+   " $err_not_fatal
+}
+
+sh_run_clean() {
+	local ret
+
+	eval "$1" 2>&1 |
+		strip_ansi |
+		tee -i -a "$BOOTLOG" \
+			>"$LOGGER"
+	ret="${PIPESTATUS[0]}"
+
+	return "$ret"
+}
+
+strip_ansi() {
+	printf '%s' "$1" |
+		sed -E '
+      s/\x1B\[[0-9;]*m//g;      # Remove SGR (Cores, negrito, etc: 1m, 38;5;196m)
+      s/\x1B\[[0-9;?]*[@-~]//g; # Remove outros CSI (Movimento de cursor, etc)
+      s/\x1B\([a-zA-Z]//g;      # Remove Charset (O ^[(B que apareceu antes)
+      s/\x1B[@-Z\\-_]//g;       # Remove escapes de 2 caracteres
+    '
+}
+
+sh_cmd_job() {
+	local cmsg="$1"
+	local cjob="$2"
+	local erro_fatal="$3"
+	local lretval=0
+
+	cmsg+=" ${cmsg_Em} ${yellow}$dir_install"
+	last_msg="$cmsg"
+	msg "INFO" "$last_msg" "$(log_info_msg "$last_msg")"
+
+	if ((grafico)); then
+		read LINES COLUMNS <<<"$(stty size)"
+		cmsg=$(strip_ansi "$cmsg")
+		eval "$cjob" 2>&1 | tee -i -a "$BOOTLOG" |
+			${DIALOG} \
+				--colors \
+				--backtitle "$ccabec" \
+				--title "\Zb\Z3Step:$ufmt \Z1==>\Zn \Z7[$cmsg]\Zn \Z6[$(sh_time_elapsed)]\Zn" \
+				--progressbox $((MAXROW / 2)) $((MAXCOL - 20))
+	else
+		eval "$cjob" 2>&1 | tee -i -a "$BOOTLOG" >$LOGGER
+	fi
+
+	lretval="${PIPESTATUS[0]}"
+	evaluate_retval "$lretval" "$erro_fatal"
+	shell='/bin/sh'
+
+	return "$lretval"
+}
+
+sh_diahora() {
+	DIAHORA=$(date +"%d%m%Y-%T" | sed 's/://g')
+	printf "%s\n" "$DIAHORA"
+}
+
+sh_rtrim() {
+	local str="$1"
+	echo "${str%%' '}"
+}
+
+sh_testcommand() {
+	if [[ -z $(command -v "$1") ]]; then
+		#		echo "$(gettext "não disponível")"
+		"$(gettext "não disponível")"
+	else
+		#		echo "$(gettext "mais avançado")"
+		"$(gettext "mais avançado")"
+	fi
+}
+
+sh_dryrun() {
+	sh_umount_fs
+	sh_mount_fs
+	sh_init_bind
+
+	#sh_update_locale
+	#sh_update_rc_conf
+	#sh_update_rc_local
+	#sh_activating_services
+	#sh_make_user
+	#sh_update_sshd
+	#sh_update_sudoers
+	#sh_make_fstab
+	#sh_update_sddm_conf
+	# sh_build_and_apply_dhcpcd_config
+	sh_change_grub
+
+	export PS1="[chroot $dir_install] $PS1"
+	LC_ALL=C chroot "$dir_install" "/bin/bash"
+	sh_umount_fs
+}
+
+sh_loadconf() {
+	if ! $LCHROOT; then
+		sh_info_msg "$(gettext 'Loading configuration file'): ${yellow}$app_conf"
+	fi
+
+	if [ -f "$app_conf" ] && [ -r "$app_conf" ]; then
+		# shellcheck source=/dev/null
+		source "$app_conf"
+		evaluate_retval "$?"
+		sh_parseconf
+	else
+		evaluate_retval "$?" 1 "${cmsg_falhaAbertura} $app_conf!"
+	fi
+}
+
+sh_parseconf() {
+	if ! $LCHROOT; then
+		sh_info_msg "$(gettext 'Analisando o arquivo de configuração'): ${yellow}$app_conf"
+	fi
+
+	url_mirror="${AConfMirror[url_mirror]}"
+	[[ -n "${AsUser[cuser]}" && -n "${AsUser[cpass]}" && -n "${AsUser[cpassroot]}" && -n "${AsUser[chostname]}" ]] && LEXTRA=true
+	[[ -n "${AConfLocale[_TIMEZONE]}" ]] && LTIMEZONE=true
+	[[ -n "${AConfLocale[_KEYMAP]}" ]] && LKEYMAP=true
+	[[ -n "${AConfMirror[_MIRROR]}" && -n "$url_mirror" ]] && LMIRROR=true
+	[[ -n "${AConfMirror[_SOURCE]}" ]] && LSOURCE=true
+	[[ -n "${AConfAudio[_AUDIOSERVER]}" ]] && LAUDIO=true
+	[[ -n "${AConfKernel[_KERNEL]}" ]] && LKERNEL=true
+	[[ -n "${Amntpoint[*]}" ]] && LPARTITION=true
+	[[ -n ${_WINDOWMANAGER[*]} ]] && LWM=true
+	[[ -n ${_DISPLAYMANAGER} ]] && LDM=true
+	evaluate_retval "${PIPESTATUS[0]}" "$err_not_fatal"
+}
+
+get_default_iface() {
+	ip route | awk '/default/ {print $5; exit}'
+}
+
+sh_configure_dhcpcd_static_ip_dialog() {
+	local CONFIG_FILE="/etc/dhcpcd.conf"
+	local DEFAULT_IFACE
+
+	# detecta interface padrão
+	DEFAULT_IFACE="$(get_default_iface)"
+
+	sh_setAsDhcp
+
+	# formulário
+	while true; do
+		exec 3>&1
+		dhcptext=$(dialog \
+			--backtitle "$ccabec" \
+			--title "$(gettext "Configuração de IP fixo (dhcpcd)")" \
+			--form "$(gettext "Preencha os dados:")" \
+			15 60 6 \
+			"$(gettext "Interface:")" 1 1 "${AsDhcp[IFACE]}" 1 25 20 0 \
+			"$(gettext "IP:")" 2 1 "${AsDhcp[IP]}" 2 25 20 0 \
+			"$(gettext "Máscara (CIDR):")" 3 1 "${AsDhcp[CIDR]}" 3 25 20 0 \
+			"$(gettext "Gateway:")" 4 1 "${AsDhcp[GATEWAY]}" 4 25 20 0 \
+			"$(gettext "DNS 1:")" 5 1 "${AsDhcp[DNS1]}" 5 25 20 0 \
+			"$(gettext "DNS 2:")" 6 1 "${AsDhcp[DNS2]}" 6 25 20 0 \
+			2>&1 >/dev/tty)
+
+		exit_status=$?
+		case $exit_status in
+		"$D_ESC" | "$D_CANCEL")
+			return
+			;;
+		"$D_OK")
+			# extrai valores
+			mapfile -t adhcp <<<"$dhcptext"
+			AsDhcp[IFACE]="${adhcp[0]}"
+			AsDhcp[IP]="${adhcp[1]}"
+			AsDhcp[CIDR]="${adhcp[2]}"
+			AsDhcp[GATEWAY]="${adhcp[3]}"
+			AsDhcp[DNS1]="${adhcp[4]}"
+			AsDhcp[DNS2]="${adhcp[5]}"
+
+			# mensagem confirmação
+			CONFIRM_MSG="$(printf "%s\n\n%s: %s\n%s: %s/%s\n%s: %s\n%s: %s %s" \
+				"${BOLD}${RED}$(gettext "Aplicar essas configurações?")" \
+				"${RESET}$(gettext "Interface")" "${AsDhcp[IFACE]}" \
+				"$(gettext "IP")" "${AsDhcp[IP]}" "${AsDhcp[CIDR]}" \
+				"$(gettext "Gateway")" "${AsDhcp[GATEWAY]}" \
+				"$(gettext "DNS")" "${AsDhcp[DNS1]}" "${AsDhcp[DNS2]}")"
+
+			#   dialog --yesno "$CONFIRM_MSG" 12 50
+			if conf "=== DHCP ===" "$CONFIRM_MSG"; then
+				LDHCP=true
+			fi
+			;;
+		esac
+		exec 3>&-
+		return 0
+	done
+}
+
+sh_create_empty_iptables_rules() {
+	local CONFIG_FILE="$dir_install/etc/iptables/iptables.rules"
+
+	sh_info_msg "%(gettext 'Aplicando configuração do iptables')"
+
+	# cria novo arquivo
+	cat >"$CONFIG_FILE" <<EOF
+# Empty iptables rule file
+*filter
+:INPUT ACCEPT [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+COMMIT
+EOF
+}
+
+sh_build_and_apply_dhcpcd_config() {
+	local CONFIG_FILE="$dir_install/etc/dhcpcd.conf"
+	local BACKUP_FILE="${CONFIG_FILE}.$(sh_diahora)"
+
+	sh_info_msg "%(gettext 'Aplicando configuração do dhcpd')"
+	# backup somente se existir
+	if [[ -f "$CONFIG_FILE" ]]; then
+		mv -f "$CONFIG_FILE" "$BACKUP_FILE"
+	fi
+
+	# cria novo arquivo
+	cat >"$CONFIG_FILE" <<EOF
+# See dhcpcd.conf(5) for details.
+
+interface ${AsDhcp[IFACE]}
+static ip_address=${AsDhcp[IP]}/${AsDhcp[CIDR]}
+static routers=${AsDhcp[GATEWAY]}
+static domain_name_servers=${AsDhcp[DNS1]} ${AsDhcp[DNS2]}
+EOF
+
+}
+
+pcount() {
+	local -i nargs="$#"
+
+	echo $nargs
+	[[ nargs -gt 0 ]] && return 0 || return 1
+}
+
+strtoarray() {
+	local anew
+
+	IFS=' ' read -r -a anew <<<"$1"
+	echo "${anew[@]}"
+}
+
+lenarraystr() {
+	local new=$1
+
+	read -ra ADDR <<<"$new"
+	echo "${#ADDR[@]}"
+}
+
+sh_gethidden-password() {
+	local senha="$1"
+	echo -e "${senha//?/*}"
+}
+
+confmulti() {
+	xtitle="$1"
+	shift
+	${DIALOG} \
+		--colors \
+		--title "$xtitle" \
+		--backtitle "$ccabec" \
+		--yes-label "${cmsg_yeslabel}" \
+		--no-label "${cmsg_nolabel}" \
+		--yesno "$*" \
+		10 60
+	nchoice=$?
+	return $nchoice
+}
+
+sh_seekstrarray() {
+	local str=("$1")
+	local search="$2"
+	local result=
+
+	for i in "${!str[@]}"; do
+		if [[ "${str[$i]}" == "$search" ]]; then
+			result="$i"
+			break
+		fi
+	done
+	echo "$result"
+}
+
+sh_splitarray() {
+	local str=("$1")
+	local pos="$2"
+	local sep="${3:-'|'}"
+	local array
+
+	[[ $# -eq 3 && "$pos" = "|" && "$sep" =~ ^[0-9]+$ ]] && {
+		sep="$2"
+		pos="$3"
+	}
+	[[ $# -eq 2 && "$pos" = "$sep" ]] && {
+		sep="$pos"
+		pos=1
+	}
+	[[ $# -eq 1 || ! "$pos" =~ ^[0-9]+$ ]] && { pos=1; }
+
+	IFS="$sep" read -r -a array <<<"$str"
+	echo "${array[pos - 1]}"
+}
+
+sh_getparamfile() {
+	if ((LFILE)); then
+		echo "- ${BOLD}${WHITE}[$app_conf]"
+		return 0
+	fi
+	return 1
+}
+
+sh_version() {
+	cat <<-EOF
+		${bold}${cyan}${0##*/} v${_VERSION_}${reset}
+		${bold}${black}Copyright (C) 2023 vcatafesta@gmail.com
+		$(gettext 'Licença GPL v3+: GNU GPL versão 3 ou posterior') <https://gnu.org/licenses/gpl.html>
+		$(gettext 'Este é um software livre: você é livre para alterá-lo e redistribuí-lo.')
+		$(gettext 'NÃO HÁ QUALQUER GARANTIA, na máxima extensão permitida em lei.')${reset}
+	EOF
+}
+
+sh_setLanguage() {
+	#	langmsg=('lang=("pt_BR"	"en_US" "de_DE" "fr_FR" "es_ES" "it_IT")')
+	#	for xmsg in "${langmsg[@]}"; do eval "$xmsg"; done
+	#	#echo "lang       ${#lang[@]} ${lang[@]} ${lang[$PT_BR]} ${lang[$EN_US]}"
+	#	#echo "cmsg_ERRO ${#cmsg_ERRO[@]} ${cmsg_ERRO[@]} ${cmsg_ERRO[$PT_BR]} ${cmsg_ERRO[$EN_US]}"
+	#	cmsg_LABEL[pt_BR]=$(gettext "Usar as teclas ${RED}↑ PARA CIMA ${RESET}e ${RED}↓ PARA BAIXO ${RESET}para navegar.\nUsar ${RED}TAB ${RESET}para alternar entre os botões e ${RED}ENTER ${RESET}para selecionar.")
+	#	cmsg_LBL_check[pt_BR]=$(gettext "Usar as teclas ${RED}PARA CIMA ${RESET}e ${RED}PARA BAIXO ${RESET}para navegar.\nUsar ${RED}BARRA DE ESPAÇO ${RESET}para selecionar.\nUsar ${RED}TAB ${RESET}para alternar entre os botões e ${RED}ENTER ${RESET}para aceitar.")
+	#	cmsg_Tarball_Corrompido[pt_BR]=$(gettext "\n${RED}Aparentemente o tarball rootfs ${_TARBALL_ROOTFS} está corrompido.\n\n${BOLD}${WHITE}Testar a integridade e reiniciar a instalação ?")
+	#
+	#	cmsg_LABEL1=$(gettext "Usar as setas ${CYAN}↑ ${RST}e ${CYAN}↓ ${RST}para navegar.")
+	#	cmsg_LABEL2=$(gettext "Usar ${CYAN}TAB ${RST}para alternar entre os botões.")
+	#	cmsg_LABEL3=$(gettext "Usar ${CYAN}ENTER ${RST}ou ${CYAN}BARRA DE ESPAÇO ${RST}para selecionar e aceitar.")
+	#	#cmsg_LABEL1=$(gettext "Usar as setas ↑ e ↓ para navegar.")
+	#	#cmsg_LABEL2=$(gettext "Usar TAB para alternar entre os botões.")
+	#	#cmsg_LABEL3=$(gettext "Usar ENTER ou BARRA DE ESPAÇO para selecionar e aceitar.")
+	#	cmsg_MENU="${cmsg_LABEL1}\n${cmsg_LABEL2}\n${cmsg_LABEL3}"
+
+	cLB1="$(gettext "Use as teclas")"
+	cLB2="$(gettext "PARA CIMA")"
+	cLB3="$(gettext "e")"
+	cLB4="$(gettext "PARA BAIXO")"
+	cLB5="$(gettext "para navegar")"
+	cLB6="$(gettext "Use")"
+	cLB7="$(gettext "para alternar entre os botões")"
+	cLB8="$(gettext "para selecionar/aceitar")"
+	ccolor="${BOLD}${RED}"
+	cmsg_MENU="$cLB1 ${ccolor}↑ $cLB2$RESET \
+$cLB3 ${ccolor}↓ $cLB4$RESET \
+$cLB5\n$cLB6 ${ccolor}⇥ TAB${RESET} \
+$cLB7 ${ccolor}↵ ENTER${RESET} ou ${ccolor}BARRA DE ESPAÇO${RESET} $cLB8"
+
+	cmsg_Tarball_Corrompido0=$(gettext "Aparentemente o tarball rootfs")
+	cmsg_Tarball_Corrompido1=$(gettext "está corrompido.")
+	cmsg_Tarball_Corrompido2=$(gettext "Testar a integridade e reiniciar a instalação ?")
+	cmsg_Tarball_Corrompido="\n${RED}${cmsg_Tarball_Corrompido0} ${_TARBALL_ROOTFS} ${cmsg_Tarball_Corrompido1}\n\n${BOLD}${WHITE}${cmsg_Tarball_Corrompido2}"
+
+	cmsg_TamanhoInsuficiente=$(gettext "Tamanho disco insuficiente para criar partições com swap")
+	cmsg_DesejaProsseguir=$(gettext "Deseja prosseguir SEM partição de swap?")
+	cmsg_DesejaCriarParticaoSwap=$(gettext "Deseja criar partição de swap ?")
+	cmsg_AcompanheInstalacao=$(gettext "Acompanhe a evolução da instalação            ")
+	cmsg_OuPeloTerminal=$(gettext "e/ou pelo terminal tty8        ")
+	cmsg_PacotesDaImagemIso=$(gettext "Usar os pacotes já presentes na imagem ISO (clonagem da ISO)")
+	cmsg_BaixadoDoRepositorioOficial=$(gettext "Usar tarball base e atualizar via internet (funciona em qualquer host Linux)")
+	cmsg_BaixadoDoRepositorioOficialFull=$(gettext "Baixar todos os pacotes diretamente da internet (requer host Void Linux)")
+	cmsg_DefinirInstalacaoDeOrigem=$(gettext "Selecionar fonte da instalação")
+	cmsg_Definicoes=$(gettext "Definições")
+	cmsg_naodefinido=$(gettext "não definido")
+	cmsg_AjustandoSenhaUsuario=$(gettext "Ajustando senha usuário")
+	cmsg_AtivandoBashUsuario=$(gettext "Ativando o bash para o usuário")
+	cmsg_CriandoUsuario=$(gettext "Criando usuário")
+	cmsg_MenuInstalacao=$(gettext "MENU DE INSTALAÇÃO")
+	cmsg_DesMontandoAmbiente=$(gettext "Desmontando ambiente")
+	cmsg_MontandoAmbiente=$(gettext "Montando ambiente")
+	cmsg_EntrandoAmbienteChroot=$(gettext "Entrando no ambiente chroot")
+	cmsg_MontandoParticao=$(gettext "Montando partição")
+	cmsg_Gerando=$(gettext "Gerando")
+	cmsg_Ajustando=$(gettext "Ajustando")
+	cmsg_Copiando=$(gettext "Copiando")
+	cmsg_Descompactando=$(gettext "Descompactando")
+	cmsg_Atualizando=$(gettext "Atualizando")
+	cmsg_Instalando=$(gettext "Instalando")
+	cmsg_Configurando=$(gettext "Configurando")
+	cmsg_Em="${cyan}=>${reset}"
+	cmsg_ERRO=$(gettext "ERRO")
+	cmsg_Aceitar=$(gettext "Aceitar")
+	cmsg_Conectar=$(gettext "Conectar")
+	cmsg_Configurar=$(gettext "Configurar")
+	cmsg_Nao_definido=$(gettext "Não definido")
+	cmsg_Mudar=$(gettext "Mudar")
+	cmsg_Sair=$(gettext "Sair")
+	cmsg_Instalar=$(gettext "Instalar")
+	cmsg_Mirror=$(gettext "Espelho")
+	cmsg_BootLoader="Bootloader (GRUB)"
+	cmsg_FileSystem=$(gettext "Sistema de Arquivos")
+	cmsg_Revised=$(gettext "não foi revisado!")
+	cmsg_Disco=$(gettext "Armazenamento")
+	cmsg_Teclado=$(gettext "Teclado")
+	cmsg_SairSemInstalar=$(gettext "Sair sem instalar")
+	cmsg_tty=$(gettext "Somente terminal, sem interface gráfica")
+	cmsg_server=$(gettext "Servidor Void")
+	cmsg_descMirror=$(gettext "Selecionar espelho dos pacotes")
+	cmsg_descDisco=$(gettext "Selecionar disco e partições")
+	cmsg_descFileSystem=$(gettext "Configurar sistema de arquivos e pontos de montagem")
+	cmsg_descBootLoader=$(gettext "Escolhar disco para o bootloader")
+	cmsg_descTeclado=$(gettext "Selecionar layout do teclado")
+	cmsg_descTimezone=$(gettext "Selecionar fuso horário")
+	cmsg_descKernel=$(gettext "Selecionar versão do kernel")
+	cmsg_descLocale=$(gettext "Selecionar localidade do sistema")
+	cmsg_descWm=$(gettext "Selecionar interface gráfico/gerenciador de janelas")
+	cmsg_descDm=$(gettext "Selecionar gerenciador de login")
+	cmsg_descWifi=$(gettext "Definir rede e senha wifi (opcional)")
+	cmsg_opcional=$(gettext "opcional")
+	cmsg_Usuario=$(gettext "Usuário")
+	cmsg_descExtra=$(gettext "Definir usuário,senha,hostname")
+	cmsg_descInstalar=$(gettext "Iniciar instalação")
+	cmsg_descSair=$(gettext "Encerrar instalação")
+	cmsg_InstalacaoAbortada=$(gettext "Instalação abortada")
+	cmsg_ChecandoRota=$(gettext "Checando rota de internet para o servidor")
+	cmsg_falhaAbertura=$(gettext "ERRO: falha de abertura de")
+	cmsg_operNotRoot=$(gettext "erro: você não pode realizar esta operação a menos que seja root.")
+	cmsg_operNotSupported=$(gettext "erro: operação não suportada")
+	cmsg_ButtonBack=$(gettext "Voltar")
+	cmsg_ButtonFeito=$(gettext "Feito")
+	cmsg_ButtonEscolher=$(gettext "Escolher")
+	cmsg_ButtonSelecionar=$(gettext "Selecionar")
+	cmsg_ButtonCancelar=$(gettext "Cancelar")
+	cmsg_ButtonRevisar=$(gettext "Revisar")
+	cmsg_ButtonProsseguir=$(gettext "Prosseguir")
+	cmsg_info_disco=$(gettext "Info disco")
+	cmsg_info_particao=$(gettext "Info partição")
+	cmsg_ok=$(gettext "Ok")
+	cmsg_Exit=$(gettext "Sair")
+	cmsg_Select=$(gettext "Selecionar")
+	cmsg_disco_origem=$(gettext "DISCO DE ORIGEM")
+	cmsg_Source=$(gettext "Fonte")
+	cmsg_disco_destino=$(gettext "DISCO DE DESTINO")
+	cmsg_dest=$(gettext "Escolha o disco de DESTINO:")
+	cmsg_yeslabel=$(gettext "Sim")
+	cmsg_nolabel=$(gettext "Não")
+	cmsg_todos_os_dados_serao_perdidos=$(gettext "Ao prosseguir, todos os dados disco DESTINO serão perdidos!")
+	cwarning=$(gettext "=== AVISO ===")
+	cmsg_DismountFileSystem=$(gettext "Desmontando sistema de arquivos")
+	cmsg_FinalizadaComSucesso=$(gettext "Instalação finalizada com sucesso")
+	cmsg_ErroTar=$(gettext "Falha ao descompactar o tarball")
+	cmsg_Para=$(gettext "para")
+	cmsg_ConfSalva=$(gettext "Configurações salvas para instalação")
+	cmsg_Operacao=$(gettext "nenhuma operação especificada - usar -h para ajuda")
+	cmsg_OneOperacao=$(gettext "apenas uma operação pode ser usada por vez")
+	cmsg_TestandoDisco=$(gettext "Testando disco")
+	cmsg_ContinuarParticionamento=$(gettext "Continuar com o particionamento em")
+	cmsg_FormatandoParticao=$(gettext "Formatando partição")
+	cmsg_AtivandoServico=$(gettext "Ativando serviço")
+	cmsg_IniciandoServico=$(gettext "Iniciando serviço")
+	cmsg_Permissoes=$(gettext "permissões")
+	cmsg_ChecandoTarball=$(gettext "Checando existência do tarball")
+	cmsg_VerificandoIntegridadeTarball=$(gettext "Verificando a integridade do tarball")
+	cmsg_IniciandoDownload=$(gettext "Iniciando download de")
+	cmsg_CriandoParticoes=$(gettext "Criando partições em")
+	cmsg_CriandoPartSwap=$(gettext "Partição Swap")
+	cmsg_CriandoDiretorio=$(gettext "Criando diretório")
+	cmsg_AtualizandoRepositorio=$(gettext "Atualizando instalação")
+	cmsg_RemovendoPacotesAntigosObseletos=$(gettext "Removendo pacotes antigos/absoletos")
+	cmsg_InstalandoMetaPacotes=$(gettext "Instalando meta pacote X")
+	cmsg_AtualizandoPacotesBase=$(gettext "Atualizando pacotes base")
+	cmsg_AtualizandoPacotesAdicionais=$(gettext "Atualizando pacotes adicionais em")
+	cmsg_part_disk=$(gettext "Visualizar partições do disco")
+	cmsg_TitleDisco=$(gettext "=== ARMAZENAMENTO ===")
+	cmsg_TitleFileSystem=$(gettext "=== FILE SYSTEM ===")
+	cmsg_ChecandoParticoesMontadas=$(gettext "Checando por partições montadas no disco")
+	cmsg_all_mounted_part=$(gettext "O disco selecionado contém partições montadas")
+	cmsgSetKeyboardLayout=$(gettext "Escolher outro layout de teclado")
+	cmsg_LayoutAtual=$(gettext "Layout atual")
+	cmsg_umount_partition=$(gettext "Aguarde, Desmontando particao de trabalho")
+	cmsg_ErroLeituraDisco=$(gettext "Erro de leitura do disco")
+	cmsg_SemRota=$(gettext "Sem rota para o servidor")
+	cmsg_CheckNet=$(gettext "Check sua conexão com a internet!")
+	cmsg_CommandNotFound=$(gettext "não encontrei o comando")
+	cmsg_ImpossivelContinuar=$(gettext "IMPOSSÍVEL CONTINUAR")
+	cmsg_ImpossivelContinuar1=$(gettext "Esse script precisa dos comandos listados acima")
+	cmsg_ImpossivelContinuar2=$(gettext "Instale-os e/ou verifique se estão no seu")
+	cmsg_InstCommand=$(gettext "Instalar o(s) comando(s)")
+	cmsg_RunNew=$(gettext "INFO: Rode novamente o aplicativo")
+	cmsg_RunNewErro=$(gettext "ERRO na instalação dos comandos. Tente manualmente")
+	cmsg_CopiandoCaminhoReserva=$(gettext "Criando inicialização padrão/reserva (roaming) para")
+	cmsg_Error_not_fatal=$(gettext "Erro não fatal. Para mais detalhes veja o log")
+	cmsg_Wm=$(gettext "gerenciador de janelas (wm)")
+	cmsg_Dm=$(gettext "gerenciador de login (dm)")
+	cmsg_TabelaMBR=$(gettext "Tabela MBR (dos)")
+	cmsg_ExtraEfi=$(gettext "✓ Detectado: sistema iniciado em modo EFI")
+	cmsg_ExtraEfiRecommended=$(gettext "✓ Recomendado: EFI")
+	cmsg_ExtraNotEfi=$(gettext "✗ EFI não detectado: sistema iniciado em modo BIOS")
+	cmsg_ExtraNotEfiRecommended=$(gettext "✓ Recomendado: GPT_BIOS ou MBR_BIOS")
+	cmsg_ExtraIso=$(gettext "Detectado boot via ISO ↓ é recomendável instalar ↓")
+	cmsg_ExtraNotIso=$(gettext "ISO não detectado ↓ é recomendável usar NETWORK ↓")
+	cmsg_ExtraNotHostVoid=$(gettext "Host VOID não detectado ↓ é recomendável usar NETWORK↓")
+	welcome=$(gettext "Bem-vindo ao instalador $APP")
+	escolhaIdioma=$(gettext "Escolha o idioma")
+	cmsg_Usuario=$(gettext "Usuário")
+	cmsg_adduser1=$(gettext "Usuário não pode ser root! Novamente?")
+	cmsg_adduser2=$(gettext "Usuário não pode estar vazio! Novamente?")
+	cmsg_adduser3=$(gettext "Senha do usuário não pode ser vazia! Novamente?")
+	cmsg_adduser4=$(gettext "Senha de root não pode ser vazia! Novamente?")
+	cmsg_adduser5=$(gettext "Usuário não pode iniciar com números! Novamente?")
+	cmsg_adduser6=$(gettext "Usuário não pode iniciar com letras maiúsculas! Novamente?")
+	cmsg_adduserCancel=$(gettext "Cadastro de usuário cancelado")
+	cmsg_redewifi=$(gettext "Rede Wi-Fi")
+	cmsg_senhawifi=$(gettext "Senha Wi-Fi")
+	cmsg_interfacewifi=$(gettext "Interface Wi-Fi")
+	cmsg_mkfs=$(gettext "↓ é recomendável ext4 ↓")
+	cmsg_utilvoidservices=$(gettext "Utilitário void-services (opcional)")
+	cmsg_Servicos=$(gettext "Serviços")
+	cmsg_Tema="$(gettext 'Estilo')"
+	cmsg_Usage1=$(gettext "Instalar")
+	cmsg_Usage2=$(gettext "Rodar chroot na partição instalada")
+	cmsg_Usage3=$(gettext "Ativar modo gráfico")
+	cmsg_Usage4=$(gettext "Saída resumida")
+	cmsg_Usage5=$(gettext "Mostrar versão do aplicativo")
+	cmsg_Usage6=$(gettext "Remove cores da saída")
+	cmsg_Usage7=$(gettext "Este help")
+	cmsg_Usage8=$(gettext "Carregar arquivo de configuração")
+	cmsg_Extra1=$(gettext "Nome Completo")
+	cmsg_Extra2=$(gettext "Nome usuario")
+	cmsg_Extra3=$(gettext "Senha usuario")
+	cmsg_Extra4=$(gettext "Senha root")
+	cmsg_Extra6=$(gettext "Disco destino")
+	cmsg_Extra11=$(gettext "Gerenciador Janelas")
+	cmsg_Efi=$(gettext "EFI + GPT (recomendado) PCs modernos")
+	cmsg_BiosGpt=$(gettext "BIOS + GPT Compatibilide avançada")
+	cmsg_BiosMbr=$(gettext "BIOS + MBR Computadores antigos")
+	cmsg_TabelaGPT=$(gettext "Tabela GPT")
+	cmsg_NotConfDefault=$(gettext "não foi configurado!")
+	cmsg_NotConfDisco=$(gettext "Disco não foi configurado!")
+	cmsg_NotConfFileSystem=$(gettext "Filesystem não foi configurado!")
+	cmsg_NotConfBootLoader=$(gettext "Bootloader não foi configurado!")
+	cmsg_NotConfTeclado=$(gettext "Teclado não foi configurado!")
+	cmsg_NotConfTimezone=$(gettext "Timezone não foi configurado!")
+	cmsg_NotConfWm=$(gettext "Gerenciador de Janelas não foi configurado!")
+	cmsg_NotConfWifi=$(gettext "Rede wifi não foi configurado!")
+	cmsg_NotConfExtra=$(gettext "Usuário não foi configurado!")
+	cmsg_DefinirAudioServer=$(gettext "Selecionar sistema de áudio")
+}
+
+sh_get_wifi_interface() {
+	local i
+	for i in /sys/class/net/*; do
+		[[ -d "$i/wireless" ]] && {
+			basename "$i"
+			return 0
+		}
+	done
+	return 1
+}
+
+sh_get_wifi_ssid() {
+  local iface="${1:-$(get_wifi_interface)}"
+  nmcli -g GENERAL.CONNECTION device show "$iface" 2>/dev/null
+}
+
+sh_get_ip_iface() {
+  local iface="${1:-$(get_wifi_interface)}"
+  ip -4 -o addr show dev "$iface" | awk '{print $4}'
+}
+
+sh_get_iface() {
+	local array=()
+	local iface_array=()
+	local iface
+	local wifi
+	local line
+	local n=0
+	local nc=0
+	local exit_status
+	local sep="\xe2\x94\x82"
+
+	# Detecta interfaces wifi
+	if pgrep -x NetworkManager >/dev/null 2>&1; then
+		while IFS=: read -r device type state connection; do
+			[[ "$type" == wifi ]] || continue
+			[[ -n "$device" ]] || continue
+			iface_array+=("$device" "")
+		done < <(
+			nmcli --terse \
+				-f DEVICE,TYPE,STATE,CONNECTION \
+				device status
+		)
+	else
+		for iface in /run/wpa_supplicant/*; do
+			[[ -S "$iface" ]] || continue
+			iface="${iface##*/}"
+			[[ "$iface" == p2p-* ]] && continue
+			iface_array+=("$iface" "")
+		done
+	fi
+
+	# Nenhuma interface encontrada
+	if [[ "${#iface_array[@]}" -eq 0 ]]; then
+		info "WIFI" \
+			"\n\n${RED}$(gettext "Nenhuma interface Wi-Fi encontrada.")"
+		return 1
+	fi
+
+	# Seleciona interface
+	iface=$(${DIALOG} \
+		--backtitle "$ccabec" \
+		--title "WIFI" \
+		--ok-label "${cmsg_Aceitar}" \
+		--cancel-label "${cmsg_ButtonBack}" \
+		--menu "$(gettext "Selecione a interface Wi-Fi")" \
+		0 0 10 \
+		"${iface_array[@]}" \
+		2>&1 >/dev/tty)
+
+	exit_status=$?
+	case $exit_status in
+	"$D_ESC" | "$D_CANCEL")
+		return 1
+		;;
+	esac
+	AConfWifi[_INTERFACE]="$iface"
+	return 0
+}
+
+sh_choosewifi() {
+	while true; do
+		local array=()
+		local iface_array=()
+		local iface
+		local wifi
+		local line
+		local n=0
+		local nc=0
+		local exit_status
+		local sep="\xe2\x94\x82"
+		unset ARRAY_{SSID,BSID,SIGNAL,FREQUENCY,FLAGS}
+
+		#		iface="$( sh_get_iface)"
+		if ! sh_get_iface; then
+			return 1
+		fi
+		iface="${AConfWifi[_INTERFACE]}"
+		exit_status=$?
+
+		case $exit_status in
+		"$D_ESC" | "$D_CANCEL")
+			return
+			;;
+		esac
+
+		sh_info_msg "$(gettext 'Escaneando redes wifi...')"
+
+		# NetworkManager
+		if pgrep -x NetworkManager >/dev/null 2>&1; then
+			while IFS=: read -r \
+				inuse \
+				b1 b2 b3 b4 b5 b6 \
+				ssid mode chan rate signal bars security; do
+				[[ -n "$ssid" ]] || continue
+				bssid="${b1}:${b2}:${b3}:${b4}:${b5}:${b6}"
+				ARRAY_SSID+=("$ssid")
+				ARRAY_BSID+=("$bssid")
+				ARRAY_SIGNAL+=("$signal")
+				ARRAY_FREQUENCY+=("$chan")
+				ARRAY_FLAGS+=("$security")
+			done < <(
+				nmcli --terse \
+					--escape no \
+					-f IN-USE,BSSID,SSID,MODE,CHAN,RATE,SIGNAL,BARS,SECURITY \
+					device wifi list ifname "$iface"
+			)
+			# wpa_supplicant fallback
+		else
+			wpa_cli -p /run/wpa_supplicant -i "$iface" scan \
+				2>&1 | tee -i -a "$BOOTLOG" >$LOGGER
+			sleep 3
+			while read -r line; do
+				[[ -n "$line" ]] || continue
+				ARRAY_BSID+=("$(cut -f1 <<<"$line")")
+				ARRAY_FREQUENCY+=("$(cut -f2 <<<"$line")")
+				ARRAY_SIGNAL+=("$(cut -f3 <<<"$line")")
+				ARRAY_FLAGS+=("$(cut -f4 <<<"$line")")
+				ARRAY_SSID+=("$(cut -f5- <<<"$line")")
+			done < <(
+				wpa_cli -p /run/wpa_supplicant -i "$iface" scan_results |
+					tail -n +3
+			)
+		fi
+
+		# Nenhuma rede encontrada
+		if [[ "${#ARRAY_SSID[@]}" -eq 0 ]]; then
+			info "WIFI" \
+				"${RED}$(gettext "Nenhuma rede wifi encontrada.")"
+			return 1
+		fi
+
+		# Monta menu
+		nc=0
+		for wifi in "${ARRAY_SSID[@]}"; do
+			array[n++]="$nc"
+			array[n++]=$(
+				printf "%-30s $sep %-17s $sep %3s%% $sep %-20s" \
+					"${ARRAY_SSID[$nc]}" \
+					"${ARRAY_BSID[$nc]}" \
+					"${ARRAY_SIGNAL[$nc]}" \
+					"${ARRAY_FLAGS[$nc]}"
+			)
+			((nc++))
+		done
+
+		# Seleciona rede
+		wifi=$(${DIALOG} \
+			--default-item "0" \
+			--backtitle "$ccabec" \
+			--title "WIFI" \
+			--ok-label "${cmsg_Aceitar}" \
+			--cancel-label "${cmsg_ButtonBack}" \
+			--colors \
+			--menu "${cmsg_MENU}" \
+			0 0 15 \
+			"${array[@]}" \
+			2>&1 >/dev/tty)
+
+		exit_status=$?
+		case $exit_status in
+		"$D_ESC" | "$D_CANCEL")
+			return
+			;;
+		esac
+		_WIFI_NETWORK="${ARRAY_SSID[$wifi]}"
+		AConfWifi[_NETWORK]="${ARRAY_SSID[$wifi]}"
+		break
+	done
+}
+
+sh_confWifi() {
+	local iface
+	local wlanip
+	local cextra
+
+	if iface="$(sh_get_wifi_interface)"; then
+		wlanip="$(sh_get_ip_iface "$iface")"
+		_WIFI_CONNECTED="$(sh_get_wifi_ssid "$iface")"
+		_WIFI_NETWORK="$_WIFI_CONNECTED"
+	fi
+
+	cextra+="➡ ${YELLOW}$(gettext 'Deixe em branco o campo Interface Wi-Fi para listar interfaces')\n"
+	cextra+="➡ ${YELLOW}$(gettext 'Deixe em branco o campo Rede Wi-Fi para escanear redes')"
+
+	while true; do
+		exec 3>&1
+		wifitext=$(${DIALOG} \
+			--title "$(gettext "=== WIFI ===")" \
+			--colors \
+			--ok-label "${cmsg_Conectar}" \
+			--cancel-label "${cmsg_ButtonBack}" \
+			--backtitle "$ccabec" \
+			--insecure "$@" \
+			--extra-button \
+			--extra-label "Scan wifi" \
+			--mixedform "${cmsg_MENU}\n\n${cextra}" \
+			17 80 5 \
+			"Rede conectada        : " 1 1 "$_WIFI_CONNECTED" 1 20 40 0 2 \
+			"Ip                    : " 2 1 "$wlanip" 2 20 40 0 2 \
+			"${cmsg_interfacewifi} : " 3 1 "${iface}" 3 20 40 0 0 \
+			"${cmsg_redewifi}      : " 4 1 "$_WIFI_NETWORK" 4 20 40 0 0 \
+			"${cmsg_senhawifi}     : " 5 1 "$_WIFI_PASSWORD" 5 20 40 0 1 \
+			2>&1 1>&3)
+
+		exit_status=$?
+		case $exit_status in
+		"$D_ESC" | "$D_CANCEL")
+			return
+			;;
+		"$D_OK")
+			mapfile -t aWifi <<<"$wifitext"
+			iface="${aWifi[2]}"
+			_WIFI_NETWORK="${aWifi[3]}"
+			_WIFI_PASSWORD="${aWifi[4]}"
+			AConfWifi[_NETWORK]="${aWifi[3]}"
+			AConfWifi[_PASSWORD]="${aWifi[4]}"
+			LWIFI=1
+
+			if [[ "${iface}" == "" ]]; then
+				if sh_get_iface; then
+					iface="${AConfWifi[_INTERFACE]}"
+				fi
+				continue
+			fi
+
+			if [[ "${AConfWifi[_NETWORK]}" == "" ]]; then
+				sh_choosewifi
+				continue
+			fi
+
+			if output=$(
+				nmcli device wifi connect "${_WIFI_NETWORK}" \
+					password "${_WIFI_PASSWORD}" \
+					ifname "$iface" 2>&1
+			); then
+
+				sleep 2
+
+				wifi_ip=$(
+					nmcli -g IP4.ADDRESS device show "$iface" |
+						head -n1
+				)
+
+				wifi_gateway=$(
+					nmcli -g IP4.GATEWAY device show "$iface" |
+						head -n1
+				)
+
+				wifi_dns=$(
+					nmcli -g IP4.DNS device show "$iface" |
+						paste -sd ','
+				)
+
+				info "${_WIFI_NETWORK}" "\
+${GREEN}Conectado com sucesso!${RST}\n\n\
+Interface: ${YELLOW}$iface${RST}\n\
+SSID     : ${YELLOW}${_WIFI_NETWORK}${RST}\n\
+BSSID    : $bssid\n\
+IP       : ${YELLOW}${wifi_ip:-N/A}${RST}\n\
+Gateway  : ${wifi_gateway:-N/A}\n\
+DNS      : ${wifi_dns:-N/A}\n\
+Sinal    : ${signal:-N/A}%\n\
+Segurança: ${security:-N/A}\n\
+"
+			else
+				if conf "WIFI" \
+					"${RED}Falha ao conectar.${RST}\n\n" \
+					"result: $output" \
+					"\n\n${BOLD}${RED}$(gettext "Deseja escanear por redes wifi?")\n\n"; then
+					sh_choosewifi
+					continue
+				fi
+			fi
+			;;
+		3)
+			sh_choosewifi
+			continue
+			;;
+		esac
+		exec 3>&-
+		return 0
+	done
+}
+
+sh_setEnvironment
+sh_setLanguage
+sh_setVarColors
+sh_setAsciiLines
+sh_setLogPrefix
+sh_checkroot "$@"
+sh_confWifi
