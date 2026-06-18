@@ -1825,6 +1825,50 @@ $cLB7 ${ccolor}↵ ENTER${RESET} ou ${ccolor}BARRA DE ESPAÇO${RESET} $cLB8"
 	cmsg_DefinirAudioServer=$(gettext "Selecionar sistema de áudio")
 }
 
+select_wifi_backend() {
+	local options=()
+	local choice
+
+	command -v nmcli >/dev/null 2>&1 &&
+		options+=(NetworkManager "NetworkManager (recomendado)")
+
+	command -v iwctl >/dev/null 2>&1 &&
+		options+=(iwd "iwd")
+
+	command -v wpa_cli >/dev/null 2>&1 &&
+		options+=(wpa_supplicant "wpa_supplicant")
+
+	case $((${#options[@]} / 2)) in
+	0) return 1 ;;
+	1)
+		printf '%s\n' "${options[0]}"
+		return 0
+		;;
+	esac
+
+	choice="$(
+		${DIALOG} \
+      --title "$(gettext "=== WIFI backend ===")" \
+      --colors \
+      --ok-label "${cmsg_ButtonEscolher}" \
+      --cancel-label "${cmsg_Exit}" \
+      --backtitle "$ccabec" \
+      --insecure "$@" \
+			--stdout \
+			--menu "Selecione o backend Wi-Fi:" \
+			15 60 5 \
+			"${options[@]}"
+	)"
+
+  exit_status=$?
+	case $exit_status in
+	"$D_ESC" | "$D_CANCEL")
+		exit 0
+		;;
+	esac
+	backend="$choice"
+}
+
 sh_get_wifi_backend() {
 	if pgrep -x NetworkManagerX >/dev/null 2>&1; then
 		printf '%s\n' NetworkManager
@@ -1877,7 +1921,6 @@ sh_get_ip_iface() {
 sh_get_iface() {
 	local array=()
 	local iface_array=()
-	local iface
 	local wifi
 	local line
 	local n=0
@@ -1914,14 +1957,16 @@ sh_get_iface() {
 
 	# Seleciona interface
 	iface=$(${DIALOG} \
+	  --stdout \
+	  --colors \
 		--backtitle "$ccabec" \
-		--title "WIFI" \
+		--title "== WIFI - interface ==" \
 		--ok-label "${cmsg_Aceitar}" \
 		--cancel-label "${cmsg_ButtonBack}" \
 		--menu "$(gettext "Selecione a interface Wi-Fi")" \
-		0 0 10 \
-		"${iface_array[@]}" \
-		2>&1 >/dev/tty)
+		0 0 0 \
+		"${iface_array[@]}")
+#		2>&1 >/dev/tty)
 
 	exit_status=$?
 	case $exit_status in
@@ -2127,11 +2172,11 @@ sh_choosewifi() {
 }
 
 sh_nm_release_iface() {
-  local iface="$1"
+	local iface="$1"
 
-  command -v nmcli >/dev/null 2>&1 || return 0
-  nmcli device disconnect "$iface" &>/dev/null
-  nmcli device set "$iface" managed no &>/dev/null
+	command -v nmcli >/dev/null 2>&1 || return 0
+	nmcli device disconnect "$iface" &>/dev/null
+	nmcli device set "$iface" managed no &>/dev/null
 }
 
 sh_confWifi() {
@@ -2139,24 +2184,27 @@ sh_confWifi() {
 	local wlanip
 	local cextra
 
-	if iface="$(sh_get_wifi_interface)"; then
+#	if iface="$(sh_get_wifi_interface)"; then
+  if sh_get_iface; then
+		select_wifi_backend
 		if ! _WIFI_CONNECTED="$(sh_get_wifi_ssid "$iface")"; then
 			info \
 				"WIFI BackEnd" \
 				"\n${RED}$(gettext "Nenhum backend Wi-Fi encontrado.")" \
 				"\n${CYAN}$(gettext "Instale o NetworkManager, ou iwd, ou wpa_supplicant.")"
 			return 1
-    fi
-    wlanip="$(sh_get_ip_iface "$iface")"
-    _WIFI_NETWORK="$_WIFI_CONNECTED"
-  else
-		info \
-			"WIFI interface" \
-			"\n${RED}$(gettext "Nenhuma interface Wi-Fi encontrado.")"
-		return 1
-  fi
+		fi
+		wlanip="$(sh_get_ip_iface "$iface")"
+		_WIFI_NETWORK="$_WIFI_CONNECTED"
+	else
+#		info \
+#			"WIFI interface" \
+#			"\n${RED}$(gettext "Nenhuma interface Wi-Fi encontrado.")"
+#		return 1
+    exit 0
+	fi
 
-  #debug "1=$_WIFI_NETWORK 2=$_WIFI_CONNECTED"
+	#debug "1=$_WIFI_NETWORK 2=$_WIFI_CONNECTED"
 
 	cextra+="➡ ${YELLOW}$(gettext 'Deixe em branco o campo Interface Wi-Fi para listar interfaces')\n"
 	cextra+="➡ ${YELLOW}$(gettext 'Deixe em branco o campo Rede Wi-Fi para escanear redes')"
@@ -2164,7 +2212,8 @@ sh_confWifi() {
 	while true; do
 		exec 3>&1
 		wifitext=$(${DIALOG} \
-			--title "$(gettext "=== WIFI ===")" \
+      --stdout \
+    	--title "$(gettext "=== WIFI ===")" \
 			--colors \
 			--ok-label "${cmsg_Conectar}" \
 			--cancel-label "${cmsg_ButtonBack}" \
@@ -2173,13 +2222,16 @@ sh_confWifi() {
 			--extra-button \
 			--extra-label "Scan wifi" \
 			--mixedform "${cmsg_MENU}\n\n${cextra}" \
-			17 80 5 \
-			"Rede conectada        : " 1 1 "$_WIFI_CONNECTED" 1 20 40 0 2 \
-			"Ip                    : " 2 1 "$wlanip" 2 20 40 0 2 \
-			"${cmsg_interfacewifi} : " 3 1 "${iface}" 3 20 40 0 0 \
-			"${cmsg_redewifi}      : " 4 1 "$_WIFI_NETWORK" 4 20 40 0 0 \
-			"${cmsg_senhawifi}     : " 5 1 "$_WIFI_PASSWORD" 5 20 40 0 1 \
-			2>&1 1>&3)
+			19 80 7 \
+			"Backend               : " 1 1 "$backend" 1 20 40 0 2 \
+			"Interface             : " 2 1 "$iface"   2 20 40 0 2 \
+			"Rede conectada        : " 3 1 "$_WIFI_CONNECTED" 3 20 40 0 2 \
+			"Ip                    : " 4 1 "$wlanip" 4 20 40 0 2 \
+			"${cmsg_interfacewifi} : " 5 1 "${iface}" 5 20 40 0 0 \
+			"${cmsg_redewifi}      : " 6 1 "$_WIFI_NETWORK" 6 20 40 0 0 \
+			"${cmsg_senhawifi}     : " 7 1 "$_WIFI_PASSWORD" 7 20 40 0 1
+			)
+#			2>&1 1>&3)
 
 		exit_status=$?
 		case $exit_status in
@@ -2188,18 +2240,20 @@ sh_confWifi() {
 			;;
 		"$D_OK")
 			mapfile -t aWifi <<<"$wifitext"
-#      debug "" "0-${aWifi[0]}\n" \
-#            "1-${aWifi[1]}\n" \
-#            "2-${aWifi[2]}\n" \
-#            "3-${aWifi[3]}\n" \
-#            "4-${aWifi[4]}\n" \
-#            "5-${aWifi[5]}\n"
+			#      debug "" "0-${aWifi[0]}\n" \
+			#            "1-${aWifi[1]}\n" \
+			#            "2-${aWifi[2]}\n" \
+			#            "3-${aWifi[3]}\n" \
+			#            "4-${aWifi[4]}\n" \
+			#            "5-${aWifi[5]}\n" \
+			#            "6-${aWifi[6]}\n"
+			#            "7-${aWifi[7]}\n"
 
-			iface="${aWifi[2]}"
-			_WIFI_NETWORK="${aWifi[3]}"
-			_WIFI_PASSWORD="${aWifi[4]}"
-			AConfWifi[_NETWORK]="${aWifi[3]}"
-			AConfWifi[_PASSWORD]="${aWifi[4]}"
+			iface="${aWifi[4]}"
+			_WIFI_NETWORK="${aWifi[5]}"
+			_WIFI_PASSWORD="${aWifi[6]}"
+			AConfWifi[_NETWORK]="${aWifi[5]}"
+			AConfWifi[_PASSWORD]="${aWifi[6]}"
 			LWIFI=1
 
 			if [[ "${iface}" == "" ]]; then
@@ -2247,8 +2301,8 @@ sh_confWifi() {
 				# garante que o dhcpcd releia a configuração
 				dhcpcd -k "$iface" 2>/dev/null
 
-        # libera outra conexao se existir
-        sh_nm_release_iface "$iface"
+				# libera outra conexao se existir
+				sh_nm_release_iface "$iface"
 
 				# conecta!
 				iwctl --passphrase "$_WIFI_PASSWORD" \
