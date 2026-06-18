@@ -1881,7 +1881,14 @@ sh_get_wifi_backend() {
 	fi
 }
 
-sh_get_wifi_interface() {
+sh_get_wifi_interfaces() {
+  local i
+  for i in /sys/class/net/*; do
+    [[ -d "$i/wireless" ]] && basename "$i"
+  done
+}
+
+sh_get_wifi_interfaceOLD() {
 	local i
 	for i in /sys/class/net/*; do
 		[[ -d "$i/wireless" ]] && {
@@ -1928,32 +1935,40 @@ sh_get_iface() {
 	local exit_status
 	local sep="\xe2\x94\x82"
 
-	# Detecta interfaces wifi
-	if pgrep -x NetworkManager >/dev/null 2>&1; then
-		while IFS=: read -r device type state connection; do
-			[[ "$type" == wifi ]] || continue
-			[[ -n "$device" ]] || continue
-			iface_array+=("$device" "")
-		done < <(
-			nmcli --terse \
-				-f DEVICE,TYPE,STATE,CONNECTION \
-				device status
-		)
-	else
-		for iface in /run/wpa_supplicant/*; do
-			[[ -S "$iface" ]] || continue
-			iface="${iface##*/}"
-			[[ "$iface" == p2p-* ]] && continue
-			iface_array+=("$iface" "")
-		done
-	fi
+#	# Detecta interfaces wifi
+#	if pgrep -x NetworkManager >/dev/null 2>&1; then
+#		while IFS=: read -r device type state connection; do
+#			[[ "$type" == wifi ]] || continue
+#			[[ -n "$device" ]] || continue
+#			iface_array+=("$device" "")
+#		done < <(
+#			nmcli --terse \
+#				-f DEVICE,TYPE,STATE,CONNECTION \
+#				device status
+#		)
+#	else
+#		for iface in /run/wpa_supplicant/*; do
+#			[[ -S "$iface" ]] || continue
+#			iface="${iface##*/}"
+#			[[ "$iface" == p2p-* ]] && continue
+#			iface_array+=("$iface" "")
+#		done
+#	fi
 
-	# Nenhuma interface encontrada
+  # Detecta interfaces wifi
+  mapfile -t iface_array < <(sh_get_wifi_interfaces)
+
+	# Nenhuma interface encontrada ?
 	if [[ "${#iface_array[@]}" -eq 0 ]]; then
 		info "WIFI" \
 			"\n\n${RED}$(gettext "Nenhuma interface Wi-Fi encontrada.")"
 		return 1
 	fi
+
+  menu_items=()
+  for iface in "${iface_array[@]}"; do
+    menu_items+=("$iface" "$(cat "/sys/class/net/$iface/device/uevent" 2>/dev/null | grep '^DRIVER=' | cut -d= -f2)")
+  done
 
 	# Seleciona interface
 	iface=$(${DIALOG} \
@@ -1965,8 +1980,9 @@ sh_get_iface() {
 		--cancel-label "${cmsg_ButtonBack}" \
 		--menu "$(gettext "Selecione a interface Wi-Fi")" \
 		0 0 0 \
-		"${iface_array[@]}")
-#		2>&1 >/dev/tty)
+    "${menu_items[@]}")
+#		"${iface_array[@]}")
+#   2>&1 >/dev/tty)
 
 	exit_status=$?
 	case $exit_status in
