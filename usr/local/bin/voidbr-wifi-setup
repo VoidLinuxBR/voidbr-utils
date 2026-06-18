@@ -1860,12 +1860,10 @@ sh_get_wifi_ssid() {
 		nmcli -g GENERAL.CONNECTION device show "$iface" 2>/dev/null
 		;;
 	iwd)
-		iwctl station "$iface" show 2>/dev/null |
-			awk -F': ' '/Connected network/ {print $2}'
+		iwctl station "$iface" show 2>/dev/null | awk -F': ' '/Connected network/ {print $2}'
 		;;
 	wpa_supplicant)
-		wpa_cli -i "$iface" status 2>/dev/null |
-			awk -F= '/^ssid=/{print $2}'
+		wpa_cli -i "$iface" status 2>/dev/null | awk -F= '/^ssid=/{print $2}'
 		;;
 	esac
 	return 0
@@ -1873,7 +1871,7 @@ sh_get_wifi_ssid() {
 
 sh_get_ip_iface() {
 	local iface="${1:-$(get_wifi_interface)}"
-	ip -4 -o addr show dev "$iface" | awk '{print $4}'
+	ip -4 -o addr show dev "$iface" | awk '{print $4}' | head -1
 }
 
 sh_get_iface() {
@@ -2112,7 +2110,7 @@ sh_choosewifi() {
 			--cancel-label "${cmsg_ButtonBack}" \
 			--colors \
 			--menu "${cmsg_MENU}" \
-			0 0 2 \
+			0 0 0 \
 			"${array[@]}" \
 			2>&1 >/dev/tty)
 
@@ -2128,22 +2126,37 @@ sh_choosewifi() {
 	done
 }
 
+sh_nm_release_iface() {
+  local iface="$1"
+
+  command -v nmcli >/dev/null 2>&1 || return 0
+  nmcli device disconnect "$iface" &>/dev/null
+  nmcli device set "$iface" managed no &>/dev/null
+}
+
 sh_confWifi() {
 	local iface
 	local wlanip
 	local cextra
 
 	if iface="$(sh_get_wifi_interface)"; then
-		wlanip="$(sh_get_ip_iface "$iface")"
 		if ! _WIFI_CONNECTED="$(sh_get_wifi_ssid "$iface")"; then
 			info \
 				"WIFI BackEnd" \
 				"\n${RED}$(gettext "Nenhum backend Wi-Fi encontrado.")" \
 				"\n${CYAN}$(gettext "Instale o NetworkManager, ou iwd, ou wpa_supplicant.")"
 			return 1
-		fi
-		_WIFI_NETWORK="$_WIFI_CONNECTED"
-	fi
+    fi
+    wlanip="$(sh_get_ip_iface "$iface")"
+    _WIFI_NETWORK="$_WIFI_CONNECTED"
+  else
+		info \
+			"WIFI interface" \
+			"\n${RED}$(gettext "Nenhuma interface Wi-Fi encontrado.")"
+		return 1
+  fi
+
+  #debug "1=$_WIFI_NETWORK 2=$_WIFI_CONNECTED"
 
 	cextra+="➡ ${YELLOW}$(gettext 'Deixe em branco o campo Interface Wi-Fi para listar interfaces')\n"
 	cextra+="➡ ${YELLOW}$(gettext 'Deixe em branco o campo Rede Wi-Fi para escanear redes')"
@@ -2175,6 +2188,13 @@ sh_confWifi() {
 			;;
 		"$D_OK")
 			mapfile -t aWifi <<<"$wifitext"
+#      debug "" "0-${aWifi[0]}\n" \
+#            "1-${aWifi[1]}\n" \
+#            "2-${aWifi[2]}\n" \
+#            "3-${aWifi[3]}\n" \
+#            "4-${aWifi[4]}\n" \
+#            "5-${aWifi[5]}\n"
+
 			iface="${aWifi[2]}"
 			_WIFI_NETWORK="${aWifi[3]}"
 			_WIFI_PASSWORD="${aWifi[4]}"
@@ -2189,7 +2209,7 @@ sh_confWifi() {
 				continue
 			fi
 
-			if [[ "${AConfWifi[_NETWORK]}" == "" ]]; then
+			if [[ -z "${AConfWifi[_NETWORK]}" ]]; then
 				sh_choosewifi
 				continue
 			fi
@@ -2227,12 +2247,15 @@ sh_confWifi() {
 				# garante que o dhcpcd releia a configuração
 				dhcpcd -k "$iface" 2>/dev/null
 
+        # libera outra conexao se existir
+        sh_nm_release_iface "$iface"
+
 				# conecta!
 				iwctl --passphrase "$_WIFI_PASSWORD" \
 					station "$iface" connect "$_WIFI_NETWORK"
 
 				# solicita configuração IP
-				dhcpcd "$iface"
+				dhcpcd "$iface" 2>/dev/null
 				;;
 			wpa_supplicant)
 				;;
