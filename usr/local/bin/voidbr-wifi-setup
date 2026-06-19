@@ -1961,6 +1961,7 @@ sh_get_iface() {
 
 	# Nenhuma interface encontrada ?
 	if [[ "${#iface_array[@]}" -eq 0 ]]; then
+    show_network_diagnostics
 		info "WIFI" \
 			"\n\n${RED}$(gettext "Nenhuma interface Wi-Fi encontrada.")"
 		return 1
@@ -2188,6 +2189,26 @@ sh_choosewifi() {
 		AConfWifi[_NETWORK]="${ARRAY_SSID[$wifi]}"
 		break
 	done
+}
+
+# Função para exibir o diagnóstico de rede
+show_network_diagnostics() {
+  local MENSAGEM="Para ativar a interface de rede, siga estes passos no terminal:
+
+1. Identifique o dispositivo:
+   $ lspci -knn | grep -iA3 net
+
+2. Carregue o driver necessário:
+   $ sudo modprobe <nome_do_driver>
+
+3. Levante a interface:
+   $ sudo ip link set <interface> up
+
+4. Verifique se há firmware faltando:
+   $ dmesg | grep -i firmware"
+
+    # Exibe o diálogo (requer o pacote 'dialog' instalado)
+    dialog --title "Diagnóstico de Rede" --msgbox "$MENSAGEM" 20 60
 }
 
 sh_nm_release_iface() {
