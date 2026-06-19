@@ -51,7 +51,21 @@ shopt -s extglob
 #system
 readonly APP="${0##*/}"
 readonly _VERSION_='0.6.18-20260618'
-declare -g DEPENDENCIES=(dialog gettext nmcli tput awk tar sed cat grep sort tr ip)
+declare -g DEPENDENCIES=(
+    dialog
+    gettext
+    nmcli
+    tput
+    awk
+    tar
+    sed
+    cat
+    grep
+    sort
+    tr
+    ip
+    iw
+)
 declare -gA PACKAGEDEP=(
 	['dialog']='dialog'
 	['gettext']='gettext'
@@ -67,7 +81,6 @@ declare -gA PACKAGEDEP=(
 	['ip']='iproute2'
 	['iw']='iw'
 )
-readonly LOCKFILE="/tmp/void-install.lock"
 declare -gA DISTRO_PKGS=(
 	["void"]="dialog gettext NetworkManager ncurses gawk tar sed coreutils grep iproute2 iw"
 	["void-live"]="dialog gettext NetworkManager ncurses gawk tar sed coreutils grep iproute2 iw"
@@ -89,104 +102,19 @@ declare -gA DISTRO_MGR=(
 	["debian"]="apt-get install -y"
 )
 declare backend
-declare LCUSTOM=false
-declare LAUTOLOGIN=false
-declare LEFI=false
-declare LGRUB=false
-declare LDISK=false
-declare LMIRROR=true
-declare LSOURCE=true
-declare LKEYMAP=true
-declare LTIMEZONE=true
-declare LKERNEL=true
-declare LWM=true
-declare LDM=true
-declare LAUTO=true
-declare LMKPARTED=false
-declare LFSREVISED=false
-declare LFS=false
-declare LPARTITION=false
-declare LBIND=false
-declare LBIOS=true
-declare LOSPROBER=false
-declare LCHROOT=false
-declare LINSTALL=false
-declare HYPRLAND=false
-declare LVM=false
-declare LFDE=false
-declare LONLY_TTY=true
-declare LAUDIO=false
-declare LSERVER=false
-declare LDHCP=false
-declare LEXTRA=false
-declare LLOCALE=true
-declare LXORG=false
-#
+declare iface
 declare DEFITEM
-#
-declare -gi njobs=73
+declare -gi njobs=3
 declare -gi ncounter=0
 declare -gi quiet=0
 declare -gi grafico=1
+declare _WIFI_NETWORK=""
+declare _WIFI_PASSWORD=""
+declare dialogRcFile="$HOME/.dialogrc"
 #
-declare -ga aCustomPackages=()
-declare -gA Amkfs
-declare -gA Amntpoint
-declare -gA AmntpointFDE
-declare -gA AARRAY_DSK_DEVICES
-declare -gA AARRAY_PART_DEVICES
-declare -gA AARRAY_VG_DEVICES
-#
-declare -gA AsUser=(
-	[cpass]='voidlinux'
-	[cpassroot]='voidlinux'
-	[chostname]='voidlinux'
-	[cgroups]='wheel,audio,video,tty,floppy,cdrom,optical,kvm,xbuilder'
-)
-#
-declare -gA AConfFde=(
-	[partition]=''
-	[vg]='voidvm'
-	[passphrase]='voidlinux'
-	[verifypassphrase]='voidlinux'
-	[lvroot]='25%'
-	[lvswap]='2%'
-	[lvvar]=''
-	[lvhome]='100%'
-)
-declare -gA AConfDisk=(
-	[_DEVICE]='/dev/sdX'
-	[_FILESYSTEM]='ext4'
-	[_DISKTABLE]=''
-	[_BOOTLOADER]='/dev/sdX'
-	[_OSPROBER]=false
-)
-declare -gA AConfLocale=(
-	[_TIMEZONE]='America/Sao_Paulo'
-	[_KEYMAP]='br-abnt2'
-	[_CLOCK]='UTC'
-	[_FONT]='Uni2-TerminusBold16'
-	[_LOCALE]='pt_BR.utf8'
-	[_REGION]='Portuguese Brazil'
-)
-declare -gA AConfMirror=(
-	[_SOURCE]='network'
-	#	[_MIRROR]='repo.fastly.voidlinux.org'
-	#	[url_mirror]='https://repo-fastly.voidlinux.org'
-	#	[location]='Fastly Global CDN'
-	[_MIRROR]='void.voidbr.org'
-	[url_mirror]='https://void.voidbr.org/voidlinux/'
-	[location]='M. do Paranapanema, Brazil'
-)
-declare -gA AConfAudio=(
-	[_AUDIOSERVER]='None'
-)
-declare -gA AConfKernel=(
-	[_KERNEL]='linux'
-)
 declare -gA AConfWifi=(
-	[_NETWORK]='wifi_ssid'
-	[_PASSWORD]='wifi_password'
+	[_NETWORK]=''
+	[_PASSWORD]=''
 )
 declare -gA Alanguage=(
 	[pt_BR]=0
@@ -212,33 +140,6 @@ declare -gA AsDhcp=(
 	AsDhcp [DNS1]="${AsDhcp[DNS1]:-1.1.1.1}"
 	AsDhcp [DNS2]="${AsDhcp[DNS2]:-8.8.8.8}"
 )
-declare -gA AsDiskPercent=(
-	[_DISKTABLE]="EFI"
-	[root]="100"
-	[boot]="0"
-	[home]="0"
-	[swap]="0"
-)
-declare -gA AsDiskSize=(
-	[root]="0"
-	[boot]="0"
-	[home]="0"
-	[swap]="0"
-)
-declare -gA AsFs=(
-	[_DEVICE]='/dev/sdX'
-	[root]="ext4"
-	[boot]="ext4"
-	[home]="ext4"
-	[swap]="swap"
-)
-
-declare dialogRcFile="$HOME/.dialogrc"
-declare _DISPLAYMANAGER='None'
-declare _WINDOWMANAGER=('tty')
-declare _WM='tty'
-declare _WIFI_NETWORK="wifi_ssid"
-declare _WIFI_PASSWORD="wifi_password"
 
 detect_distro() {
 	local id=""
@@ -389,7 +290,7 @@ die() {
 }
 
 DOT() {
-	printf "%s" "${blue}:: ${reset}"
+    printf "%s" "${blue}:: ${reset}"
 }
 
 sh_create_dialogrc() {
@@ -448,33 +349,12 @@ info_msg() {
 sh_setEnvironment() {
 	[[ ! -e "$dialogRcFile" ]] && sh_create_dialogrc
 
-	declare url_mirror='https://repo-fastly.voidlinux.org/'
-	declare -g app_conf='/tmp/void-install.conf'
-	declare -g dir_install='/mnt/voidlinux'
-	readonly cnickefi='Void_install'
-	readonly _TARBALL_ROOTFS=void-x86_64-base-custom-current.tar.xz
-	readonly url_tarball="https://raw.githubusercontent.com/voidlinuxbr/void-install/refs/heads/main/${_TARBALL_ROOTFS}"
-	readonly url_tarball_md5="https://raw.githubusercontent.com/voidlinuxbr/void-install/refs/heads/main/${_TARBALL_ROOTFS}.md5"
-	#
-	readonly zero=0
-	readonly one=1
+	declare -g app_conf="/tmp/${APP}.conf"
 	readonly err_not_fatal=0
 	readonly err_fatal=1
-	#
 	readonly BOOTLOG="/tmp/${APP}-$(sh_diahora).log"
 	readonly LOGGER='/dev/tty8'
 	shell='/bin/sh'
-
-	# flag disk info
-	: "${DSK_NAME=1}"
-	: "${DSK_SIZE=2}"
-	: "${DSK_TRAN=3}"
-	: "${DSK_MODEL=4}"
-	: "${DSK_LABEL=5}"
-	: "${DSK_SERIAL=6}"
-	: "${DSK_PTTYPE=7}"
-	: "${DSK_FSTYPE=8}"
-	: "${DSK_PARTTYPENAME=9}"
 
 	# flag languages
 	: "${pt_BR=0}"
@@ -497,22 +377,7 @@ sh_setEnvironment() {
 	: "${D_ESC=255}"
 
 	# flag dialog menu
-	: "${LDISK=}"
-	: "${LFS=}"
-	: "${LPARTITION=}"
-	: "${LGRUB=}"
-	: "${LKEYMAP=}"
-	: "${LWM=}"
-	: "${LDM=}"
 	: "${LWIFI=}"
-	: "${LMIRROR=}"
-	: "${LSOURCE=}"
-	: "${LEXTRA=}"
-	: "${LAUDIO=}"
-	: "${LTIMEZONE=}"
-	: "${LKERNEL=}"
-	: "${LFILE=}"
-	: "${LCUSTOM=}"
 
 	# dialog colors
 	GREEN="\Z2"
@@ -558,49 +423,19 @@ sh_setEnvironment() {
 }
 
 sh_touchConf() {
-	#		_WINDOWMANAGER=(${_WINDOWMANAGER[*]})
 	cat >"$app_conf" <<-EOF
 		######################################################################
 		# void-install.conf
-		# Gerado por void-install
+		# Gerado por voidbr-wifi-setup
 		######################################################################
 		WIFI_NETWORK=$_WIFI_NETWORK
 		WIFI_PASSWORD=$_WIFI_PASSWORD
 	EOF
 	{
-		declare -p aCustomPackages
-		declare -p LONLY_TTY
-		declare -p LDHCP
-		declare -p LCUSTOM
-		declare -p LDISK
-		declare -p LEFI
-		declare -p LAUDIO
-		declare -p LGRUB
-		declare -p LBIOS
-		declare -p LKERNEL
-		declare -p LMKPARTED
-		declare -p LFSREVISED
 		declare -p _WIFI_NETWORK
 		declare -p _WIFI_PASSWORD
-		declare -p _DISPLAYMANAGER
-		declare -p _WINDOWMANAGER
-		declare -p AsUser
-		declare -p Amkfs
 		declare -p AsDhcp
-		declare -p AsDiskPercent
-		declare -p AsFs
-		declare -p Amntpoint
-		declare -p AmntpointFDE
-		declare -p AConfDisk
-		declare -p AConfAudio
-		declare -p AConfKernel
-		declare -p AConfLocale
-		declare -p AConfMirror
 		declare -p AConfWifi
-		declare -p AConfFde
-		declare -p LCUSTOM
-		declare -p LAUTOLOGIN
-		declare -p HYPRLAND
 		#	declare -p AARRAY_DSK_DEVICES
 		#	declare -p AARRAY_PART_DEVICES
 		#	} | sed 's/declare -/&g/' >>"$app_conf"
@@ -640,43 +475,6 @@ sh_get_Locale() {
 		# Retorna apenas o código (ex: es_AR) sem o .UTF-8
 		echo "${current%%.*}"
 	fi
-}
-
-sh_get_code_lang() {
-	local LangFilter="${LANG%%.*}"
-	local LangFilterLowercase="${LangFilter,,}"
-	local LangClean="${LangFilterLowercase%%_*}"
-	local LangCountry="${LangFilterLowercase#*_}"
-	local LangFilterLowercaseModified="${LangFilterLowercase//_/-}"
-	echo "$LangFilterLowercaseModified"
-}
-
-sh_get_lang() {
-	echo "$LANG"
-}
-
-sh_get_language_without_utf8() {
-	#	local LangFilter="${LANG%%.*}"
-	local LangFilter="${AConfLocale[_LOCALE]%%.*}"
-	local LangFilterModified="${LangFilter//_/-}"
-	echo "$LangFilterModified"
-}
-
-sh_get_code_language() {
-	local LangFilter="${LANGUAGE%%.*}"
-	local LangFilterLowercase="${LangFilter,,}"
-	local LangClean="${LangFilterLowercase%%_*}"
-	local LangCountry="${LangFilterLowercase#*_}"
-	local LangFilterLowercaseModified="${LangFilterLowercase//_/-}"
-	echo "$LangFilterLowercaseModified"
-}
-
-sh_get_language() {
-	echo "$LANGUAGE"
-}
-
-sh_catecho() {
-	echo "$(<"$1")"
 }
 
 sh_loadSavedConfig() {
@@ -954,7 +752,7 @@ log_msg() {
 
 evaluate_retval() {
 	local error_value=$? # captura retorno anterior
-	local error_fatal=${2:-$one}
+	local error_fatal=${2:-1}
 	local cmsgdie="$3"
 	local level="$4"
 
@@ -1249,7 +1047,7 @@ notconf() {
 
 sh_update_wpa_suplicant() {
 	sh_cmd_job "${cmsg_Ajustando} wpa_supplicant.conf" "
-      cat >"$dir_install/etc/wpa_supplicant/wpa_supplicant.conf" <<-EOF
+      cat >"/etc/wpa_supplicant/wpa_supplicant.conf" <<-EOF
 ctrl_interface=/run/wpa_supplicant
 ctrl_interface_group=wheel
 update_config=1
@@ -1292,7 +1090,7 @@ sh_cmd_job() {
 	local erro_fatal="$3"
 	local lretval=0
 
-	cmsg+=" ${cmsg_Em} ${yellow}$dir_install"
+	cmsg+=" ${cmsg_Em}"
 	last_msg="$cmsg"
 	msg "INFO" "$last_msg" "$(log_info_msg "$last_msg")"
 
@@ -1312,7 +1110,6 @@ sh_cmd_job() {
 	lretval="${PIPESTATUS[0]}"
 	evaluate_retval "$lretval" "$erro_fatal"
 	shell='/bin/sh'
-
 	return "$lretval"
 }
 
@@ -1355,19 +1152,7 @@ sh_parseconf() {
 	if ! $LCHROOT; then
 		sh_info_msg "$(gettext 'Analisando o arquivo de configuração'): ${yellow}$app_conf"
 	fi
-
-	url_mirror="${AConfMirror[url_mirror]}"
-	[[ -n "${AsUser[cuser]}" && -n "${AsUser[cpass]}" && -n "${AsUser[cpassroot]}" && -n "${AsUser[chostname]}" ]] && LEXTRA=true
-	[[ -n "${AConfLocale[_TIMEZONE]}" ]] && LTIMEZONE=true
-	[[ -n "${AConfLocale[_KEYMAP]}" ]] && LKEYMAP=true
-	[[ -n "${AConfMirror[_MIRROR]}" && -n "$url_mirror" ]] && LMIRROR=true
-	[[ -n "${AConfMirror[_SOURCE]}" ]] && LSOURCE=true
-	[[ -n "${AConfAudio[_AUDIOSERVER]}" ]] && LAUDIO=true
-	[[ -n "${AConfKernel[_KERNEL]}" ]] && LKERNEL=true
-	[[ -n "${Amntpoint[*]}" ]] && LPARTITION=true
-	[[ -n ${_WINDOWMANAGER[*]} ]] && LWM=true
-	[[ -n ${_DISPLAYMANAGER} ]] && LDM=true
-	evaluate_retval "${PIPESTATUS[0]}" "$err_not_fatal"
+	#evaluate_retval "${PIPESTATUS[0]}" "$err_not_fatal"
 }
 
 get_default_iface() {
@@ -1575,8 +1360,6 @@ sh_setLanguage() {
 	#	#echo "cmsg_ERRO ${#cmsg_ERRO[@]} ${cmsg_ERRO[@]} ${cmsg_ERRO[$PT_BR]} ${cmsg_ERRO[$EN_US]}"
 	#	cmsg_LABEL[pt_BR]=$(gettext "Usar as teclas ${RED}↑ PARA CIMA ${RESET}e ${RED}↓ PARA BAIXO ${RESET}para navegar.\nUsar ${RED}TAB ${RESET}para alternar entre os botões e ${RED}ENTER ${RESET}para selecionar.")
 	#	cmsg_LBL_check[pt_BR]=$(gettext "Usar as teclas ${RED}PARA CIMA ${RESET}e ${RED}PARA BAIXO ${RESET}para navegar.\nUsar ${RED}BARRA DE ESPAÇO ${RESET}para selecionar.\nUsar ${RED}TAB ${RESET}para alternar entre os botões e ${RED}ENTER ${RESET}para aceitar.")
-	#	cmsg_Tarball_Corrompido[pt_BR]=$(gettext "\n${RED}Aparentemente o tarball rootfs ${_TARBALL_ROOTFS} está corrompido.\n\n${BOLD}${WHITE}Testar a integridade e reiniciar a instalação ?")
-	#
 	#	cmsg_LABEL1=$(gettext "Usar as setas ${CYAN}↑ ${RST}e ${CYAN}↓ ${RST}para navegar.")
 	#	cmsg_LABEL2=$(gettext "Usar ${CYAN}TAB ${RST}para alternar entre os botões.")
 	#	cmsg_LABEL3=$(gettext "Usar ${CYAN}ENTER ${RST}ou ${CYAN}BARRA DE ESPAÇO ${RST}para selecionar e aceitar.")
@@ -1599,18 +1382,12 @@ $cLB3 ${ccolor}↓ $cLB4$RESET \
 $cLB5\n$cLB6 ${ccolor}⇥ TAB${RESET} \
 $cLB7 ${ccolor}↵ ENTER${RESET} ou ${ccolor}BARRA DE ESPAÇO${RESET} $cLB8"
 
-	cmsg_Tarball_Corrompido0=$(gettext "Aparentemente o tarball rootfs")
-	cmsg_Tarball_Corrompido1=$(gettext "está corrompido.")
-	cmsg_Tarball_Corrompido2=$(gettext "Testar a integridade e reiniciar a instalação ?")
-	cmsg_Tarball_Corrompido="\n${RED}${cmsg_Tarball_Corrompido0} ${_TARBALL_ROOTFS} ${cmsg_Tarball_Corrompido1}\n\n${BOLD}${WHITE}${cmsg_Tarball_Corrompido2}"
-
 	cmsg_TamanhoInsuficiente=$(gettext "Tamanho disco insuficiente para criar partições com swap")
 	cmsg_DesejaProsseguir=$(gettext "Deseja prosseguir SEM partição de swap?")
 	cmsg_DesejaCriarParticaoSwap=$(gettext "Deseja criar partição de swap ?")
 	cmsg_AcompanheInstalacao=$(gettext "Acompanhe a evolução da instalação            ")
 	cmsg_OuPeloTerminal=$(gettext "e/ou pelo terminal tty8        ")
 	cmsg_PacotesDaImagemIso=$(gettext "Usar os pacotes já presentes na imagem ISO (clonagem da ISO)")
-	cmsg_BaixadoDoRepositorioOficial=$(gettext "Usar tarball base e atualizar via internet (funciona em qualquer host Linux)")
 	cmsg_BaixadoDoRepositorioOficialFull=$(gettext "Baixar todos os pacotes diretamente da internet (requer host Void Linux)")
 	cmsg_DefinirInstalacaoDeOrigem=$(gettext "Selecionar fonte da instalação")
 	cmsg_Definicoes=$(gettext "Definições")
@@ -1691,7 +1468,6 @@ $cLB7 ${ccolor}↵ ENTER${RESET} ou ${ccolor}BARRA DE ESPAÇO${RESET} $cLB8"
 	cwarning=$(gettext "=== AVISO ===")
 	cmsg_DismountFileSystem=$(gettext "Desmontando sistema de arquivos")
 	cmsg_FinalizadaComSucesso=$(gettext "Instalação finalizada com sucesso")
-	cmsg_ErroTar=$(gettext "Falha ao descompactar o tarball")
 	cmsg_Para=$(gettext "para")
 	cmsg_ConfSalva=$(gettext "Configurações salvas para instalação")
 	cmsg_Operacao=$(gettext "nenhuma operação especificada - usar -h para ajuda")
@@ -1702,8 +1478,6 @@ $cLB7 ${ccolor}↵ ENTER${RESET} ou ${ccolor}BARRA DE ESPAÇO${RESET} $cLB8"
 	cmsg_AtivandoServico=$(gettext "Ativando serviço")
 	cmsg_IniciandoServico=$(gettext "Iniciando serviço")
 	cmsg_Permissoes=$(gettext "permissões")
-	cmsg_ChecandoTarball=$(gettext "Checando existência do tarball")
-	cmsg_VerificandoIntegridadeTarball=$(gettext "Verificando a integridade do tarball")
 	cmsg_IniciandoDownload=$(gettext "Iniciando download de")
 	cmsg_CriandoParticoes=$(gettext "Criando partições em")
 	cmsg_CriandoPartSwap=$(gettext "Partição Swap")
@@ -2402,6 +2176,9 @@ sh_confWifi() {
 			fi
 
       sh_info_msg "$(gettext 'Configurando conexao')"
+
+#      sh_cmd_job_infobox "Aguarde alguns instantes, sincronizando e atualizando..." \
+#          "xbps-install -Syuf --ignore-file-conflicts "${PackagesToUpdate[@]}" &>/dev/null"
 
 			case "${backend}" in
 			NetworkManager)
