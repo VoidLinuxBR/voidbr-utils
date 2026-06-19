@@ -858,9 +858,9 @@ padr() {
 }
 
 sh_info_msg() {
-	local _msg="$1"
-	last_msg="$_msg"
-	msg "INFO" "$last_msg" "$(log_info_msg "$last_msg")"
+  local _msg="$1"
+  last_msg="$_msg"
+  msg "INFO" "$last_msg" "$(log_info_msg "$last_msg")"
 }
 
 msg() {
@@ -1855,10 +1855,11 @@ select_wifi_backend() {
       --backtitle "$ccabec" \
       --insecure "$@" \
 			--stdout \
-			--menu "Selecione o backend Wi-Fi:" \
-			15 60 5 \
+			--menu "\n${YELLOW}$(gettext "Selecione o backend Wi-Fi:")" \
+			8 60 0 \
 			"${options[@]}"
 	)"
+#			15 60 5 \
 
   exit_status=$?
 	case $exit_status in
@@ -1888,7 +1889,7 @@ sh_get_wifi_interfaces() {
   done
 }
 
-sh_get_wifi_interfaceOLD() {
+sh_get_first_wifi_interface() {
 	local i
 	for i in /sys/class/net/*; do
 		[[ -d "$i/wireless" ]] && {
@@ -1976,10 +1977,10 @@ sh_get_iface() {
 	  --colors \
 		--backtitle "$ccabec" \
 		--title "== WIFI - interface ==" \
-		--ok-label "${cmsg_Aceitar}" \
+		--ok-label "${cmsg_ButtonEscolher}" \
 		--cancel-label "${cmsg_ButtonBack}" \
-		--menu "$(gettext "Selecione a interface Wi-Fi")" \
-		0 0 0 \
+		--menu "\n${YELLOW}$(gettext "Selecione a interface Wi-Fi:")" \
+		8 60 0 \
     "${menu_items[@]}")
 #		"${iface_array[@]}")
 #   2>&1 >/dev/tty)
@@ -2113,10 +2114,12 @@ sh_choosewifi() {
 		local sep="\xe2\x94\x82"
 		unset ARRAY_{SSID,BSID,SIGNAL,FREQUENCY,FLAGS}
 
-		#		iface="$( sh_get_iface)"
-		if ! sh_get_iface; then
-			return 1
-		fi
+		if [[ -z "${iface}" ]]; then
+  		if ! sh_get_iface; then
+	  		return 1
+  		fi
+	  fi
+
 		iface="${AConfWifi[_INTERFACE]}"
 		exit_status=$?
 
@@ -2127,13 +2130,13 @@ sh_choosewifi() {
 		esac
 
 		sh_info_msg "$(gettext 'Escaneando redes wifi...')"
-		if ! backend="$(sh_get_wifi_backend)"; then
-			info \
-				"WIFI BackEnd" \
-				"\n${RED}$(gettext "Nenhum backend Wi-Fi encontrado.")" \
-				"\n${CYAN}$(gettext "Instale o NetworkManager, ou iwd, ou wpa_supplicant.")"
-			return 1
-		fi
+#		if ! backend="$(sh_get_wifi_backend)"; then
+#			info \
+#				"WIFI BackEnd" \
+#				"\n${RED}$(gettext "Nenhum backend Wi-Fi encontrado.")" \
+#				"\n${CYAN}$(gettext "Instale o NetworkManager, ou iwd, ou wpa_supplicant.")"
+#			return 1
+#		fi
 
 		case "$backend" in
 		NetworkManager) sh_wifi_scan_networkmanager ;;
@@ -2166,11 +2169,11 @@ sh_choosewifi() {
 		wifi=$(${DIALOG} \
 			--default-item "0" \
 			--backtitle "$ccabec" \
-			--title "WIFI" \
+			--title "== WIFI - redes via ${backend} ==" \
 			--ok-label "${cmsg_Aceitar}" \
 			--cancel-label "${cmsg_ButtonBack}" \
 			--colors \
-			--menu "${cmsg_MENU}" \
+			--menu "\n${YELLOW}$(gettext "Escolha a rede que deseja conectar:")" \
 			0 0 0 \
 			"${array[@]}" \
 			2>&1 >/dev/tty)
@@ -2224,6 +2227,9 @@ sh_confWifi() {
 
 	cextra+="➡ ${YELLOW}$(gettext 'Deixe em branco o campo Interface Wi-Fi para listar interfaces')\n"
 	cextra+="➡ ${YELLOW}$(gettext 'Deixe em branco o campo Rede Wi-Fi para escanear redes')"
+  iface_edit=0
+  rede_edit=0
+  senha_edit=1
 
 	while true; do
 		exec 3>&1
@@ -2239,13 +2245,13 @@ sh_confWifi() {
 			--extra-label "Scan wifi" \
 			--mixedform "${cmsg_MENU}\n\n${cextra}" \
 			19 80 7 \
-			"Backend               : " 1 1 "$backend" 1 20 40 0 2 \
-			"Interface             : " 2 1 "$iface"   2 20 40 0 2 \
+			"Interface             : " 1 1 "$iface"   1 20 40 0 2 \
+			"Backend               : " 2 1 "$backend" 2 20 40 0 2 \
 			"Rede conectada        : " 3 1 "$_WIFI_CONNECTED" 3 20 40 0 2 \
 			"Ip                    : " 4 1 "$wlanip" 4 20 40 0 2 \
-			"${cmsg_interfacewifi} : " 5 1 "${iface}" 5 20 40 0 0 \
-			"${cmsg_redewifi}      : " 6 1 "$_WIFI_NETWORK" 6 20 40 0 0 \
-			"${cmsg_senhawifi}     : " 7 1 "$_WIFI_PASSWORD" 7 20 40 0 1
+			"${cmsg_interfacewifi} : " 5 1 "${iface}" 5 20 40 0 $iface_edit \
+			"${cmsg_redewifi}      : " 6 1 "$_WIFI_NETWORK" 6 20 40 0 $rede_edit \
+			"${cmsg_senhawifi}     : " 7 1 "$_WIFI_PASSWORD" 7 20 40 0 $senha_edit
 			)
 #			2>&1 1>&3)
 
@@ -2272,15 +2278,18 @@ sh_confWifi() {
 			AConfWifi[_PASSWORD]="${aWifi[6]}"
 			LWIFI=1
 
-			if [[ "${iface}" == "" ]]; then
+			if [[ -z "${iface}" ]]; then
 				if sh_get_iface; then
 					iface="${AConfWifi[_INTERFACE]}"
-				fi
+          iface_edit=2
+ 				fi
 				continue
 			fi
+      iface_edit=2
 
 			if [[ -z "${AConfWifi[_NETWORK]}" ]]; then
 				sh_choosewifi
+				rede_edit=2
 				continue
 			fi
 
