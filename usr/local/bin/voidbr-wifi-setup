@@ -2182,7 +2182,9 @@ sh_confWifi() {
 
 			case "${backend}" in
 			NetworkManager)
-        nmcli connection delete "${_WIFI_NETWORK}" >/dev/null 2>&1
+        sh_cmd_job_infobox "Removendo conexao antiga..." \
+          "nmcli connection delete ${_WIFI_NETWORK}"
+
 				if output=$(
 					nmcli device wifi connect "${_WIFI_NETWORK}" \
 						password "${_WIFI_PASSWORD}" \
