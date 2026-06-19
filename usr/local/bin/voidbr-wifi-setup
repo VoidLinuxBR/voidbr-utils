@@ -858,9 +858,9 @@ padr() {
 }
 
 sh_info_msg() {
-  local _msg="$1"
-  last_msg="$_msg"
-  msg "INFO" "$last_msg" "$(log_info_msg "$last_msg")"
+	local _msg="$1"
+	last_msg="$_msg"
+	msg "INFO" "$last_msg" "$(log_info_msg "$last_msg")"
 }
 
 msg() {
@@ -1848,20 +1848,20 @@ select_wifi_backend() {
 
 	choice="$(
 		${DIALOG} \
-      --title "$(gettext "=== WIFI backend ===")" \
-      --colors \
-      --ok-label "${cmsg_ButtonEscolher}" \
-      --cancel-label "${cmsg_Exit}" \
-      --backtitle "$ccabec" \
-      --insecure "$@" \
+			--title "$(gettext "=== WIFI backend ===")" \
+			--colors \
+			--ok-label "${cmsg_ButtonEscolher}" \
+			--cancel-label "${cmsg_Exit}" \
+			--backtitle "$ccabec" \
+			--insecure "$@" \
 			--stdout \
 			--menu "\n${YELLOW}$(gettext "Selecione o backend Wi-Fi:")" \
 			8 60 0 \
 			"${options[@]}"
 	)"
-#			15 60 5 \
+	#			15 60 5 \
 
-  exit_status=$?
+	exit_status=$?
 	case $exit_status in
 	"$D_ESC" | "$D_CANCEL")
 		exit 0
@@ -1883,10 +1883,10 @@ sh_get_wifi_backend() {
 }
 
 sh_get_wifi_interfaces() {
-  local i
-  for i in /sys/class/net/*; do
-    [[ -d "$i/wireless" ]] && basename "$i"
-  done
+	local i
+	for i in /sys/class/net/*; do
+		[[ -d "$i/wireless" ]] && basename "$i"
+	done
 }
 
 sh_get_first_wifi_interface() {
@@ -1936,53 +1936,53 @@ sh_get_iface() {
 	local exit_status
 	local sep="\xe2\x94\x82"
 
-#	# Detecta interfaces wifi
-#	if pgrep -x NetworkManager >/dev/null 2>&1; then
-#		while IFS=: read -r device type state connection; do
-#			[[ "$type" == wifi ]] || continue
-#			[[ -n "$device" ]] || continue
-#			iface_array+=("$device" "")
-#		done < <(
-#			nmcli --terse \
-#				-f DEVICE,TYPE,STATE,CONNECTION \
-#				device status
-#		)
-#	else
-#		for iface in /run/wpa_supplicant/*; do
-#			[[ -S "$iface" ]] || continue
-#			iface="${iface##*/}"
-#			[[ "$iface" == p2p-* ]] && continue
-#			iface_array+=("$iface" "")
-#		done
-#	fi
+	#	# Detecta interfaces wifi
+	#	if pgrep -x NetworkManager >/dev/null 2>&1; then
+	#		while IFS=: read -r device type state connection; do
+	#			[[ "$type" == wifi ]] || continue
+	#			[[ -n "$device" ]] || continue
+	#			iface_array+=("$device" "")
+	#		done < <(
+	#			nmcli --terse \
+	#				-f DEVICE,TYPE,STATE,CONNECTION \
+	#				device status
+	#		)
+	#	else
+	#		for iface in /run/wpa_supplicant/*; do
+	#			[[ -S "$iface" ]] || continue
+	#			iface="${iface##*/}"
+	#			[[ "$iface" == p2p-* ]] && continue
+	#			iface_array+=("$iface" "")
+	#		done
+	#	fi
 
-  # Detecta interfaces wifi
-  mapfile -t iface_array < <(sh_get_wifi_interfaces)
+	# Detecta interfaces wifi
+	mapfile -t iface_array < <(sh_get_wifi_interfaces)
 
 	# Nenhuma interface encontrada ?
 	if [[ "${#iface_array[@]}" -eq 0 ]]; then
-    show_network_diagnostics
+		show_network_diagnostics
 		return 1
 	fi
 
-  menu_items=()
-  for iface in "${iface_array[@]}"; do
-    menu_items+=("$iface" "$(cat "/sys/class/net/$iface/device/uevent" 2>/dev/null | grep '^DRIVER=' | cut -d= -f2)")
-  done
+	menu_items=()
+	for iface in "${iface_array[@]}"; do
+		menu_items+=("$iface" "$(cat "/sys/class/net/$iface/device/uevent" 2>/dev/null | grep '^DRIVER=' | cut -d= -f2)")
+	done
 
 	# Seleciona interface
 	iface=$(${DIALOG} \
-	  --stdout \
-	  --colors \
+		--stdout \
+		--colors \
 		--backtitle "$ccabec" \
 		--title "== WIFI - interface ==" \
 		--ok-label "${cmsg_ButtonEscolher}" \
 		--cancel-label "${cmsg_ButtonBack}" \
 		--menu "\n${YELLOW}$(gettext "Selecione a interface Wi-Fi:")" \
 		8 60 0 \
-    "${menu_items[@]}")
-#		"${iface_array[@]}")
-#   2>&1 >/dev/tty)
+		"${menu_items[@]}")
+	#		"${iface_array[@]}")
+	#   2>&1 >/dev/tty)
 
 	exit_status=$?
 	case $exit_status in
@@ -2114,10 +2114,10 @@ sh_choosewifi() {
 		unset ARRAY_{SSID,BSID,SIGNAL,FREQUENCY,FLAGS}
 
 		if [[ -z "${iface}" ]]; then
-  		if ! sh_get_iface; then
-	  		return 1
-  		fi
-	  fi
+			if ! sh_get_iface; then
+				return 1
+			fi
+		fi
 
 		iface="${AConfWifi[_INTERFACE]}"
 		exit_status=$?
@@ -2129,13 +2129,13 @@ sh_choosewifi() {
 		esac
 
 		sh_info_msg "$(gettext 'Escaneando redes wifi...')"
-#		if ! backend="$(sh_get_wifi_backend)"; then
-#			info \
-#				"WIFI BackEnd" \
-#				"\n${RED}$(gettext "Nenhum backend Wi-Fi encontrado.")" \
-#				"\n${CYAN}$(gettext "Instale o NetworkManager, ou iwd, ou wpa_supplicant.")"
-#			return 1
-#		fi
+		#		if ! backend="$(sh_get_wifi_backend)"; then
+		#			info \
+		#				"WIFI BackEnd" \
+		#				"\n${RED}$(gettext "Nenhum backend Wi-Fi encontrado.")" \
+		#				"\n${CYAN}$(gettext "Instale o NetworkManager, ou iwd, ou wpa_supplicant.")"
+		#			return 1
+		#		fi
 
 		case "$backend" in
 		NetworkManager) sh_wifi_scan_networkmanager ;;
@@ -2189,26 +2189,27 @@ sh_choosewifi() {
 	done
 }
 
-# Função para exibir o diagnóstico de rede
 show_network_diagnostics() {
-  local MENSAGEM="Para ativar a interface de rede, siga estes passos no terminal:
+	local cmsg="
+${RED}${REVERSE}$(gettext "Nenhuma interface de Wi-fi encontrada!")${RST}
 
-1. Identifique o dispositivo:
-   $ lspci -knn | grep -iA3 net
+${YELLOW}$(gettext "Para ativar/levantar a interface de rede, caso tenha,
+tente seguir estes passos no terminal:")${RST}
 
-2. Carregue o driver necessário:
-   $ sudo modprobe <nome_do_driver>
+1. $(gettext "Identifique o dispositivo"):${CYAN} $ lspci -knn | grep -iA3 net${RST}
+2. $(gettext "ou"):${CYAN} $ lsusb${RST}
+3. $(gettext "Carregue o driver necessário"): ${CYAN}$ sudo modprobe <nome_do_driver>${RST}
+4. $(gettext "Levante a interface"):${CYAN} $ sudo ip link set <interface> up${RST}
+5. $(gettext "Verifique se há firmware faltando"):${CYAN} $ dmesg | grep -i firmware ${RST}
+6. $(gettext "(Re)Instale os drivers"):${CYAN} $ sudo xbps-install -Syuf linux-firmware linux-firmware-network${RST}
 
-3. Levante a interface:
-   $ sudo ip link set <interface> up
+"
 
-4. Verifique se há firmware faltando:
-   $ dmesg | grep -i firmware"
-
-    # Exibe o diálogo (requer o pacote 'dialog' instalado)
-		info "WIFI" \
-			"\n\n${RED}$(gettext "Nenhuma interface Wi-Fi encontrada.")" \
-      "$MENSAGEM"
+	${DIALOG} \
+		--backtitle "${ccabec}" \
+		--colors \
+		--title "== $(gettext "WIFI - Diagnóstico de Rede") ==" \
+		--msgbox "${cmsg}" 0 0
 }
 
 sh_nm_release_iface() {
@@ -2224,8 +2225,8 @@ sh_confWifi() {
 	local wlanip
 	local cextra
 
-#	if iface="$(sh_get_wifi_interface)"; then
-  if sh_get_iface; then
+	#	if iface="$(sh_get_wifi_interface)"; then
+	if sh_get_iface; then
 		select_wifi_backend
 		if ! _WIFI_CONNECTED="$(sh_get_wifi_ssid "$iface")"; then
 			info \
@@ -2237,44 +2238,45 @@ sh_confWifi() {
 		wlanip="$(sh_get_ip_iface "$iface")"
 		_WIFI_NETWORK="$_WIFI_CONNECTED"
 	else
-#		info \
-#			"WIFI interface" \
-#			"\n${RED}$(gettext "Nenhuma interface Wi-Fi encontrado.")"
-#		return 1
-    exit 0
+		#		info \
+		#			"WIFI interface" \
+		#			"\n${RED}$(gettext "Nenhuma interface Wi-Fi encontrado.")"
+		#		return 1
+		exit 0
 	fi
 
 	#debug "1=$_WIFI_NETWORK 2=$_WIFI_CONNECTED"
 
 	cextra+="➡ ${YELLOW}$(gettext 'Deixe em branco o campo Interface Wi-Fi para listar interfaces')\n"
 	cextra+="➡ ${YELLOW}$(gettext 'Deixe em branco o campo Rede Wi-Fi para escanear redes')"
-  iface_edit=0
-  rede_edit=0
-  senha_edit=1
+	iface_edit=0
+	rede_edit=0
+	senha_edit=1
 
 	while true; do
 		exec 3>&1
-		wifitext=$(${DIALOG} \
-      --stdout \
-    	--title "$(gettext "=== WIFI ===")" \
-			--colors \
-			--ok-label "${cmsg_Conectar}" \
-			--cancel-label "${cmsg_ButtonBack}" \
-			--backtitle "$ccabec" \
-			--insecure "$@" \
-			--extra-button \
-			--extra-label "Scan wifi" \
-			--mixedform "${cmsg_MENU}\n\n${cextra}" \
-			19 80 7 \
-			"Interface             : " 1 1 "$iface"   1 20 40 0 2 \
-			"Backend               : " 2 1 "$backend" 2 20 40 0 2 \
-			"Rede conectada        : " 3 1 "$_WIFI_CONNECTED" 3 20 40 0 2 \
-			"Ip                    : " 4 1 "$wlanip" 4 20 40 0 2 \
-			"${cmsg_interfacewifi} : " 5 1 "${iface}" 5 20 40 0 $iface_edit \
-			"${cmsg_redewifi}      : " 6 1 "$_WIFI_NETWORK" 6 20 40 0 $rede_edit \
-			"${cmsg_senhawifi}     : " 7 1 "$_WIFI_PASSWORD" 7 20 40 0 $senha_edit
-			)
-#			2>&1 1>&3)
+		wifitext=$(
+			${DIALOG} \
+				--stdout \
+				--title "$(gettext "=== WIFI ===")" \
+				--colors \
+				--ok-label "${cmsg_Conectar}" \
+				--cancel-label "${cmsg_ButtonBack}" \
+				--backtitle "$ccabec" \
+				--insecure "$@" \
+				--extra-button \
+				--extra-label "Scan wifi" \
+				--mixedform "${cmsg_MENU}\n\n${cextra}" \
+				19 80 7 \
+				"Interface             : " 1 1 "$iface" 1 20 40 0 2 \
+				"Backend               : " 2 1 "$backend" 2 20 40 0 2 \
+				"Rede conectada        : " 3 1 "$_WIFI_CONNECTED" 3 20 40 0 2 \
+				"Ip                    : " 4 1 "$wlanip" 4 20 40 0 2 \
+				"${cmsg_interfacewifi} : " 5 1 "${iface}" 5 20 40 0 $iface_edit \
+				"${cmsg_redewifi}      : " 6 1 "$_WIFI_NETWORK" 6 20 40 0 $rede_edit \
+				"${cmsg_senhawifi}     : " 7 1 "$_WIFI_PASSWORD" 7 20 40 0 $senha_edit
+		)
+		#			2>&1 1>&3)
 
 		exit_status=$?
 		case $exit_status in
@@ -2302,11 +2304,11 @@ sh_confWifi() {
 			if [[ -z "${iface}" ]]; then
 				if sh_get_iface; then
 					iface="${AConfWifi[_INTERFACE]}"
-          iface_edit=2
- 				fi
+					iface_edit=2
+				fi
 				continue
 			fi
-      iface_edit=2
+			iface_edit=2
 
 			if [[ -z "${AConfWifi[_NETWORK]}" ]]; then
 				sh_choosewifi
