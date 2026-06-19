@@ -2193,7 +2193,7 @@ show_network_diagnostics() {
 	local cmsg="
 ${RED}${REVERSE}$(gettext "Nenhuma interface de Wi-fi encontrada!")${RST}
 
-${YELLOW}$(gettext "Para ativar/levantar a interface de rede, caso tenha,
+${YELLOW}$(gettext "Para ativar/levantar a interface de Wi-fi, caso exista,
 tente seguir estes passos no terminal:")${RST}
 
 1. $(gettext "Identifique o dispositivo"):${CYAN} $ lspci -knn | grep -iA3 net${RST}
