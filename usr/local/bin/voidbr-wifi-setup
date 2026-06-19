@@ -4,7 +4,7 @@
 #
 #  voidbr-wifi-setup
 #  Created: qua 17 jun 2026 00:46:30 -04
-#  Updated: qua 17 jun 2026 00:46:30 -04
+#  Updated: qui 18 jun 2026 22:19:31 -04
 #
 #  Copyright (c) 2019-2026, Vilmar Catafesta <vcatafesta@gmail.com>
 #  All rights reserved.
@@ -50,7 +50,7 @@ shopt -s extglob
 
 #system
 readonly APP="${0##*/}"
-readonly _VERSION_='0.6.17-20260617'
+readonly _VERSION_='0.6.18-20260618'
 declare -g DEPENDENCIES=(dialog gettext nmcli tput awk tar sed cat grep sort tr ip)
 declare -gA PACKAGEDEP=(
 	['dialog']='dialog'
@@ -1335,28 +1335,6 @@ sh_testcommand() {
 	fi
 }
 
-sh_dryrun() {
-	sh_umount_fs
-	sh_mount_fs
-	sh_init_bind
-
-	#sh_update_locale
-	#sh_update_rc_conf
-	#sh_update_rc_local
-	#sh_activating_services
-	#sh_make_user
-	#sh_update_sshd
-	#sh_update_sudoers
-	#sh_make_fstab
-	#sh_update_sddm_conf
-	# sh_build_and_apply_dhcpcd_config
-	sh_change_grub
-
-	export PS1="[chroot $dir_install] $PS1"
-	LC_ALL=C chroot "$dir_install" "/bin/bash"
-	sh_umount_fs
-}
-
 sh_loadconf() {
 	if ! $LCHROOT; then
 		sh_info_msg "$(gettext 'Loading configuration file'): ${yellow}$app_conf"
@@ -1454,29 +1432,37 @@ sh_configure_dhcpcd_static_ip_dialog() {
 	done
 }
 
-sh_save_nm_static_ip() {
-	local conn
-
-	conn="$(nmcli -t -f NAME connection show --active | head -n1)"
-	nmcli connection modify "$conn" \
-		ipv4.method manual \
-		ipv4.addresses "${AsDhcp[IP]}/${AsDhcp[CIDR]}" \
-		ipv4.gateway "${AsDhcp[GATEWAY]}" \
-		ipv4.dns "${AsDhcp[DNS1]} ${AsDhcp[DNS2]}"
-}
-
 sh_remove_dhcpcd_conf_iface() {
 	sed -i \
 		"/^# BEGIN VOIDBR-WIFI-${iface}\$/,/^# END VOIDBR-WIFI-${iface}\$/d" \
 		/etc/dhcpcd.conf
 }
 
+sh_save_nm_static_ip() {
+  local conn="$1"
+
+  nmcli connection modify "$conn" \
+    ipv4.method manual \
+    ipv4.addresses "${AsDhcp[IP]}/${AsDhcp[CIDR]}" \
+    ipv4.gateway "${AsDhcp[GATEWAY]}" \
+    ipv4.dns "${AsDhcp[DNS1]} ${AsDhcp[DNS2]}" \
+    connection.autoconnect yes
+}
+
 sh_save_dhcpcd_static_ip() {
 	local conf="/etc/dhcpcd.conf"
+	local BACKUP_FILE="${conf}.$(sh_diahora)"
 
 	sed -i \
 		"/^interface ${AsDhcp[IFACE]}\$/,/^$/d" \
 		"$conf"
+
+	sh_info_msg "%(gettext 'Aplicando configuração do dhcpd')"
+	# backup somente se existir
+	if [[ -f "$conf" ]]; then
+		mv -f "$conf" "$BACKUP_FILE"
+	fi
+
 	cat >>"$conf" <<EOF
 # BEGIN VOIDBR-WIFI-wlo1
 interface ${AsDhcp[IFACE]}
@@ -1486,28 +1472,6 @@ static domain_name_servers=${AsDhcp[DNS1]} ${AsDhcp[DNS2]}
 # END VOIDBR-WIFI-wlo1
 
 EOF
-}
-
-sh_build_and_apply_dhcpcd_config() {
-	local CONFIG_FILE="$dir_install/etc/dhcpcd.conf"
-	local BACKUP_FILE="${CONFIG_FILE}.$(sh_diahora)"
-
-	sh_info_msg "%(gettext 'Aplicando configuração do dhcpd')"
-	# backup somente se existir
-	if [[ -f "$CONFIG_FILE" ]]; then
-		mv -f "$CONFIG_FILE" "$BACKUP_FILE"
-	fi
-
-	# cria novo arquivo
-	cat >"$CONFIG_FILE" <<EOF
-# See dhcpcd.conf(5) for details.
-
-interface ${AsDhcp[IFACE]}
-static ip_address=${AsDhcp[IP]}/${AsDhcp[CIDR]}
-static routers=${AsDhcp[GATEWAY]}
-static domain_name_servers=${AsDhcp[DNS1]} ${AsDhcp[DNS2]}
-EOF
-
 }
 
 pcount() {
@@ -2220,6 +2184,24 @@ sh_nm_release_iface() {
 	nmcli device set "$iface" managed no &>/dev/null
 }
 
+sh_nm_disable_autoconnect_others() {
+    local iface="$1"
+    local current_conn="$2"
+    local conn
+
+    while read -r conn; do
+        [[ -z "$conn" ]] && continue
+        [[ "$conn" == "$current_conn" ]] && continue
+
+        [[ "$(nmcli -g connection.interface-name \
+              connection show "$conn" 2>/dev/null)" == "$iface" ]] || continue
+
+        nmcli connection modify "$conn" connection.autoconnect no
+    done < <(
+        nmcli -t -f NAME connection show
+    )
+}
+
 sh_confWifi() {
 	local iface
 	local wlanip
@@ -2330,17 +2312,32 @@ sh_confWifi() {
 
 			case "${backend}" in
 			NetworkManager)
+        nmcli connection delete "${_WIFI_NETWORK}" >/dev/null 2>&1
 				if output=$(
 					nmcli device wifi connect "${_WIFI_NETWORK}" \
 						password "${_WIFI_PASSWORD}" \
 						ifname "$iface" 2>&1
 				); then
-					sleep 2
+  				sleep 0.5
+
+          if $USE_STATIC_IP; then
+            AsDhcp[CONNECTION]=$(nmcli -g GENERAL.CONNECTION device show "$iface")
+            sh_save_nm_static_ip "${AsDhcp[CONNECTION]}"
+            nmcli connection down "${AsDhcp[CONNECTION]}" >/dev/null 2>&1
+            nmcli connection up "${AsDhcp[CONNECTION]}" >/dev/null 2>&1
+            sleep 0.5
+          fi
+
 					wifi_ip=$(nmcli -g IP4.ADDRESS device show "$iface" | head -n1)
 					wifi_gateway=$(nmcli -g IP4.GATEWAY device show "$iface" | head -n1)
 					wifi_dns=$(nmcli -g IP4.DNS device show "$iface" | paste -sd ',')
+
+          sh_nm_disable_autoconnect_others \
+            "$iface" \
+            "$_WIFI_NETWORK"
+
 				fi
-				;;
+        ;;
 
 			iwd)
 				# DHCP = remove bloco estático
