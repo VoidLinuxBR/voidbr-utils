@@ -1962,8 +1962,6 @@ sh_get_iface() {
 	# Nenhuma interface encontrada ?
 	if [[ "${#iface_array[@]}" -eq 0 ]]; then
     show_network_diagnostics
-		info "WIFI" \
-			"\n\n${RED}$(gettext "Nenhuma interface Wi-Fi encontrada.")"
 		return 1
 	fi
 
@@ -2208,7 +2206,9 @@ show_network_diagnostics() {
    $ dmesg | grep -i firmware"
 
     # Exibe o diálogo (requer o pacote 'dialog' instalado)
-    dialog --title "Diagnóstico de Rede" --msgbox "$MENSAGEM" 20 60
+		info "WIFI" \
+			"\n\n${RED}$(gettext "Nenhuma interface Wi-Fi encontrada.")" \
+      "$MENSAGEM"
 }
 
 sh_nm_release_iface() {
