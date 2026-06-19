@@ -65,17 +65,18 @@ declare -gA PACKAGEDEP=(
 	['tr']='coreutils'
 	['grep']='grep'
 	['ip']='iproute2'
+	['iw']='iw'
 )
 readonly LOCKFILE="/tmp/void-install.lock"
 declare -gA DISTRO_PKGS=(
-	["void"]="dialog gettext NetworkManager ncurses gawk tar sed coreutils grep iproute2"
-	["void-live"]="dialog gettext NetworkManager ncurses gawk tar sed coreutils grep iproute2"
-	["voidlinux"]="dialog gettext NetworkManager ncurses gawk tar sed coreutils grep iproute2"
-	["chili"]="dialog gettext NetworkManager ncurses gawk tar sed coreutils grep iproute2"
-	["chililinux"]="dialog gettext NetworkManager ncurses gawk tar sed coreutils grep iproute2"
-	["arch"]="dialog gettext rsync NetworkManager ncurses gawk tar sed coreutils grep iproute2"
-	["manjaro"]="dialog gettext NetworkManager ncurses gawk tar sed coreutils grep iproute2"
-	["debian"]="dialog gettext-base NetworkManager ncurses gawk tar sed coreutils grep iproute2"
+	["void"]="dialog gettext NetworkManager ncurses gawk tar sed coreutils grep iproute2 iw"
+	["void-live"]="dialog gettext NetworkManager ncurses gawk tar sed coreutils grep iproute2 iw"
+	["voidlinux"]="dialog gettext NetworkManager ncurses gawk tar sed coreutils grep iproute2 iw"
+	["chili"]="dialog gettext NetworkManager ncurses gawk tar sed coreutils grep iproute2 iw"
+	["chililinux"]="dialog gettext NetworkManager ncurses gawk tar sed coreutils grep iproute2 iw"
+	["arch"]="dialog gettext rsync NetworkManager ncurses gawk tar sed coreutils grep iproute2 iw"
+	["manjaro"]="dialog gettext NetworkManager ncurses gawk tar sed coreutils grep iproute2 iw"
+	["debian"]="dialog gettext-base NetworkManager ncurses gawk tar sed coreutils grep iproute2 iw"
 )
 declare -gA DISTRO_MGR=(
 	["void"]="xbps-install -Syu --ignore-file-conflicts"
@@ -1978,35 +1979,125 @@ sh_wifi_scan_networkmanager() {
 	)
 }
 
-sh_wifi_scan_wpa_supplicant() {
-	wpa_cli -p /run/wpa_supplicant -i "$iface" scan \
-		2>&1 | tee -i -a "$BOOTLOG" >$LOGGER
-	sleep 3
-	while read -r line; do
-		[[ -n "$line" ]] || continue
-		ARRAY_BSID+=("$(cut -f1 <<<"$line")")
-		ARRAY_FREQUENCY+=("$(cut -f2 <<<"$line")")
-		ARRAY_SIGNAL+=("$(cut -f3 <<<"$line")")
-		ARRAY_FLAGS+=("$(cut -f4 <<<"$line")")
-		ARRAY_SSID+=("$(cut -f5- <<<"$line")")
-	done < <(
-		wpa_cli -p /run/wpa_supplicant -i "$iface" scan_results |
-			tail -n +3
-	)
-	wpa_cli -p /run/wpa_supplicant -i "$iface" scan \
-		2>&1 | tee -i -a "$BOOTLOG" >$LOGGER
-	sleep 3
-	while read -r line; do
-		[[ -n "$line" ]] || continue
-		ARRAY_BSID+=("$(cut -f1 <<<"$line")")
-		ARRAY_FREQUENCY+=("$(cut -f2 <<<"$line")")
-		ARRAY_SIGNAL+=("$(cut -f3 <<<"$line")")
-		ARRAY_FLAGS+=("$(cut -f4 <<<"$line")")
-		ARRAY_SSID+=("$(cut -f5- <<<"$line")")
-	done < <(
-		wpa_cli -p /run/wpa_supplicant -i "$iface" scan_results |
-			tail -n +3
-	)
+sh_wifi_scan_iw() {
+    local iface="${1:-$(sh_get_wifi_interface)}"
+    local line
+    local bssid=""
+    local freq=""
+    local signal_db=""
+    local signal=""
+    local ssid=""
+    local flags="OPEN"
+
+    ARRAY_SSID=()
+    ARRAY_BSID=()
+    ARRAY_SIGNAL=()
+    ARRAY_FREQUENCY=()
+    ARRAY_FLAGS=()
+
+    while IFS= read -r line; do
+
+        case "$line" in
+
+            BSS\ *)
+                if [[ -n "$ssid" ]]; then
+
+                    if (( ${signal_db%.*} >= -60 )); then
+                        signal="$(sh_signal_to_bars 4)"
+                    elif (( ${signal_db%.*} >= -70 )); then
+                        signal="$(sh_signal_to_bars 3)"
+                    elif (( ${signal_db%.*} >= -80 )); then
+                        signal="$(sh_signal_to_bars 2)"
+                    else
+                        signal="$(sh_signal_to_bars 1)"
+                    fi
+
+                    ARRAY_SSID+=("$ssid")
+                    ARRAY_BSID+=("$bssid")
+                    ARRAY_SIGNAL+=("$signal")
+                    ARRAY_FREQUENCY+=("$freq")
+                    ARRAY_FLAGS+=("$flags")
+                fi
+
+                bssid="${line#BSS }"
+                bssid="${bssid%%(*}"
+
+                freq=""
+                signal_db=""
+                ssid=""
+                flags="OPEN"
+                ;;
+                
+            $'\t'freq:*)
+                freq="${line##*: }"
+                freq="${freq%.*}"
+                ;;
+
+            $'\t'signal:*)
+                signal_db="${line##*: }"
+                signal_db="${signal_db%% *}"
+                ;;
+
+            $'\t'SSID:*)
+                ssid="${line#*$'\t'SSID: }"
+                ;;
+
+            $'\t'RSN:*)
+                flags="WPA2/WPA3"
+                ;;
+
+            $'\t'WPA:*)
+                flags="WPA"
+                ;;
+
+        esac
+
+    done < <(iw dev "$iface" scan 2>/dev/null)
+
+    if [[ -n "$ssid" ]]; then
+
+        if (( ${signal_db%.*} >= -60 )); then
+            signal="$(sh_signal_to_bars 4)"
+        elif (( ${signal_db%.*} >= -70 )); then
+            signal="$(sh_signal_to_bars 3)"
+        elif (( ${signal_db%.*} >= -80 )); then
+            signal="$(sh_signal_to_bars 2)"
+        else
+            signal="$(sh_signal_to_bars 1)"
+        fi
+
+        ARRAY_SSID+=("$ssid")
+        ARRAY_BSID+=("$bssid")
+        ARRAY_SIGNAL+=("$signal")
+        ARRAY_FREQUENCY+=("$freq")
+        ARRAY_FLAGS+=("$flags")
+    fi
+}
+
+sh_wifi_scan_wpa() {
+  local iface="${1:-$(sh_get_wifi_interface)}"
+  local bssid freq signal_db flags ssid signal
+
+  wpa_cli -i "$iface" scan >/dev/null 2>&1
+  sleep 3
+
+  while IFS=$'\t' read -r bssid freq signal_db flags ssid; do
+    [[ -z "$ssid" ]] && continue
+    case "$signal_db" in
+    -[0-4][0-9]) signal="$(sh_signal_to_bars 4)" ;;
+    -5[0-9]|-6[0-4]) signal="$(sh_signal_to_bars 3)" ;;
+    -6[5-9]|-7[0-9]) signal="$(sh_signal_to_bars 2)" ;;
+    *) signal="$(sh_signal_to_bars 1)" ;;
+    esac
+    ARRAY_SSID+=("$ssid")
+    ARRAY_BSID+=("$bssid")
+    ARRAY_SIGNAL+=("$signal")
+    ARRAY_FREQUENCY+=("$freq")
+    ARRAY_FLAGS+=("$flags")
+  done < <(
+    wpa_cli -i "$iface" scan_results |
+    tail -n +3
+    )
 }
 
 sh_signal_to_bars() {
@@ -2101,11 +2192,13 @@ sh_choosewifi() {
 		#			return 1
 		#		fi
 
-		case "$backend" in
-		NetworkManager) sh_wifi_scan_networkmanager ;;
-		iwd) sh_wifi_scan_iwd ;;
-		wpa_supplicant) sh_wifi_scan_wpa_supplicant ;;
-		esac
+#		case "$backend" in
+#		NetworkManager) sh_wifi_scan_networkmanager ;;
+#		iwd) sh_wifi_scan_iwd ;;
+#		wpa_supplicant) sh_wifi_scan_iw "${iface}" ;;
+#		esac
+
+    sh_wifi_scan_iw "${iface}"
 
 		# Nenhuma rede encontrada
 		if [[ "${#ARRAY_SSID[@]}" -eq 0 ]]; then
@@ -2137,7 +2230,7 @@ sh_choosewifi() {
 			--cancel-label "${cmsg_ButtonBack}" \
 			--colors \
 			--menu "\n${YELLOW}$(gettext "Escolha a rede que deseja conectar:")" \
-			0 0 0 \
+			20 0 0 \
 			"${array[@]}" \
 			2>&1 >/dev/tty)
 
@@ -2361,7 +2454,37 @@ sh_confWifi() {
 				# solicita configuração IP
 				dhcpcd "$iface" 2>/dev/null
 				;;
+
 			wpa_supplicant)
+				# DHCP = remove bloco estático
+				sh_remove_dhcpcd_conf_iface
+
+				# IP fixo = recria bloco
+				if $USE_STATIC_IP; then
+					sh_save_dhcpcd_static_ip
+				fi
+
+				# garante que o dhcpcd releia a configuração
+				dhcpcd -k "$iface" 2>/dev/null
+
+				# libera outra conexao se existir
+				sh_nm_release_iface "$iface"
+
+				# gerar conf
+				wpa_cli -i "$iface" terminate >/dev/null 2>&1 || true
+				rm -f "/etc/wpa_supplicant/wpa_supplicant-$iface.conf" >/dev/null 2>&1 || true
+				wpa_passphrase \
+				  "$_WIFI_NETWORK" \
+				  "$_WIFI_PASSWORD" >/etc/wpa_supplicant/wpa_supplicant-"$iface".conf
+
+        # conecta!
+        wpa_supplicant \
+            -B \
+            -i "$iface" \
+            -c "/etc/wpa_supplicant/wpa_supplicant-$iface.conf"
+
+				# solicita configuração IP
+				dhcpcd "$iface" 2>/dev/null
 				;;
 			esac
 
