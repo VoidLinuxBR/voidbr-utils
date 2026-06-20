@@ -4,7 +4,7 @@
 #
 #  voidbr-wifi-setup
 #  Created: qua 17 jun 2026 00:46:30 -04
-#  Updated: qui 18 jun 2026 22:19:31 -04
+#  Updated: sáb 20 jun 2026 02:34:26 -04
 #
 #  Copyright (c) 2019-2026, Vilmar Catafesta <vcatafesta@gmail.com>
 #  All rights reserved.
@@ -50,7 +50,7 @@ shopt -s extglob
 
 #system
 readonly APP="${0##*/}"
-readonly _VERSION_='0.6.18-20260618'
+readonly _VERSION_='0.6.20-20260620'
 declare -g DEPENDENCIES=(
 	dialog
 	gettext
@@ -104,7 +104,7 @@ declare -gA DISTRO_MGR=(
 declare backend
 declare iface
 declare DEFITEM
-declare -gi njobs=3
+declare -gi njobs=7
 declare -gi ncounter=0
 declare -gi quiet=0
 declare -gi grafico=1
@@ -133,12 +133,12 @@ declare -gA Alocale=(
 	[5]=it_IT
 )
 declare -gA AsDhcp=(
-	AsDhcp [IFACE]="${Asdhcp[IFACE]:-eth0}"
-	AsDhcp [IP]="${AsDhcp[IP]:-192.168.1.100}"
-	AsDhcp [CIDR]="${AsDhcp[CIDR]:-24}"
-	AsDhcp [GATEWAY]="${AsDhcp[GATEWAY]:-192.168.1.1}"
-	AsDhcp [DNS1]="${AsDhcp[DNS1]:-1.1.1.1}"
-	AsDhcp [DNS2]="${AsDhcp[DNS2]:-8.8.8.8}"
+	AsDhcp[IFACE]="${Asdhcp[IFACE]:-eth0}"
+	AsDhcp[IP]="${AsDhcp[IP]:-192.168.2.100}"
+	AsDhcp[CIDR]="${AsDhcp[CIDR]:-24}"
+	AsDhcp[GATEWAY]="${AsDhcp[GATEWAY]:-192.168.2.1}"
+	AsDhcp[DNS1]="${AsDhcp[DNS1]:-1.1.1.1}"
+	AsDhcp[DNS2]="${AsDhcp[DNS2]:-8.8.8.8}"
 )
 
 detect_distro() {
@@ -492,9 +492,9 @@ sh_loadSavedConfig() {
 
 sh_setAsDhcp() {
 	AsDhcp[IFACE]=${AsDhcp[IFACE]:-$(get_default_iface)}
-	AsDhcp[IP]=${AsDhcp[IP]:-192.168.1.100}
+	AsDhcp[IP]=${AsDhcp[IP]:-192.168.2.100}
 	AsDhcp[CIDR]=${AsDhcp[CIDR]:-24}
-	AsDhcp[GATEWAY]=${AsDhcp[GATEWAY]:-192.168.1.1}
+	AsDhcp[GATEWAY]=${AsDhcp[GATEWAY]:-192.168.2.1}
 	AsDhcp[DNS1]=${AsDhcp[DNS1]:-1.1.1.1}
 	AsDhcp[DNS2]=${AsDhcp[DNS2]:-8.8.8.8}
 }
@@ -907,6 +907,20 @@ alerta() {
 		10 81
 }
 
+notconf() {
+  xtitle="$1"
+  shift
+  ${DIALOG} \
+    --colors \
+    --title "$xtitle" \
+    --backtitle "$ccabec" \
+    --yes-label "${cmsg_nolabel}" \
+    --no-label "${cmsg_yeslabel}" \
+    --yesno "$*" \
+    0 0
+  return $?
+}
+
 conf() {
 	xtitle="$1"
 	shift
@@ -1010,9 +1024,10 @@ sh_cmd_job_progressbox() {
 		} 2>&1 | ${DIALOG} \
 			--no-collapse \
 			--colors \
+			--backtitle "$ccabec" \
 			--title "Step:${BOLD}${YELLOW}${ufmt} ${RESET}${BOLD}$logmessage" \
 			--backtitle "$ctitle" \
-			--progressbox 0 0
+			--progressbox 15 80
 
 		lretval=${PIPESTATUS[0]}
 	else
@@ -1086,25 +1101,11 @@ display_result() {
 		0 0
 }
 
-#			15 100
-
-notconf() {
-	xtitle="$1"
-	shift
-	${DIALOG} \
-		--colors \
-		--title "$xtitle" \
-		--backtitle "$ccabec" \
-		--yes-label "${cmsg_nolabel}" \
-		--no-label "${cmsg_yeslabel}" \
-		--yesno "$*" \
-		10 100
-	return $?
-}
-
 sh_update_wpa_suplicant() {
-	sh_cmd_job "${cmsg_Ajustando} wpa_supplicant.conf" "
-      cat >"/etc/wpa_supplicant/wpa_supplicant.conf" <<-EOF
+  local cConfig="$1"
+
+	sh_cmd_job "${cmsg_Ajustando} ${cConfig}" "
+      cat >"/etc/wpa_supplicant/${cConfig}" <<-EOF
 ctrl_interface=/run/wpa_supplicant
 ctrl_interface_group=wheel
 update_config=1
@@ -1778,7 +1779,7 @@ sh_get_iface() {
 		--stdout \
 		--colors \
 		--backtitle "$ccabec" \
-		--title "== WIFI - $(gettext "interface(s) detectada(s)") ==" \
+		--title "== WIFI - $(gettext "interface") ==" \
 		--ok-label "${cmsg_ButtonEscolher}" \
 		--cancel-label "${cmsg_ButtonBack}" \
 		--menu "\n${YELLOW}$(gettext "Selecione a interface Wi-Fi:")" \
@@ -1798,6 +1799,12 @@ sh_get_iface() {
 }
 
 sh_wifi_scan_networkmanager() {
+	ARRAY_SSID=()
+	ARRAY_BSID=()
+	ARRAY_SIGNAL=()
+	ARRAY_FREQUENCY=()
+	ARRAY_FLAGS=()
+
 	while IFS=: read -r \
 		inuse \
 		b1 b2 b3 b4 b5 b6 \
@@ -1834,13 +1841,10 @@ sh_wifi_scan_iw() {
 	ARRAY_FLAGS=()
 
 	while IFS= read -r line; do
-
 		case "$line" in
-
 		BSS\ *)
 			if [[ -n "$ssid" ]]; then
-
-				if ((${signal_db%.*} >= -60)); then
+  			if ((${signal_db%.*} >= -60)); then
 					signal="$(sh_signal_to_bars 4)"
 				elif ((${signal_db%.*} >= -70)); then
 					signal="$(sh_signal_to_bars 3)"
@@ -1889,11 +1893,9 @@ sh_wifi_scan_iw() {
 			;;
 
 		esac
-
 	done < <(iw dev "$iface" scan 2>/dev/null)
 
 	if [[ -n "$ssid" ]]; then
-
 		if ((${signal_db%.*} >= -60)); then
 			signal="$(sh_signal_to_bars 4)"
 		elif ((${signal_db%.*} >= -70)); then
@@ -1918,6 +1920,12 @@ sh_wifi_scan_wpa() {
 
 	wpa_cli -i "$iface" scan >/dev/null 2>&1
 	sleep 3
+
+	ARRAY_SSID=()
+	ARRAY_BSID=()
+	ARRAY_SIGNAL=()
+	ARRAY_FREQUENCY=()
+	ARRAY_FLAGS=()
 
 	while IFS=$'\t' read -r bssid freq signal_db flags ssid; do
 		[[ -z "$ssid" ]] && continue
@@ -1952,8 +1960,13 @@ sh_wifi_scan_iwd() {
 	local iface="${1:-$(sh_get_wifi_interface)}"
 	local raw_line line ssid security signal
 
-	while IFS= read -r raw_line; do
+	ARRAY_SSID=()
+	ARRAY_BSID=()
+	ARRAY_SIGNAL=()
+	ARRAY_FREQUENCY=()
+	ARRAY_FLAGS=()
 
+	while IFS= read -r raw_line; do
 		case "$raw_line" in
 		*"Available networks"*) continue ;;
 		*"Network name"*) continue ;;
@@ -1990,7 +2003,6 @@ sh_wifi_scan_iwd() {
 		ARRAY_SIGNAL+=("$signal")
 		ARRAY_FREQUENCY+=("-")
 		ARRAY_FLAGS+=("$security")
-
 	done < <(iwctl station "$iface" get-networks)
 }
 
@@ -2031,8 +2043,8 @@ sh_choosewifi() {
 		#		fi
 
 		case "$backend" in
-		NetworkManager) sh_wifi_scan_networkmanager ;;
-		iwd) sh_wifi_scan_iwd ;;
+		NetworkManager) sh_wifi_scan_networkmanager "${iface}" ;;
+		iwd) sh_wifi_scan_iwd "${iface}" ;;
 		wpa_supplicant) sh_wifi_scan_iw "${iface}" ;;
 		esac
 
@@ -2059,6 +2071,7 @@ sh_choosewifi() {
 
 		# Seleciona rede
 		wifi=$(${DIALOG} \
+		  --stdout \
 			--default-item "0" \
 			--backtitle "$ccabec" \
 			--title "== WIFI - redes via ${backend} ==" \
@@ -2068,9 +2081,8 @@ sh_choosewifi() {
 			--extra-label "Refresh" \
 			--colors \
 			--menu "\n${YELLOW}$(gettext "Escolha a rede que deseja conectar:")" \
-			20 0 0 \
-			"${array[@]}" \
-			2>&1 >/dev/tty)
+			0 0 0 \
+			"${array[@]}")
 
 		exit_status=$?
 		case $exit_status in
@@ -2136,6 +2148,64 @@ sh_nm_disable_autoconnect_others() {
 	)
 }
 
+sh_service_running() {
+  sv status "$1" 2>/dev/null | grep -q '^run:'
+}
+
+sh_restart_services() {
+  sh_service_running NetworkManager &&
+    sv restart NetworkManager
+
+  sh_service_running iwd &&
+    sv restart iwd
+
+  sh_service_running wpa_supplicant &&
+    sv restart wpa_supplicant
+
+  rfkill list
+  rfkill unblock all
+}
+
+sh_prepare_wifi_backend() {
+    local backend="$1"
+
+    case "$backend" in
+        NetworkManager)
+            sv stop iwd 2>/dev/null
+            sv stop wpa_supplicant 2>/dev/null
+            sv restart NetworkManager
+            ;;
+
+        iwd)
+            sv stop NetworkManager 2>/dev/null
+            sv stop wpa_supplicant 2>/dev/null
+            sv restart iwd
+            ;;
+
+        wpa_supplicant)
+            sv stop NetworkManager 2>/dev/null
+            sv stop iwd 2>/dev/null
+            sv restart wpa_supplicant
+            ;;
+    esac
+
+    sleep 3
+}
+
+switch_to_networkmanager() {
+    local iface="$1"
+
+    [[ -z "$iface" ]] && return 1
+    echo "Desativando conexões wpa_supplicant..." ; wpa_cli disable_network all
+    echo "Parando wpa_supplicant..." ; wpa_cli terminate
+    echo "Removendo DHCP antigo..."  ; dhcpcd -k "$iface"
+    echo "Limpando IPs..."           ; ip addr flush dev "$iface"
+    echo "Ativando interface..."     ; ip link set "$iface" up
+    echo "Entregando interface ao NM..." ; nmcli device set "$iface" managed yes
+    echo "Reconectando..." ; nmcli device reapply "$iface"
+    echo "Concluído."
+}
+
 sh_confWifi() {
 	local iface
 	local wlanip
@@ -2160,8 +2230,23 @@ sh_confWifi() {
 		#		return 1
 		exit 0
 	fi
-
 	#debug "1=$_WIFI_NETWORK 2=$_WIFI_CONNECTED"
+
+  sh_cmd_job_progressbox "$(gettext "Reiniciando serviços/interface e desbloquendo rfkill")" '
+    ip link set "${iface}" up
+    rfkill list
+    rfkill unblock all
+    #sh_prepare_wifi_backend "${backend}"
+    sleep 0.5
+    :
+  '
+
+  case "${backend}" in
+  NetworkManager)
+    sh_cmd_job_progressbox "${backend}: Entregando interface ao NM" '
+      switch_to_networkmanager "${iface}"
+    ' $err_not_fatal
+  esac
 
 	cextra+="➡ ${YELLOW}$(gettext 'Deixe em branco o campo Interface Wi-Fi para listar interfaces')\n"
 	cextra+="➡ ${YELLOW}$(gettext 'Deixe em branco o campo Rede Wi-Fi para escanear redes')"
@@ -2170,7 +2255,7 @@ sh_confWifi() {
 	senha_edit=1
 
 	while true; do
-		exec 3>&1
+#		exec 3>&1
 		wifitext=$(
 			${DIALOG} \
 				--stdout \
@@ -2198,6 +2283,10 @@ sh_confWifi() {
 		case $exit_status in
 		"$D_ESC" | "$D_CANCEL")
 			return
+			;;
+		"$D_EXTRA")
+			sh_choosewifi
+			continue
 			;;
 		"$D_OK")
 			mapfile -t aWifi <<<"$wifitext"
@@ -2231,8 +2320,29 @@ sh_confWifi() {
 				continue
 			fi
 
+      if test -e /etc/NetworkManager/system-connections/"${_WIFI_NETWORK}".nmconnection; then
+   			if conf "=== ${_WIFI_NETWORK} ===" \
+          "\n\n${BOLD}${RED}$(gettext "Já existe um perfil para essa rede.\nDeseja reaproveitar ?")\n\n"; then
+  				sh_cmd_job_progressbox "${backend}: Reativando conexão ${_WIFI_NETWORK}" '
+	    			sh_nm_disable_autoconnect_others "$iface" "$_WIFI_NETWORK"
+            nmcli connection modify "${_WIFI_NETWORK}" connection.autoconnect yes
+            nmcli connection up "${_WIFI_NETWORK}"
+          '
+  				display_result "$(nmcli -f NAME,UUID,AUTOCONNECT connection show)"
+	        break
+        fi
+      fi
+
+			if test -z "${AConfWifi[_PASSWORD]}"; then
+  			if ! conf "=== WIFI PASSWORD ===" \
+	  			"${RED}Campo de senha está vazia.${RST}" \
+		  		"\n\n${BOLD}${RED}$(gettext "Isso é deliberado ?")\n\n"; then
+			  continue
+        fi
+      fi
+
 			USE_STATIC_IP=false
-			if conf "=== IP SERVER ===" \
+			if ! notconf "=== IP SERVER ===" \
 				"\nInterface: ${CYAN}${iface}${RST}" \
 				"\nBackend  : ${CYAN}${backend}${RST}" \
 				"\nNetwork  : ${CYAN}${AConfWifi[_NETWORK]}${RST}" \
@@ -2241,19 +2351,29 @@ sh_confWifi() {
 				sh_configure_dhcpcd_static_ip_dialog
 			fi
 
+ 			if ! conf "=== AVISO ===" \
+        "\n\n${BOLD}${RED}$(gettext "Prosseguir com a configuração e conexão ?")\n\n"; then
+  	    continue
+      fi
+
 			case "${backend}" in
 			NetworkManager)
 				sh_cmd_job_progressbox "${backend}: Removendo conexão antiga" '
+	  			sh_nm_disable_autoconnect_others "$iface" "$_WIFI_NETWORK"
           nmcli connection delete ${_WIFI_NETWORK}
         ' $err_not_fatal
 
 				sh_cmd_job_progressbox "${backend}: Configurando conexão ${_WIFI_NETWORK}" '
+          #nmcli device disconnect "${iface}"
 				  nmcli device wifi connect "${_WIFI_NETWORK}" \
 					  password "${_WIFI_PASSWORD}" \
   					ifname "$iface"
-
 	  		  sleep 0.5
-				' $erro_fatal
+				' $err_fatal
+
+				sh_cmd_job_progressbox "${backend}: Configurando autoconexão ${_WIFI_NETWORK}" '
+          nmcli connection modify "${_WIFI_NETWORK}" connection.autoconnect yes
+        '
 
 				if $USE_STATIC_IP; then
 					sh_cmd_job_progressbox "${backend}: Configurando ip fixo" '
@@ -2262,7 +2382,7 @@ sh_confWifi() {
     				nmcli connection down "${AsDhcp[CONNECTION]}"
     				nmcli connection up "${AsDhcp[CONNECTION]}"
     				sleep 0.5
-				  ' $erro_not_fatal
+				  ' $err_not_fatal
 				fi
 
 				sh_cmd_job_progressbox "${backend}: Configurando dns" '
@@ -2273,9 +2393,7 @@ sh_confWifi() {
 				  echo "GATEWAY: $wifi_gateway"
 				  echo "DNS    : $wifi_dns"
 				'
-
-				sh_nm_disable_autoconnect_others \
-					"$iface" \ "$_WIFI_NETWORK"
+				#display_result "$(nmcli -f NAME,UUID,AUTOCONNECT connection show)"
 				;;
 
 			iwd)
@@ -2286,7 +2404,7 @@ sh_confWifi() {
 				if $USE_STATIC_IP; then
 					sh_cmd_job_progressbox "${backend}: IP fixo = recria bloco" '
     				sh_save_dhcpcd_static_ip
-  	      '
+          '
 				fi
 
 				sh_cmd_job_progressbox "${backend}: garante que o dhcpcd releia a configuração" '
@@ -2306,6 +2424,9 @@ sh_confWifi() {
 				sh_cmd_job_progressbox "${backend}: solicita configuração IP" '
   				dhcpcd "$iface"
 	      '
+        : ${wifi_ip=$(ip -4 -o addr show dev "$iface" | awk '{print $4}' | head -n1)}
+        : ${wifi_gateway=$(ip route show default dev "$iface" | awk '{print $3}' | head -n1)}
+        : ${wifi_dns=$(awk '/^nameserver/{print $2}' /etc/resolv.conf | paste -sd ',')}
 				;;
 
 			wpa_supplicant)
@@ -2320,7 +2441,7 @@ sh_confWifi() {
 				fi
 
 				sh_cmd_job_progressbox "${backend}: garante que o dhcpcd releia a configuração" '
-  				dhcpcd -k "$iface" 2>/dev/null
+  				dhcpcd -k "$iface"
  				'
 
 				sh_cmd_job_progressbox "${backend}: libera outra conexao se existir" '
@@ -2328,11 +2449,12 @@ sh_confWifi() {
         '
 
 				sh_cmd_job_progressbox "${backend}: Gerar configuração" '
-  				wpa_cli -i "$iface" terminate >/dev/null 2>&1 || true
-	  			rm -f "/etc/wpa_supplicant/wpa_supplicant-$iface.conf" >/dev/null 2>&1 || true
-		  		wpa_passphrase \
-			  		"$_WIFI_NETWORK" \
-				  	"$_WIFI_PASSWORD" >/etc/wpa_supplicant/wpa_supplicant-"$iface".conf
+  				wpa_cli -i "$iface" terminate || true
+	  			rm -f "/etc/wpa_supplicant/wpa_supplicant-$iface.conf" || true
+		  		#wpa_passphrase \
+            #"$_WIFI_NETWORK" \
+				  	#"$_WIFI_PASSWORD" >/etc/wpa_supplicant/wpa_supplicant-"$iface".conf
+          sh_update_wpa_suplicant "wpa_supplicant-$iface.conf"
         ' $err_fatal
 
 				sh_cmd_job_progressbox "${backend}: Iniciando conexão" '
@@ -2343,23 +2465,27 @@ sh_confWifi() {
         '
 
 				sh_cmd_job_progressbox "${backend}: solicita configuração IP" '
-  				dhcpcd "$iface" 2>/dev/null
+  				dhcpcd "$iface"
 	      '
+        : ${wifi_ip=$(ip -4 -o addr show dev "$iface" | awk '{print $4}' | head -n1)}
+        : ${wifi_gateway=$(ip route show default dev "$iface" | awk '{print $3}' | head -n1)}
+        : ${wifi_dns=$(awk '/^nameserver/{print $2}' /etc/resolv.conf | paste -sd ',')}
 				;;
 			esac
 
 			if [[ $? -eq 0 ]]; then
 				info "${_WIFI_NETWORK}" "\
-${GREEN}Conectado com sucesso!${RST}\n\n\
-Interface: ${YELLOW}$iface${RST}\n\
-SSID     : ${YELLOW}${_WIFI_NETWORK}${RST}\n\
-BSSID    : $bssid\n\
-IP       : ${YELLOW}${wifi_ip:-N/A}${RST}\n\
-Gateway  : ${wifi_gateway:-N/A}\n\
-DNS      : ${wifi_dns:-N/A}\n\
-Sinal    : ${signal:-N/A}%\n\
-Segurança: ${security:-N/A}\n\
-"
+          ${GREEN}Conectado com sucesso!${RST}\n\n\
+          Interface: ${YELLOW}$iface${RST}\n\
+          SSID     : ${YELLOW}${_WIFI_NETWORK}${RST}\n\
+          BSSID    : $bssid\n\
+          IP       : ${YELLOW}${wifi_ip:-N/A}${RST}\n\
+          Gateway  : ${YELLOW}${wifi_gateway:-N/A}${RST}\n\
+          DNS      : ${YELLOW}${wifi_dns:-N/A}${RST}\n\
+          Sinal    : ${signal:-N/A}%\n\
+          Segurança: ${security:-N/A}\n\
+        "
+        exit 0
 			else
 				if conf "WIFI" \
 					"${RED}Falha ao conectar.${RST}\n\n" \
@@ -2370,12 +2496,8 @@ Segurança: ${security:-N/A}\n\
 				fi
 			fi
 			;;
-		3)
-			sh_choosewifi
-			continue
-			;;
 		esac
-		exec 3>&-
+#		exec 3>&-
 		return 0
 	done
 }
