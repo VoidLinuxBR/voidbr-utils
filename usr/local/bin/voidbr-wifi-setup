@@ -1105,15 +1105,15 @@ sh_update_wpa_suplicant() {
   local cConfig="$1"
 
 	sh_cmd_job "${cmsg_Ajustando} ${cConfig}" "
-      cat >"/etc/wpa_supplicant/${cConfig}" <<-EOF
+      cat >"/etc/wpa_supplicant/${cConfig}" <<EOF
 ctrl_interface=/run/wpa_supplicant
 ctrl_interface_group=wheel
 update_config=1
 fast_reauth=1
 
 network={
-   ssid=P"$_WIFI_NETWORK"
-   psk="$_WIFI_PASSWORD"
+   ssid=P\"$_WIFI_NETWORK\"
+   psk=\"$_WIFI_PASSWORD\"
    mesh_fwding=1
 }
 EOF
@@ -1629,7 +1629,7 @@ $cLB7 ${ccolor}↵ ENTER${RESET} ou ${ccolor}BARRA DE ESPAÇO${RESET} $cLB8"
 	cmsg_DefinirAudioServer=$(gettext "Selecionar sistema de áudio")
 }
 
-select_wifi_backend() {
+sh_select_wifi_backend() {
 	local options=()
 	local choice
 
@@ -1674,18 +1674,6 @@ select_wifi_backend() {
 	backend="$choice"
 }
 
-sh_get_wifi_backend() {
-	if pgrep -x NetworkManagerX >/dev/null 2>&1; then
-		printf '%s\n' NetworkManager
-	elif pgrep -x iwd >/dev/null 2>&1; then
-		printf '%s\n' iwd
-	elif pgrep -x wpa_supplicant >/dev/null 2>&1; then
-		printf '%s\n' wpa_supplicant
-	else
-		return 1
-	fi
-}
-
 sh_get_wifi_interfaces() {
 	local i
 	for i in /sys/class/net/*; do
@@ -1706,10 +1694,7 @@ sh_get_first_wifi_interface() {
 
 sh_get_wifi_ssid() {
 	local iface="${1:-$(sh_get_wifi_interface)}"
-
-	backend="$(sh_get_wifi_backend)" || {
-		return 1
-	}
+	local backend="$2"
 
 	case "${backend}" in
 	NetworkManager)
@@ -1739,26 +1724,6 @@ sh_get_iface() {
 	local nc=0
 	local exit_status
 	local sep="\xe2\x94\x82"
-
-	#	# Detecta interfaces wifi
-	#	if pgrep -x NetworkManager >/dev/null 2>&1; then
-	#		while IFS=: read -r device type state connection; do
-	#			[[ "$type" == wifi ]] || continue
-	#			[[ -n "$device" ]] || continue
-	#			iface_array+=("$device" "")
-	#		done < <(
-	#			nmcli --terse \
-	#				-f DEVICE,TYPE,STATE,CONNECTION \
-	#				device status
-	#		)
-	#	else
-	#		for iface in /run/wpa_supplicant/*; do
-	#			[[ -S "$iface" ]] || continue
-	#			iface="${iface##*/}"
-	#			[[ "$iface" == p2p-* ]] && continue
-	#			iface_array+=("$iface" "")
-	#		done
-	#	fi
 
 	# Detecta interfaces wifi
 	mapfile -t iface_array < <(sh_get_wifi_interfaces)
@@ -2034,13 +1999,6 @@ sh_choosewifi() {
 		esac
 
 		sh_info_msg "$(gettext 'Escaneando redes wifi...')"
-		#		if ! backend="$(sh_get_wifi_backend)"; then
-		#			info \
-		#				"WIFI BackEnd" \
-		#				"\n${RED}$(gettext "Nenhum backend Wi-Fi encontrado.")" \
-		#				"\n${CYAN}$(gettext "Instale o NetworkManager, ou iwd, ou wpa_supplicant.")"
-		#			return 1
-		#		fi
 
 		case "$backend" in
 		NetworkManager) sh_wifi_scan_networkmanager "${iface}" ;;
@@ -2197,8 +2155,9 @@ switch_to_networkmanager() {
 
     [[ -z "$iface" ]] && return 1
     echo "Desativando conexões wpa_supplicant..." ; wpa_cli disable_network all
-    echo "Parando wpa_supplicant..." ; wpa_cli terminate
-    echo "Removendo DHCP antigo..."  ; dhcpcd -k "$iface"
+    echo "Parando conexões wpa..."   ; wpa_cli terminate
+    echo "Parando wpa_supplicant..." ; sv stop wpa_supplicant
+#   echo "Removendo DHCP antigo..."  ; dhcpcd -k "$iface"
     echo "Limpando IPs..."           ; ip addr flush dev "$iface"
     echo "Ativando interface..."     ; ip link set "$iface" up
     echo "Entregando interface ao NM..." ; nmcli device set "$iface" managed yes
@@ -2206,15 +2165,38 @@ switch_to_networkmanager() {
     echo "Concluído."
 }
 
+has_internet() {
+  local iface="$1"
+#  local retval
+
+  sh_cmd_job_progressbox "${iface}: $(gettext "Testando internet")" '
+    #ping -I "$iface" -c 3 -W 3 8.8.8.8
+    output=$(
+      curl --interface wlo1 --connect-timeout 5 ifconfig.me/ip | tee >(cat >&2)
+    )
+    sleep 1.5
+  '
+
+#  retval="$?"
+#  return "$retval"
+}
+
 sh_confWifi() {
-	local iface
 	local wlanip
 	local cextra
 
 	#	if iface="$(sh_get_wifi_interface)"; then
 	if sh_get_iface; then
-		select_wifi_backend
-		if ! _WIFI_CONNECTED="$(sh_get_wifi_ssid "$iface")"; then
+	  if has_internet "${iface}"; then
+  		if ! conf "=== ${iface} => INTERNET ===" \
+        "\n${BOLD}${GREEN}✓ ${CYAN}$(gettext "A Interface selecionada já tem acesso à internet!")" \
+        "\n\n${BOLD}${RED}$(gettext "Ainda deseja prosseguir ?")\n\n"; then
+        return 1
+      fi
+	  fi
+
+		sh_select_wifi_backend
+		if ! _WIFI_CONNECTED="$(sh_get_wifi_ssid "$iface" "${backend}")"; then
 			info \
 				"WIFI BackEnd" \
 				"\n${RED}$(gettext "Nenhum backend Wi-Fi encontrado.")" \
@@ -2320,18 +2302,42 @@ sh_confWifi() {
 				continue
 			fi
 
-      if test -e /etc/NetworkManager/system-connections/"${_WIFI_NETWORK}".nmconnection; then
-   			if conf "=== ${_WIFI_NETWORK} ===" \
-          "\n\n${BOLD}${RED}$(gettext "Já existe um perfil para essa rede.\nDeseja reaproveitar ?")\n\n"; then
-  				sh_cmd_job_progressbox "${backend}: Reativando conexão ${_WIFI_NETWORK}" '
-	    			sh_nm_disable_autoconnect_others "$iface" "$_WIFI_NETWORK"
-            nmcli connection modify "${_WIFI_NETWORK}" connection.autoconnect yes
-            nmcli connection up "${_WIFI_NETWORK}"
-          '
-  				display_result "$(nmcli -f NAME,UUID,AUTOCONNECT connection show)"
-	        break
+      case "${backend}" in
+      NetworkManager)
+        if test -e /etc/NetworkManager/system-connections/"${_WIFI_NETWORK}".nmconnection; then
+     			if conf "=== ${_WIFI_NETWORK} ===" \
+            "\n\n${BOLD}${RED}$(gettext "Já existe um perfil para essa rede.\nDeseja utilizar ?")\n\n"; then
+    				sh_cmd_job_progressbox "${backend}: Reativando conexão ${_WIFI_NETWORK}" '
+  	    			sh_nm_disable_autoconnect_others "$iface" "$_WIFI_NETWORK"
+              nmcli connection modify "${_WIFI_NETWORK}" connection.autoconnect yes
+              nmcli connection up "${_WIFI_NETWORK}"
+            '
+    				display_result "$(nmcli -f NAME,UUID,AUTOCONNECT connection show)"
+  	        break
+          fi
         fi
-      fi
+      ;;
+      iwd)
+      ;;
+      wpa_supplicant)
+        if test -e /etc/wpa_supplicant/wpa_supplicant-${iface}.conf; then
+     			if conf "=== ${_WIFI_NETWORK} ===" \
+            "\n\n${BOLD}${RED}$(gettext "Já existe um perfil para essa rede.\nDeseja utilizar ?")\n\n"; then
+    				sh_cmd_job_progressbox "${backend}: Reativando conexão ${_WIFI_NETWORK}" '
+  	    			sh_nm_disable_autoconnect_others "$iface" "$_WIFI_NETWORK"
+  	    			sh_nm_release_iface "$iface"
+  	    			sv down wpa_supplicant
+        			pkill wpa_supplicant
+              rm -f /run/wpa_supplicant/*
+              sv up wpa_supplicant
+      				dhcpcd "$iface"
+            '
+    				display_result "$(wpa_cli status)"
+  	        break
+          fi
+        fi
+      ;;
+      esac
 
 			if test -z "${AConfWifi[_PASSWORD]}"; then
   			if ! conf "=== WIFI PASSWORD ===" \
@@ -2458,10 +2464,10 @@ sh_confWifi() {
         ' $err_fatal
 
 				sh_cmd_job_progressbox "${backend}: Iniciando conexão" '
-  				wpa_supplicant \
-	  				-B \
-		  			-i "$iface" \
-			  		-c "/etc/wpa_supplicant/wpa_supplicant-$iface.conf"
+    			sv down wpa_supplicant
+     			pkill wpa_supplicant
+          rm -f /run/wpa_supplicant/*
+          sv up wpa_supplicant
         '
 
 				sh_cmd_job_progressbox "${backend}: solicita configuração IP" '
