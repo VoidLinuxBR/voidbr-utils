@@ -1121,8 +1121,8 @@ update_config=1
 fast_reauth=1
 
 network={
-   ssid=P\"$_WIFI_NETWORK\"
-   psk=\"$_WIFI_PASSWORD\"
+   ssid=P"$_WIFI_NETWORK"
+   psk="$_WIFI_PASSWORD"
    mesh_fwding=1
 }
 EOF
@@ -2133,32 +2133,6 @@ sh_restart_services() {
 	rfkill unblock all
 }
 
-sh_prepare_wifi_backend() {
-	local backend="$1"
-
-	case "$backend" in
-	NetworkManager)
-		sv stop iwd 2>/dev/null
-		sv stop wpa_supplicant 2>/dev/null
-		sv restart NetworkManager
-		;;
-
-	iwd)
-		sv stop NetworkManager 2>/dev/null
-		sv stop wpa_supplicant 2>/dev/null
-		sv restart iwd
-		;;
-
-	wpa_supplicant)
-		sv stop NetworkManager 2>/dev/null
-		sv stop iwd 2>/dev/null
-		sv restart wpa_supplicant
-		;;
-	esac
-
-	sleep 3
-}
-
 switch_to_networkmanager() {
 	local iface="$1"
 
@@ -2189,15 +2163,10 @@ has_internet() {
   '
 }
 
-# Reinicia o wpa_supplicant de forma controlada
 sh_restart_wpa() {
-	sh_cmd_job_progressbox "Reiniciando wpa_supplicant" '
-    sv down wpa_supplicant
-    pkill -9 wpa_supplicant
-    # Garante a limpeza do socket
-    rm -rf /run/wpa_supplicant/*
+  sh_cmd_job_progressbox "Reiniciando wpa_supplicant" '
+    sh_down_wpa
     sv up wpa_supplicant
-    # Pequeno delay para garantir que o processo suba antes de continuar
     sleep 1
   '
 }
@@ -2217,92 +2186,84 @@ sh_prepare_dhcpcd() {
 }
 
 sh_show_connection_status() {
-	info "${_WIFI_NETWORK}" "
-    ${GREEN}Conectado com sucesso!${RST}
+  info "${_WIFI_NETWORK}" "\
+    ${GREEN}Conectado com sucesso!${RST}\n\n\
+    Interface: ${YELLOW}$iface${RST}\n\
+    SSID     : ${YELLOW}${_WIFI_NETWORK}${RST}\n\
+    BSSID    : $bssid\n\
+    IP       : ${YELLOW}${wifi_ip:-N/A}${RST}\n\
+    Gateway  : ${YELLOW}${wifi_gateway:-N/A}${RST}\n\
+    DNS      : ${YELLOW}${wifi_dns:-N/A}${RST}\n\
+    Sinal    : ${signal:-N/A}%\n\
+    Segurança: ${security:-N/A}\n\
+  "
+}
 
-    Interface: ${YELLOW}$iface${RST}
-    SSID     : ${YELLOW}${_WIFI_NETWORK}${RST}
-    BSSID    : $bssid
-    IP       : ${YELLOW}${wifi_ip:-N/A}${RST}
-    Gateway  : ${YELLOW}${wifi_gateway:-N/A}${RST}
-    DNS      : ${YELLOW}${wifi_dns:-N/A}${RST}
-    Sinal    : ${signal:-N/A}%
-    Segurança: ${security:-N/A}"
+sh_down_iwd() {
+  if has_running iwd; then
+	  echo "iwd rodando, iniciando rotina de reset..."
+
+  	# Para o serviço iwd
+		sv down iwd
+
+		# Identifica o driver da placa
+		local driver_path="/sys/class/net/$iface/device/driver"
+		local driver_name=$(basename "$(readlink "$driver_path")")
+
+		# Identifica o dependente real (o "filho")
+		# Agora veremos erros caso o 'ls' ou 'head' falhem
+		local filho=$(ls -1 /sys/module/"$driver_name"/holders | head -n 1)
+
+		# Executa o reset do módulo
+		if [[ -n "$filho" ]]; then
+			echo "Reiniciando módulo: $filho"
+			modprobe -r "$filho"
+			sleep 1
+			modprobe "$filho"
+			sleep 3
+		else
+			echo "Erro: Nenhum módulo dependente encontrado para $driver_name"
+		fi
+	fi
+}
+
+sh_down_wpa() {
+  if has_running wpa_supplicant; then
+	  echo "wpa_supplicant rodando, iniciando rotina de reset..."
+    sv down wpa_supplicant
+    pkill -9 wpa_supplicant
+    # Garante a limpeza do socket
+    rm -rf /run/wpa_supplicant/*
+  fi
+}
+
+sh_down_nm() {
+  if has_running NetworkManager; then
+    echo "NetworkManager rodando, iniciando rotina de reset..."
+    sv down NetworkManager
+  fi
 }
 
 sh_alternar_backend() {
 	local novo_backend="$1"
 
-	if [[ "$novo_backend" == "NetworkManager" ]]; then
-		# 1. Pega o status, limpa o final da string (':') e pega a primeira coluna
-		local status=$(sv status iwd | cut -d':' -f1)
-
-		# 2. Verifica se a primeira coluna é 'run'
-		if [[ "$status" == "run" ]]; then
-			echo "iwd rodando, iniciando rotina de reset..."
-
-			# 1. Para o serviço iwd
-			sv down iwd
-
-			# 2. Identifica o driver da placa
-			local driver_path="/sys/class/net/$iface/device/driver"
-			local driver_name=$(basename "$(readlink "$driver_path")")
-
-			# 3. Identifica o dependente real (o "filho")
-			# Agora veremos erros caso o 'ls' ou 'head' falhem
-			local filho=$(ls -1 /sys/module/"$driver_name"/holders | head -n 1)
-
-			# 4. Executa o reset do módulo
-			if [[ -n "$filho" ]]; then
-				echo "Reiniciando módulo: $filho"
-				modprobe -r "$filho"
-				sleep 1
-				modprobe "$filho"
-				sleep 3
-			else
-				echo "Erro: Nenhum módulo dependente encontrado para $driver_name"
-			fi
-		fi
-
-		# 5. Inicia o NetworkManager
-		sv up NetworkManager
-	fi
-}
-
-sh_alternar_backend() {
-	local novo_backend="$1"
-
-	if [[ "$novo_backend" == "NetworkManager" ]]; then
-		# 1. Verifica se a primeira coluna é 'run'
-		if has_running iwd; then
-			echo "iwd rodando, iniciando rotina de reset..."
-
-			# 2. Para o serviço iwd
-			sv down iwd
-
-			# 3. Identifica o driver da placa
-			local driver_path="/sys/class/net/$iface/device/driver"
-			local driver_name=$(basename "$(readlink "$driver_path")")
-
-			# 4. Identifica o dependente real (o "filho")
-			# Agora veremos erros caso o 'ls' ou 'head' falhem
-			local filho=$(ls -1 /sys/module/"$driver_name"/holders | head -n 1)
-
-			# 5. Executa o reset do módulo
-			if [[ -n "$filho" ]]; then
-				echo "Reiniciando módulo: $filho"
-				modprobe -r "$filho"
-				sleep 1
-				modprobe "$filho"
-				sleep 3
-			else
-				echo "Erro: Nenhum módulo dependente encontrado para $driver_name"
-			fi
-		fi
-
-		# 5. Inicia o NetworkManager
-		sv up NetworkManager
-	fi
+  case "$novo_backend" in
+	NetworkManager)
+    sh_down_iwd
+    sh_down_wpa
+    ! has_running NetworkManager &&	sv up NetworkManager
+		;;
+	iwd)
+    sh_down_wpa
+    sh_down_nm
+    ! has_running iwd && sv up iwd
+    ;;
+	wpa_supplicant)
+    sh_down_iwd
+    sh_down_nm
+    ! has_running wpa_supplicant && sv up wpa_supplicant
+    ;;
+	esac
 }
 
 sh_confWifi() {
@@ -2330,20 +2291,15 @@ sh_confWifi() {
 		wlanip="$(sh_get_ip_iface "$iface")"
 		_WIFI_NETWORK="$_WIFI_CONNECTED"
 	else
-		#		info \
-		#			"WIFI interface" \
-		#			"\n${RED}$(gettext "Nenhuma interface Wi-Fi encontrado.")"
-		#		return 1
 		exit 0
 	fi
 	#debug "1=$_WIFI_NETWORK 2=$_WIFI_CONNECTED"
 
 	sh_cmd_job_progressbox "$(gettext "Reiniciando serviços/interface e desbloquendo rfkill")" '
     sh_alternar_backend "${backend}"
-    #ip link set "${iface}" up
+    ip link set "${iface}" up
     rfkill list
     rfkill unblock all
-    #sh_prepare_wifi_backend "${backend}"
     sleep 0.5
     :
   '
@@ -2363,7 +2319,6 @@ sh_confWifi() {
 	senha_edit=1
 
 	while true; do
-		#		exec 3>&1
 		wifitext=$(
 			${DIALOG} \
 				--stdout \
@@ -2385,7 +2340,6 @@ sh_confWifi() {
 				"${cmsg_redewifi}      : " 6 1 "$_WIFI_NETWORK" 6 20 40 0 $rede_edit \
 				"${cmsg_senhawifi}     : " 7 1 "$_WIFI_PASSWORD" 7 20 40 0 $senha_edit
 		)
-		#			2>&1 1>&3)
 
 		exit_status=$?
 		case $exit_status in
@@ -2578,7 +2532,6 @@ sh_confWifi() {
 			fi
 			;;
 		esac
-		#		exec 3>&-
 		return 0
 	done
 }
