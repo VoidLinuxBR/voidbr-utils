@@ -1,0 +1,982 @@
+# Chili Tradutor Go - 2.1.20-20260201
+# Copyright (C) 2019-2026 Vilmar Catafesta <vcatafesta@gmail.com>
+# This file is distributed under the same license as the chili-tradutor-go package.
+msgid ""
+msgstr ""
+"Project-Id-Version: chili-tradutor-go 2.1.20-20260201\n"
+"POT-Creation-Date: 2026-06-21 00:07-0400\n"
+"PO-Revision-Date: 2026-06-21 00:07-0400\n"
+"Last-Translator: Vilmar Catafesta <vcatafesta@gmail.com>\n"
+"Language-Team: Portuguese <https://github.com/chililinux/chili-tradutor-go>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ja\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: usr/local/bin/voidbr-wifi-setup:453
+msgid "Antes de continuar, redimensione o terminal"
+msgstr "続行する前に、端末のサイズを変更してください"
+
+#: usr/local/bin/voidbr-wifi-setup:454
+msgid "para que ele meça pelo menos 80 x 24 caracteres."
+msgstr "少なくとも 80 x 24 文字になるようにしてください。"
+
+#: usr/local/bin/voidbr-wifi-setup:455
+msgid "Caso contrário, "
+msgstr "さもないと、"
+
+#: usr/local/bin/voidbr-wifi-setup:456
+msgid "você não poderá usar as ferramentas de partição de Disco."
+msgstr "ディスク パーティション ツールは使用できなくなります。"
+
+#: usr/local/bin/voidbr-wifi-setup:460
+msgid "TERMINAL MUITO PEQUENO"
+msgstr "非常に小さなターミナル"
+
+#: usr/local/bin/voidbr-wifi-setup:533
+msgid "Error: Unable to elevate privileges. Run manually as root."
+msgstr "エラー: 権限を昇格できません。 root として手動で実行します。"
+
+#: usr/local/bin/voidbr-wifi-setup:1210
+msgid "não disponível"
+msgstr "利用不可"
+
+#: usr/local/bin/voidbr-wifi-setup:1213
+msgid "mais avançado"
+msgstr "より高度な"
+
+#: usr/local/bin/voidbr-wifi-setup:1219
+msgid "Loading configuration file"
+msgstr "設定ファイルをロードしています"
+
+#: usr/local/bin/voidbr-wifi-setup:1234
+msgid "Analisando o arquivo de configuração"
+msgstr "設定ファイルの分析"
+
+#: usr/local/bin/voidbr-wifi-setup:1257
+msgid "Configuração de IP fixo (dhcpcd)"
+msgstr "固定 IP 構成 (dhcpcd)"
+
+#: usr/local/bin/voidbr-wifi-setup:1258
+msgid "Preencha os dados:"
+msgstr "データを入力します。"
+
+#: usr/local/bin/voidbr-wifi-setup:1260
+msgid "Interface:"
+msgstr "インタフェース："
+
+#: usr/local/bin/voidbr-wifi-setup:1261
+msgid "IP:"
+msgstr "IP:"
+
+#: usr/local/bin/voidbr-wifi-setup:1262
+msgid "Máscara (CIDR):"
+msgstr "マスク (CIDR):"
+
+#: usr/local/bin/voidbr-wifi-setup:1263
+msgid "Gateway:"
+msgstr "ゲートウェイ："
+
+#: usr/local/bin/voidbr-wifi-setup:1264
+msgid "DNS 1:"
+msgstr "DNS1:"
+
+#: usr/local/bin/voidbr-wifi-setup:1265
+msgid "DNS 2:"
+msgstr "DNS2:"
+
+#: usr/local/bin/voidbr-wifi-setup:1285
+msgid "Aplicar essas configurações?"
+msgstr "これらの設定を適用しますか?"
+
+#: usr/local/bin/voidbr-wifi-setup:1286
+msgid "Interface"
+msgstr "インタフェース"
+
+#: usr/local/bin/voidbr-wifi-setup:1287
+msgid "IP"
+msgstr "IP"
+
+#: usr/local/bin/voidbr-wifi-setup:1288
+msgid "Gateway"
+msgstr "ゲートウェイ"
+
+#: usr/local/bin/voidbr-wifi-setup:1289
+msgid "DNS"
+msgstr "DNS"
+
+#: usr/local/bin/voidbr-wifi-setup:1431
+msgid "Licença GPL v3+: GNU GPL versão 3 ou posterior"
+msgstr "GPL v3+ ライセンス: GNU GPL バージョン 3 以降"
+
+#: usr/local/bin/voidbr-wifi-setup:1432
+msgid "Este é um software livre: você é livre para alterá-lo e redistribuí-lo."
+msgstr "これはフリー ソフトウェアです。自由に変更したり再配布したりできます。"
+
+#: usr/local/bin/voidbr-wifi-setup:1433
+msgid "NÃO HÁ QUALQUER GARANTIA, na máxima extensão permitida em lei."
+msgstr "法律で認められる最大限の範囲において、いかなる保証もありません。"
+
+#: usr/local/bin/voidbr-wifi-setup:1444
+msgid "Use as teclas"
+msgstr "キーを使用する"
+
+#: usr/local/bin/voidbr-wifi-setup:1445
+msgid "PARA CIMA"
+msgstr "上"
+
+#: usr/local/bin/voidbr-wifi-setup:1446
+msgid "e"
+msgstr "そして"
+
+#: usr/local/bin/voidbr-wifi-setup:1447
+msgid "PARA BAIXO"
+msgstr "下"
+
+#: usr/local/bin/voidbr-wifi-setup:1448
+msgid "para navegar"
+msgstr "ナビゲートする"
+
+#: usr/local/bin/voidbr-wifi-setup:1449
+msgid "Use"
+msgstr "使用"
+
+#: usr/local/bin/voidbr-wifi-setup:1450
+msgid "para alternar entre os botões"
+msgstr "ボタンを切り替えるには"
+
+#: usr/local/bin/voidbr-wifi-setup:1451
+msgid "para selecionar/aceitar"
+msgstr "選択/承認する"
+
+#: usr/local/bin/voidbr-wifi-setup:1458
+msgid "Tamanho disco insuficiente para criar partições com swap"
+msgstr "スワップ パーティションを作成するにはディスク サイズが不十分です"
+
+#: usr/local/bin/voidbr-wifi-setup:1459
+msgid "Deseja prosseguir SEM partição de swap?"
+msgstr "パーティションをスワップせずに続行しますか?"
+
+#: usr/local/bin/voidbr-wifi-setup:1460
+msgid "Deseja criar partição de swap ?"
+msgstr "スワップパーティションを作成しますか?"
+
+#: usr/local/bin/voidbr-wifi-setup:1461
+msgid "Acompanhe a evolução da instalação            "
+msgstr "インストールの進行状況を追跡する"
+
+#: usr/local/bin/voidbr-wifi-setup:1462
+msgid "e/ou pelo terminal tty8        "
+msgstr "および/または tty8 ターミナル経由"
+
+#: usr/local/bin/voidbr-wifi-setup:1463
+msgid "Usar os pacotes já presentes na imagem ISO (clonagem da ISO)"
+msgstr "ISO イメージにすでに存在するパッケージを使用する (ISO クローン作成)"
+
+#: usr/local/bin/voidbr-wifi-setup:1464
+msgid ""
+"Baixar todos os pacotes diretamente da internet (requer host Void Linux)"
+msgstr ""
+
+#: usr/local/bin/voidbr-wifi-setup:1465
+msgid "Selecionar fonte da instalação"
+msgstr "インストール元の選択"
+
+#: usr/local/bin/voidbr-wifi-setup:1466
+msgid "Definições"
+msgstr "定義"
+
+#: usr/local/bin/voidbr-wifi-setup:1467
+msgid "não definido"
+msgstr "定義されていません"
+
+#: usr/local/bin/voidbr-wifi-setup:1468
+msgid "Ajustando senha usuário"
+msgstr "ユーザーパスワードの設定"
+
+#: usr/local/bin/voidbr-wifi-setup:1469
+msgid "Ativando o bash para o usuário"
+msgstr "ユーザーに対して bash を有効にする"
+
+#: usr/local/bin/voidbr-wifi-setup:1470
+msgid "Criando usuário"
+msgstr "ユーザーの作成"
+
+#: usr/local/bin/voidbr-wifi-setup:1471
+msgid "MENU DE INSTALAÇÃO"
+msgstr "インストールメニュー"
+
+#: usr/local/bin/voidbr-wifi-setup:1472
+msgid "Desmontando ambiente"
+msgstr "環境の解体"
+
+#: usr/local/bin/voidbr-wifi-setup:1473
+msgid "Montando ambiente"
+msgstr "環境のセットアップ"
+
+#: usr/local/bin/voidbr-wifi-setup:1474
+msgid "Entrando no ambiente chroot"
+msgstr "chroot 環境を使用しない環境に入る"
+
+#: usr/local/bin/voidbr-wifi-setup:1475
+msgid "Montando partição"
+msgstr "パーティションの取り付け"
+
+#: usr/local/bin/voidbr-wifi-setup:1476
+msgid "Gerando"
+msgstr "生成中"
+
+#: usr/local/bin/voidbr-wifi-setup:1477
+msgid "Ajustando"
+msgstr "調整中"
+
+#: usr/local/bin/voidbr-wifi-setup:1478
+msgid "Copiando"
+msgstr "コピーする"
+
+#: usr/local/bin/voidbr-wifi-setup:1479
+msgid "Descompactando"
+msgstr "圧縮解除中"
+
+#: usr/local/bin/voidbr-wifi-setup:1480
+msgid "Atualizando"
+msgstr "更新中"
+
+#: usr/local/bin/voidbr-wifi-setup:1481
+msgid "Instalando"
+msgstr "インストール中"
+
+#: usr/local/bin/voidbr-wifi-setup:1482
+msgid "Configurando"
+msgstr "設定中"
+
+#: usr/local/bin/voidbr-wifi-setup:1484
+msgid "ERRO"
+msgstr "エラー"
+
+#: usr/local/bin/voidbr-wifi-setup:1485
+msgid "Aceitar"
+msgstr "受け入れるには"
+
+#: usr/local/bin/voidbr-wifi-setup:1486
+msgid "Conectar"
+msgstr "接続する"
+
+#: usr/local/bin/voidbr-wifi-setup:1487
+msgid "Configurar"
+msgstr "設定する"
+
+#: usr/local/bin/voidbr-wifi-setup:1488
+msgid "Não definido"
+msgstr "定義されていません"
+
+#: usr/local/bin/voidbr-wifi-setup:1489
+msgid "Mudar"
+msgstr "変更するには"
+
+#: usr/local/bin/voidbr-wifi-setup:1490 usr/local/bin/voidbr-wifi-setup:1533
+msgid "Sair"
+msgstr "外出する"
+
+#: usr/local/bin/voidbr-wifi-setup:1491 usr/local/bin/voidbr-wifi-setup:1611
+msgid "Instalar"
+msgstr "インストール"
+
+#: usr/local/bin/voidbr-wifi-setup:1492
+msgid "Espelho"
+msgstr "鏡"
+
+#: usr/local/bin/voidbr-wifi-setup:1494
+msgid "Sistema de Arquivos"
+msgstr "ファイルシステム"
+
+#: usr/local/bin/voidbr-wifi-setup:1495
+msgid "não foi revisado!"
+msgstr "レビューされてないよ！"
+
+#: usr/local/bin/voidbr-wifi-setup:1496
+msgid "Armazenamento"
+msgstr "ストレージ"
+
+#: usr/local/bin/voidbr-wifi-setup:1497
+msgid "Teclado"
+msgstr "キーボード"
+
+#: usr/local/bin/voidbr-wifi-setup:1498
+msgid "Sair sem instalar"
+msgstr "インストールせずに終了する"
+
+#: usr/local/bin/voidbr-wifi-setup:1499
+msgid "Somente terminal, sem interface gráfica"
+msgstr "ターミナルのみ、グラフィカルインターフェイスなし"
+
+#: usr/local/bin/voidbr-wifi-setup:1500
+msgid "Servidor Void"
+msgstr "サービダーボイド"
+
+#: usr/local/bin/voidbr-wifi-setup:1501
+msgid "Selecionar espelho dos pacotes"
+msgstr "パッケージミラーを選択してください"
+
+#: usr/local/bin/voidbr-wifi-setup:1502
+msgid "Selecionar disco e partições"
+msgstr "ディスクとパーティションの選択"
+
+#: usr/local/bin/voidbr-wifi-setup:1503
+msgid "Configurar sistema de arquivos e pontos de montagem"
+msgstr "ファイルシステムとマウントポイントを構成する"
+
+#: usr/local/bin/voidbr-wifi-setup:1504
+msgid "Escolhar disco para o bootloader"
+msgstr "ブートローダー用のディスクを選択してください"
+
+#: usr/local/bin/voidbr-wifi-setup:1505
+msgid "Selecionar layout do teclado"
+msgstr "キーボードレイアウトを選択する"
+
+#: usr/local/bin/voidbr-wifi-setup:1506
+msgid "Selecionar fuso horário"
+msgstr "タイムゾーンを選択してください"
+
+#: usr/local/bin/voidbr-wifi-setup:1507
+msgid "Selecionar versão do kernel"
+msgstr "カーネルバージョンの選択"
+
+#: usr/local/bin/voidbr-wifi-setup:1508
+msgid "Selecionar localidade do sistema"
+msgstr "システムロケールの選択"
+
+#: usr/local/bin/voidbr-wifi-setup:1509
+msgid "Selecionar interface gráfico/gerenciador de janelas"
+msgstr "グラフィカル インターフェイス/ウィンドウ マネージャーを選択します"
+
+#: usr/local/bin/voidbr-wifi-setup:1510
+msgid "Selecionar gerenciador de login"
+msgstr "ログインマネージャーを選択"
+
+#: usr/local/bin/voidbr-wifi-setup:1511
+msgid "Definir rede e senha wifi (opcional)"
+msgstr "WiFi ネットワークとパスワードを設定します (オプション)"
+
+#: usr/local/bin/voidbr-wifi-setup:1512
+msgid "opcional"
+msgstr "オプション"
+
+#: usr/local/bin/voidbr-wifi-setup:1513 usr/local/bin/voidbr-wifi-setup:1596
+msgid "Usuário"
+msgstr "ユーザー"
+
+#: usr/local/bin/voidbr-wifi-setup:1514
+msgid "Definir usuário,senha,hostname"
+msgstr "ユーザー、パスワード、ホスト名を設定する"
+
+#: usr/local/bin/voidbr-wifi-setup:1515
+msgid "Iniciar instalação"
+msgstr "インストールを開始する"
+
+#: usr/local/bin/voidbr-wifi-setup:1516
+msgid "Encerrar instalação"
+msgstr "インストールを終了する"
+
+#: usr/local/bin/voidbr-wifi-setup:1517
+msgid "Instalação abortada"
+msgstr "インストールが中止されました"
+
+#: usr/local/bin/voidbr-wifi-setup:1518
+msgid "Checando rota de internet para o servidor"
+msgstr "サーバーへのインターネットルートを確認しています"
+
+#: usr/local/bin/voidbr-wifi-setup:1519
+msgid "ERRO: falha de abertura de"
+msgstr "エラー: オープンに失敗しました"
+
+#: usr/local/bin/voidbr-wifi-setup:1520
+msgid "erro: você não pode realizar esta operação a menos que seja root."
+msgstr "エラー: root でない限り、この操作は実行できません。"
+
+#: usr/local/bin/voidbr-wifi-setup:1521
+msgid "erro: operação não suportada"
+msgstr "エラー: 操作はサポートされていません"
+
+#: usr/local/bin/voidbr-wifi-setup:1522
+msgid "Encerrar"
+msgstr "近い"
+
+#: usr/local/bin/voidbr-wifi-setup:1523
+msgid "Voltar"
+msgstr "戻るには"
+
+#: usr/local/bin/voidbr-wifi-setup:1524
+msgid "Feito"
+msgstr "終わり"
+
+#: usr/local/bin/voidbr-wifi-setup:1525
+msgid "Escolher"
+msgstr "選択するには"
+
+#: usr/local/bin/voidbr-wifi-setup:1526 usr/local/bin/voidbr-wifi-setup:1534
+msgid "Selecionar"
+msgstr "選択"
+
+#: usr/local/bin/voidbr-wifi-setup:1527
+msgid "Cancelar"
+msgstr "キャンセル"
+
+#: usr/local/bin/voidbr-wifi-setup:1528
+msgid "Revisar"
+msgstr "レビュー"
+
+#: usr/local/bin/voidbr-wifi-setup:1529
+msgid "Prosseguir"
+msgstr "続く"
+
+#: usr/local/bin/voidbr-wifi-setup:1530
+msgid "Info disco"
+msgstr "インフォディスコ"
+
+#: usr/local/bin/voidbr-wifi-setup:1531
+msgid "Info partição"
+msgstr "パーティション情報"
+
+#: usr/local/bin/voidbr-wifi-setup:1532
+msgid "Ok"
+msgstr "わかりました"
+
+#: usr/local/bin/voidbr-wifi-setup:1535
+msgid "DISCO DE ORIGEM"
+msgstr "ソースディスク"
+
+#: usr/local/bin/voidbr-wifi-setup:1536
+msgid "Fonte"
+msgstr "ソース"
+
+#: usr/local/bin/voidbr-wifi-setup:1537
+msgid "DISCO DE DESTINO"
+msgstr "宛先ディスク"
+
+#: usr/local/bin/voidbr-wifi-setup:1538
+msgid "Escolha o disco de DESTINO:"
+msgstr "宛先ディスクを選択します。"
+
+#: usr/local/bin/voidbr-wifi-setup:1539
+msgid "Sim"
+msgstr "シム"
+
+#: usr/local/bin/voidbr-wifi-setup:1540
+msgid "Não"
+msgstr "いいえ"
+
+#: usr/local/bin/voidbr-wifi-setup:1541
+msgid "Ao prosseguir, todos os dados disco DESTINO serão perdidos!"
+msgstr "続行すると、DESTINATION ディスク上のすべてのデータが失われます。"
+
+#: usr/local/bin/voidbr-wifi-setup:1542
+msgid "=== AVISO ==="
+msgstr "=== お知らせ ==="
+
+#: usr/local/bin/voidbr-wifi-setup:1543
+msgid "Desmontando sistema de arquivos"
+msgstr "ファイルシステムのアンマウント"
+
+#: usr/local/bin/voidbr-wifi-setup:1544
+msgid "Instalação finalizada com sucesso"
+msgstr "インストールが正常に完了しました"
+
+#: usr/local/bin/voidbr-wifi-setup:1545
+msgid "para"
+msgstr "に"
+
+#: usr/local/bin/voidbr-wifi-setup:1546
+msgid "Configurações salvas para instalação"
+msgstr "インストール用に保存された設定"
+
+#: usr/local/bin/voidbr-wifi-setup:1547
+msgid "nenhuma operação especificada - usar -h para ajuda"
+msgstr "操作が指定されていません - ヘルプを表示するには -h を使用してください"
+
+#: usr/local/bin/voidbr-wifi-setup:1548
+msgid "apenas uma operação pode ser usada por vez"
+msgstr "一度に使用できる操作は 1 つだけです"
+
+#: usr/local/bin/voidbr-wifi-setup:1549
+msgid "Testando disco"
+msgstr "テストディスク"
+
+#: usr/local/bin/voidbr-wifi-setup:1550
+msgid "Continuar com o particionamento em"
+msgstr "パーティショニングを続ける"
+
+#: usr/local/bin/voidbr-wifi-setup:1551
+msgid "Formatando partição"
+msgstr "パーティションをフォーマット中"
+
+#: usr/local/bin/voidbr-wifi-setup:1552
+msgid "Ativando serviço"
+msgstr "サービスの有効化"
+
+#: usr/local/bin/voidbr-wifi-setup:1553
+msgid "Iniciando serviço"
+msgstr "サービス開始"
+
+#: usr/local/bin/voidbr-wifi-setup:1554
+msgid "permissões"
+msgstr "権限"
+
+#: usr/local/bin/voidbr-wifi-setup:1555
+msgid "Iniciando download de"
+msgstr "ダウンロードを開始します"
+
+#: usr/local/bin/voidbr-wifi-setup:1556
+msgid "Criando partições em"
+msgstr "でのパーティションの作成"
+
+#: usr/local/bin/voidbr-wifi-setup:1557
+msgid "Partição Swap"
+msgstr "スワップパーティション"
+
+#: usr/local/bin/voidbr-wifi-setup:1558
+msgid "Criando diretório"
+msgstr "ディレクトリの作成"
+
+#: usr/local/bin/voidbr-wifi-setup:1559
+msgid "Atualizando instalação"
+msgstr "インストールを更新しています"
+
+#: usr/local/bin/voidbr-wifi-setup:1560
+msgid "Removendo pacotes antigos/absoletos"
+msgstr "古い/廃止されたパッケージの削除"
+
+#: usr/local/bin/voidbr-wifi-setup:1561
+msgid "Instalando meta pacote X"
+msgstr "メタパッケージのインストール"
+
+#: usr/local/bin/voidbr-wifi-setup:1562
+msgid "Atualizando pacotes base"
+msgstr "基本パッケージの更新"
+
+#: usr/local/bin/voidbr-wifi-setup:1563
+msgid "Atualizando pacotes adicionais em"
+msgstr "追加パッケージを更新しています"
+
+#: usr/local/bin/voidbr-wifi-setup:1564
+msgid "Visualizar partições do disco"
+msgstr "ディスクパーティションの表示"
+
+#: usr/local/bin/voidbr-wifi-setup:1565
+msgid "=== ARMAZENAMENTO ==="
+msgstr "=== ストレージ ==="
+
+#: usr/local/bin/voidbr-wifi-setup:1566
+msgid "=== FILE SYSTEM ==="
+msgstr "=== ファイルシステム ==="
+
+#: usr/local/bin/voidbr-wifi-setup:1567
+msgid "Checando por partições montadas no disco"
+msgstr "ディスク上にマウントされたパーティションを確認しています"
+
+#: usr/local/bin/voidbr-wifi-setup:1568
+msgid "O disco selecionado contém partições montadas"
+msgstr "選択したディスクにはマウントされたパーティションが含まれています"
+
+#: usr/local/bin/voidbr-wifi-setup:1569
+msgid "Escolher outro layout de teclado"
+msgstr "別のキーボード レイアウトを選択する"
+
+#: usr/local/bin/voidbr-wifi-setup:1570
+msgid "Layout atual"
+msgstr "レイアウト実際"
+
+#: usr/local/bin/voidbr-wifi-setup:1571
+msgid "Aguarde, Desmontando particao de trabalho"
+msgstr "お待ちください。作業パーティションをアンマウントしています"
+
+#: usr/local/bin/voidbr-wifi-setup:1572
+msgid "Erro de leitura do disco"
+msgstr "ディスク読み取りエラー"
+
+#: usr/local/bin/voidbr-wifi-setup:1573
+msgid "Sem rota para o servidor"
+msgstr "サーバーへのルートがありません"
+
+#: usr/local/bin/voidbr-wifi-setup:1574
+msgid "Check sua conexão com a internet!"
+msgstr "インターネット接続を確認してください!"
+
+#: usr/local/bin/voidbr-wifi-setup:1575
+msgid "não encontrei o comando"
+msgstr "コマンドが見つかりませんでした"
+
+#: usr/local/bin/voidbr-wifi-setup:1576
+msgid "IMPOSSÍVEL CONTINUAR"
+msgstr "続行不可能"
+
+#: usr/local/bin/voidbr-wifi-setup:1577
+msgid "Esse script precisa dos comandos listados acima"
+msgstr "このスクリプトには上記のコマンドが必要です"
+
+#: usr/local/bin/voidbr-wifi-setup:1578
+msgid "Instale-os e/ou verifique se estão no seu"
+msgstr "それらをインストールするか、それらがあなたのコンピュータにインストールされているかどうかを確認してください。"
+
+#: usr/local/bin/voidbr-wifi-setup:1579
+msgid "Instalar o(s) comando(s)"
+msgstr "コマンドをインストールする"
+
+#: usr/local/bin/voidbr-wifi-setup:1580
+msgid "INFO: Rode novamente o aplicativo"
+msgstr "情報: アプリケーションを再度実行してください"
+
+#: usr/local/bin/voidbr-wifi-setup:1581
+msgid "ERRO na instalação dos comandos. Tente manualmente"
+msgstr "コマンドのインストール時にエラーが発生しました。手動で試してください"
+
+#: usr/local/bin/voidbr-wifi-setup:1582
+msgid "Criando inicialização padrão/reserva (roaming) para"
+msgstr "のデフォルト/スペア (ローミング) ブートの作成"
+
+#: usr/local/bin/voidbr-wifi-setup:1583
+msgid "Erro não fatal. Para mais detalhes veja o log"
+msgstr "致命的ではないエラー。詳細についてはログを参照してください"
+
+#: usr/local/bin/voidbr-wifi-setup:1584
+msgid "gerenciador de janelas (wm)"
+msgstr "ウィンドウマネージャー (wm)"
+
+#: usr/local/bin/voidbr-wifi-setup:1585
+msgid "gerenciador de login (dm)"
+msgstr "ログインマネージャー（DM）"
+
+#: usr/local/bin/voidbr-wifi-setup:1586
+msgid "Tabela MBR (dos)"
+msgstr "MBR テーブル (dos)"
+
+#: usr/local/bin/voidbr-wifi-setup:1587
+msgid "✓ Detectado: sistema iniciado em modo EFI"
+msgstr "✓ 検出: システムは EFI モードで起動しました"
+
+#: usr/local/bin/voidbr-wifi-setup:1588
+msgid "✓ Recomendado: EFI"
+msgstr "✓ 推奨: EFI"
+
+#: usr/local/bin/voidbr-wifi-setup:1589
+msgid "✗ EFI não detectado: sistema iniciado em modo BIOS"
+msgstr "✗ EFI が検出されません: システムは BIOS モードで起動しました"
+
+#: usr/local/bin/voidbr-wifi-setup:1590
+msgid "✓ Recomendado: GPT_BIOS ou MBR_BIOS"
+msgstr "✓ 推奨: GPT_BIOS または MBR_BIOS"
+
+#: usr/local/bin/voidbr-wifi-setup:1591
+msgid "Detectado boot via ISO ↓ é recomendável instalar ↓"
+msgstr "ISO 経由で起動が検出されました ↓ インストールを推奨します ↓"
+
+#: usr/local/bin/voidbr-wifi-setup:1592
+msgid "ISO não detectado ↓ é recomendável usar NETWORK ↓"
+msgstr "ISOが検出されません ↓ ネットワークの使用を推奨します ↓"
+
+#: usr/local/bin/voidbr-wifi-setup:1593
+msgid "Host VOID não detectado ↓ é recomendável usar NETWORK↓"
+msgstr "ホスト VOID が検出されません ↓ NETWORK の使用を推奨します ↓"
+
+#: usr/local/bin/voidbr-wifi-setup:1595
+msgid "Escolha o idioma"
+msgstr "言語を選択してください"
+
+#: usr/local/bin/voidbr-wifi-setup:1597
+msgid "Usuário não pode ser root! Novamente?"
+msgstr "ユーザーは root になることはできません。また？"
+
+#: usr/local/bin/voidbr-wifi-setup:1598
+msgid "Usuário não pode estar vazio! Novamente?"
+msgstr "ユーザーを空にすることはできません。また？"
+
+#: usr/local/bin/voidbr-wifi-setup:1599
+msgid "Senha do usuário não pode ser vazia! Novamente?"
+msgstr "ユーザーパスワードを空にすることはできません。また？"
+
+#: usr/local/bin/voidbr-wifi-setup:1600
+msgid "Senha de root não pode ser vazia! Novamente?"
+msgstr "root パスワードを空にすることはできません。また？"
+
+#: usr/local/bin/voidbr-wifi-setup:1601
+msgid "Usuário não pode iniciar com números! Novamente?"
+msgstr "ユーザーは数字で始めることはできません!また？"
+
+#: usr/local/bin/voidbr-wifi-setup:1602
+msgid "Usuário não pode iniciar com letras maiúsculas! Novamente?"
+msgstr "ユーザーは大文字で始めることはできません!また？"
+
+#: usr/local/bin/voidbr-wifi-setup:1603
+msgid "Cadastro de usuário cancelado"
+msgstr "ユーザー登録が解除されました"
+
+#: usr/local/bin/voidbr-wifi-setup:1604
+msgid "Rede Wi-Fi"
+msgstr "Wi-Fiネットワーク"
+
+#: usr/local/bin/voidbr-wifi-setup:1605
+msgid "Senha Wi-Fi"
+msgstr "WiFiパスワード"
+
+#: usr/local/bin/voidbr-wifi-setup:1606
+msgid "Interface Wi-Fi"
+msgstr "インターフェース Wi-Fi"
+
+#: usr/local/bin/voidbr-wifi-setup:1607
+msgid "↓ é recomendável ext4 ↓"
+msgstr "↓ext4推奨↓"
+
+#: usr/local/bin/voidbr-wifi-setup:1608
+msgid "Utilitário void-services (opcional)"
+msgstr "void-services ユーティリティ (オプション)"
+
+#: usr/local/bin/voidbr-wifi-setup:1609
+msgid "Serviços"
+msgstr "サービス"
+
+#: usr/local/bin/voidbr-wifi-setup:1610
+msgid "Estilo"
+msgstr "スタイル"
+
+#: usr/local/bin/voidbr-wifi-setup:1612
+msgid "Rodar chroot na partição instalada"
+msgstr "インストールされたパーティションで chroot を実行します"
+
+#: usr/local/bin/voidbr-wifi-setup:1613
+msgid "Ativar modo gráfico"
+msgstr "グラフィカルモードを有効にする"
+
+#: usr/local/bin/voidbr-wifi-setup:1614
+msgid "Saída resumida"
+msgstr "概要出力"
+
+#: usr/local/bin/voidbr-wifi-setup:1615
+msgid "Mostrar versão do aplicativo"
+msgstr "アプリのバージョンを表示"
+
+#: usr/local/bin/voidbr-wifi-setup:1616
+msgid "Remove cores da saída"
+msgstr "出力から色を削除する"
+
+#: usr/local/bin/voidbr-wifi-setup:1617
+msgid "Este help"
+msgstr "それは助けです"
+
+#: usr/local/bin/voidbr-wifi-setup:1618
+msgid "Carregar arquivo de configuração"
+msgstr "設定ファイルをロードする"
+
+#: usr/local/bin/voidbr-wifi-setup:1619
+msgid "Nome Completo"
+msgstr "フルネーム"
+
+#: usr/local/bin/voidbr-wifi-setup:1620
+msgid "Nome usuario"
+msgstr "ユーザー名"
+
+#: usr/local/bin/voidbr-wifi-setup:1621
+msgid "Senha usuario"
+msgstr "ユーザーパスワード"
+
+#: usr/local/bin/voidbr-wifi-setup:1622
+msgid "Senha root"
+msgstr "ルートパスワード"
+
+#: usr/local/bin/voidbr-wifi-setup:1623
+msgid "Disco destino"
+msgstr "宛先ディスク"
+
+#: usr/local/bin/voidbr-wifi-setup:1624
+msgid "Gerenciador Janelas"
+msgstr "ウィンドウズマネージャー"
+
+#: usr/local/bin/voidbr-wifi-setup:1625
+msgid "EFI + GPT (recomendado) PCs modernos"
+msgstr "EFI + GPT (推奨) 最新の PC"
+
+#: usr/local/bin/voidbr-wifi-setup:1626
+msgid "BIOS + GPT Compatibilide avançada"
+msgstr "BIOS + GPT の高度な互換性"
+
+#: usr/local/bin/voidbr-wifi-setup:1627
+msgid "BIOS + MBR Computadores antigos"
+msgstr "BIOS + MBR 古いコンピューター"
+
+#: usr/local/bin/voidbr-wifi-setup:1628
+msgid "Tabela GPT"
+msgstr "GPT テーブル"
+
+#: usr/local/bin/voidbr-wifi-setup:1629
+msgid "não foi configurado!"
+msgstr "設定されていません!"
+
+#: usr/local/bin/voidbr-wifi-setup:1630
+msgid "Disco não foi configurado!"
+msgstr "ディスクが設定されていません!"
+
+#: usr/local/bin/voidbr-wifi-setup:1631
+msgid "Filesystem não foi configurado!"
+msgstr "ファイルシステムが設定されていません!"
+
+#: usr/local/bin/voidbr-wifi-setup:1632
+msgid "Bootloader não foi configurado!"
+msgstr "ブートローダーが設定されていません!"
+
+#: usr/local/bin/voidbr-wifi-setup:1633
+msgid "Teclado não foi configurado!"
+msgstr "キーボードが設定されていません!"
+
+#: usr/local/bin/voidbr-wifi-setup:1634
+msgid "Timezone não foi configurado!"
+msgstr "タイムゾーンが設定されていません!"
+
+#: usr/local/bin/voidbr-wifi-setup:1635
+msgid "Gerenciador de Janelas não foi configurado!"
+msgstr "ウィンドウ マネージャーが設定されていません。"
+
+#: usr/local/bin/voidbr-wifi-setup:1636
+msgid "Rede wifi não foi configurado!"
+msgstr "WiFi ネットワークが設定されていません!"
+
+#: usr/local/bin/voidbr-wifi-setup:1637
+msgid "Usuário não foi configurado!"
+msgstr "ユーザーが設定されていません!"
+
+#: usr/local/bin/voidbr-wifi-setup:1638
+msgid "Selecionar sistema de áudio"
+msgstr "オーディオシステムを選択してください"
+
+#: usr/local/bin/voidbr-wifi-setup:1646
+msgid "Network Management daemon (recommended)"
+msgstr "ネットワーク管理デーモン (推奨)"
+
+#: usr/local/bin/voidbr-wifi-setup:1649
+msgid "Internet Wireless Daemon by Intel that aims to replace wpa_supplicant"
+msgstr "wpa_supplicant を置き換えることを目的とした Intel のインターネット ワイヤレス デーモン"
+
+#: usr/local/bin/voidbr-wifi-setup:1652
+msgid "WPA/WPA2/IEEE 802.1X Supplicant"
+msgstr "WPA/WPA2/IEEE 802.1X サプリカント"
+
+#: usr/local/bin/voidbr-wifi-setup:1666
+msgid "=== WIFI backend ==="
+msgstr "=== WIFI バックエンド ==="
+
+#: usr/local/bin/voidbr-wifi-setup:1671
+msgid "Selecione o backend Wi-Fi:"
+msgstr "Wi-Fi バックエンドを選択します。"
+
+#: usr/local/bin/voidbr-wifi-setup:1756
+msgid "interface"
+msgstr "インタフェース"
+
+#: usr/local/bin/voidbr-wifi-setup:1759
+msgid "Selecione a interface Wi-Fi:"
+msgstr "Wi-Fi インターフェースを選択します:"
+
+#: usr/local/bin/voidbr-wifi-setup:2010
+msgid "Escaneando redes wifi..."
+msgstr "Wi-Fi ネットワークをスキャンしています..."
+
+#: usr/local/bin/voidbr-wifi-setup:2021
+msgid "Nenhuma rede wifi encontrada."
+msgstr "Wi-Fi ネットワークが見つかりません。"
+
+#: usr/local/bin/voidbr-wifi-setup:2050
+msgid "Escolha a rede que deseja conectar:"
+msgstr "接続するネットワークを選択してください:"
+
+#: usr/local/bin/voidbr-wifi-setup:2071
+msgid "Nenhuma interface de Wi-fi encontrada!"
+msgstr "Wi-Fi インターフェースが見つかりません!"
+
+#: usr/local/bin/voidbr-wifi-setup:2073
+msgid ""
+"Para ativar/levantar a interface de Wi-fi, caso exista,\n"
+"tente seguir estes passos no terminal:"
+msgstr ""
+
+#: usr/local/bin/voidbr-wifi-setup:2076
+msgid "Identifique o dispositivo"
+msgstr "デバイスを識別する"
+
+#: usr/local/bin/voidbr-wifi-setup:2077
+msgid "ou"
+msgstr "または"
+
+#: usr/local/bin/voidbr-wifi-setup:2078
+msgid "Carregue o driver necessário"
+msgstr "必要なドライバーをロードします"
+
+#: usr/local/bin/voidbr-wifi-setup:2079
+msgid "Levante a interface"
+msgstr "レヴァンテのインターフェース"
+
+#: usr/local/bin/voidbr-wifi-setup:2080
+msgid "Verifique se há firmware faltando"
+msgstr "不足しているファームウェアを確認する"
+
+#: usr/local/bin/voidbr-wifi-setup:2081
+msgid "(Re)Instale os drivers"
+msgstr "ドライバーを(再)インストールする"
+
+#: usr/local/bin/voidbr-wifi-setup:2088
+msgid "WIFI - Diagnóstico de Rede"
+msgstr "WIFI - ネットワーク診断"
+
+#: usr/local/bin/voidbr-wifi-setup:2187
+msgid "Testando internet"
+msgstr "インターネットのテスト"
+
+#: usr/local/bin/voidbr-wifi-setup:2316
+msgid "A Interface selecionada já tem acesso à internet!"
+msgstr "選択したインターフェイスにはすでにインターネット アクセスがあります。"
+
+#: usr/local/bin/voidbr-wifi-setup:2317
+msgid "Ainda deseja prosseguir ?"
+msgstr "まだ続行しますか?"
+
+#: usr/local/bin/voidbr-wifi-setup:2326
+msgid "Nenhum backend Wi-Fi encontrado."
+msgstr "Wi-Fi バックエンドが見つかりません。"
+
+#: usr/local/bin/voidbr-wifi-setup:2327
+msgid "Instale o NetworkManager, ou iwd, ou wpa_supplicant."
+msgstr "NetworkManager、iwd、または wpa_supplicant をインストールします。"
+
+#: usr/local/bin/voidbr-wifi-setup:2341
+msgid "Reiniciando serviços/interface e desbloquendo rfkill"
+msgstr "サービス/インターフェイスの再起動と rfkill のロック解除"
+
+#: usr/local/bin/voidbr-wifi-setup:2359
+msgid "Deixe em branco o campo Interface Wi-Fi para listar interfaces"
+msgstr "インターフェイスをリストするには、[Wi-Fi インターフェイス] フィールドを空白のままにしておきます"
+
+#: usr/local/bin/voidbr-wifi-setup:2360
+msgid "Deixe em branco o campo Rede Wi-Fi para escanear redes"
+msgstr "ネットワークをスキャンするには、[Wi-Fi ネットワーク] フィールドを空白のままにしておきます"
+
+#: usr/local/bin/voidbr-wifi-setup:2370
+msgid "=== WIFI ==="
+msgstr "=== Wi-Fi ==="
+
+#: usr/local/bin/voidbr-wifi-setup:2435 usr/local/bin/voidbr-wifi-setup:2451
+msgid "Já existe um perfil para essa rede.\\nDeseja utilizar ?"
+msgstr "このネットワークにはプロファイルがすでに存在します。\nそれを使用しますか?"
+
+#: usr/local/bin/voidbr-wifi-setup:2468
+msgid "Isso é deliberado ?"
+msgstr "これは故意ですか？"
+
+#: usr/local/bin/voidbr-wifi-setup:2478
+msgid "Deseja configurar IP fixo?"
+msgstr "固定IPを設定しますか?"
+
+#: usr/local/bin/voidbr-wifi-setup:2484
+msgid "Prosseguir com a configuração e conexão ?"
+msgstr "設定と接続を続行しますか?"
+
+#: usr/local/bin/voidbr-wifi-setup:2574
+msgid "Deseja escanear por redes wifi?"
+msgstr "WiFi ネットワーク経由でスキャンしますか?"
