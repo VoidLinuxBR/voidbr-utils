@@ -2,7 +2,8 @@
 
 set -euo pipefail
 
-ISO_DIR="/vg/void-mirror/iso"
+ISO_DIR="/vg/void-mirror/iso/current"
+ISO_LINK_DIR="/vg/void-mirror/iso"
 INDEX="/vg/void-mirror/www/voidbr/index.html"
 
 # Cores
@@ -60,8 +61,12 @@ voidbr_update_index() {
 		msg "${BLUE}[INFO]${RESET} ${flavor}: ${GREEN}${latest}${RESET}"
 
 		sed -Ei \
-			"s#iso/voidbr-live-${flavor}-x86_64-[^\"]*\.iso#iso/${latest}#g" \
+			"s#iso/voidbr-live-${flavor}-x86_64-[^\"]*\.iso#iso/current/${latest}#g" \
 			"$INDEX"
+		sed -Ei \
+			"s#iso/current/voidbr-live-${flavor}-x86_64-[^\"]*\.iso#iso/current/${latest}#g" \
+			"$INDEX"
+
 	}
 
 	for flavor in \
@@ -105,7 +110,7 @@ voidbr_update_iso_links() {
 
 		link="voidbr-live-${flavor}-current.iso"
 
-		ln -sfn "$latest" "$ISO_DIR/$link"
+		ln -sfn "current/$latest" "$ISO_LINK_DIR/$link"
 		msg "${BLUE}[LINK]${RESET} ${link} ${CYAN}->${RESET} ${GREEN}${latest}${RESET}"
 	done
 	msg "Feito!"
