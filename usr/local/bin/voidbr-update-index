@@ -17,10 +17,10 @@ msg() {
 	printf "%b\n" "$1"
 }
 
-if (( EUID != 0 )); then
-    msg "${RED}Erro:${RESET} este script deve ser executado como ${YELLOW}root${RESET}."
-    msg "Execute: ${CYAN}sudo $0${RESET}"
-    exit 1
+if ((EUID != 0)); then
+	msg "${RED}Erro:${RESET} este script deve ser executado como ${YELLOW}root${RESET}."
+	msg "Execute: ${CYAN}sudo $0${RESET}"
+	exit 1
 fi
 
 [[ -d "$ISO_DIR" ]] || {
@@ -28,53 +28,88 @@ fi
 	exit 1
 }
 
-[[ -f "$INDEX" ]] || {
-	msg "${RED}Erro:${RESET} arquivo não encontrado: ${YELLOW}$INDEX${RESET}"
-	exit 1
+voidbr_update_index() {
+	[[ -f "$INDEX" ]] || {
+		msg "${RED}Erro:${RESET} arquivo não encontrado: ${YELLOW}$INDEX${RESET}"
+		exit 1
+	}
+
+	cp -a "$INDEX" "$INDEX.bak"
+
+	msg "${CYAN}==============================================${RESET}"
+	msg "${CYAN}     Atualizador de links do index.html das ISOs VoidBR${RESET}"
+	msg "${CYAN}==============================================${RESET}"
+
+	update_iso() {
+		local flavor="$1"
+		local latest
+
+		latest=$(
+			find "$ISO_DIR" -maxdepth 1 \
+				-name "voidbr-live-${flavor}-x86_64-*.iso" \
+				-printf '%f\n' |
+				sort -V |
+				tail -n1
+		)
+
+		if [[ -z "$latest" ]]; then
+			msg "${YELLOW}[SKIP]${RESET} ${flavor}: nenhuma ISO encontrada."
+			return
+		fi
+
+		msg "${BLUE}[INFO]${RESET} ${flavor}: ${GREEN}${latest}${RESET}"
+
+		sed -Ei \
+			"s#iso/voidbr-live-${flavor}-x86_64-[^\"]*\.iso#iso/${latest}#g" \
+			"$INDEX"
+	}
+
+	for flavor in \
+		base \
+		xfce \
+		gnome \
+		plasma \
+		cinnamon \
+		mate \
+		sway; do
+		update_iso "$flavor"
+	done
+
+	msg ""
+	msg "${GREEN}✔ ${INDEX} atualizado com sucesso.${RESET}"
+	msg "${CYAN}Backup:${RESET} ${INDEX}.bak"
+	msg "Feito!"
+	echo
 }
 
-cp -a "$INDEX" "$INDEX.bak"
+voidbr_update_iso_links() {
+	local flavor latest link
 
-msg "${CYAN}==============================================${RESET}"
-msg "${CYAN}     Atualizador de links das ISOs VoidBR${RESET}"
-msg "${CYAN}==============================================${RESET}"
-msg ""
+	msg "${CYAN}==============================================${RESET}"
+	msg "${CYAN}     Atualizador de links das ISOs VoidBR${RESET}"
+	msg "${CYAN}==============================================${RESET}"
 
-update_iso() {
-	local flavor="$1"
-	local latest
+	for flavor in $(find "$ISO_DIR" -maxdepth 1 -name 'voidbr-live-*-x86_64-*.iso' |
+		sed -E 's#.*/voidbr-live-([^-]+)-x86_64-.*#\1#' |
+		sort -u); do
 
-	latest=$(
-		find "$ISO_DIR" -maxdepth 1 \
-			-name "voidbr-live-${flavor}-x86_64-*.iso" \
-			-printf '%f\n' |
-			sort -V |
-			tail -n1
-	)
+		latest=$(
+			find "$ISO_DIR" -maxdepth 1 \
+				-name "voidbr-live-${flavor}-x86_64-*.iso" \
+				-printf '%f\n' |
+				sort -V |
+				tail -n1
+		)
 
-	if [[ -z "$latest" ]]; then
-		msg "${YELLOW}[SKIP]${RESET} ${flavor}: nenhuma ISO encontrada."
-		return
-	fi
+		[[ -n "$latest" ]] || continue
 
-	msg "${BLUE}[INFO]${RESET} ${flavor}: ${GREEN}${latest}${RESET}"
+		link="voidbr-live-${flavor}-current.iso"
 
-	sed -Ei \
-		"s#iso/voidbr-live-${flavor}-x86_64-[^\"]*\.iso#iso/${latest}#g" \
-		"$INDEX"
+		ln -sfn "$latest" "$ISO_DIR/$link"
+		msg "${BLUE}[LINK]${RESET} ${link} ${CYAN}->${RESET} ${GREEN}${latest}${RESET}"
+	done
+	msg "Feito!"
 }
 
-for flavor in \
-	base \
-	xfce \
-	gnome \
-	plasma \
-	cinnamon \
-	mate \
-	sway; do
-	update_iso "$flavor"
-done
-
-msg ""
-msg "${GREEN}✔ ${INDEX} atualizado com sucesso.${RESET}"
-msg "${CYAN}Backup:${RESET} ${INDEX}.bak"
+voidbr_update_index
+voidbr_update_iso_links
