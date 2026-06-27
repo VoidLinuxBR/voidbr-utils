@@ -4,7 +4,7 @@
 #
 #  voidbr-wifi-setup
 #  Created: qua 17 jun 2026 00:46:30 -04
-#  Updated: dom 21 jun 2026 00:06:53 -04
+#  Updated: sáb 27 jun 2026 17:17:44 -04
 #
 #  Copyright (c) 2019-2026, Vilmar Catafesta <vcatafesta@gmail.com>
 #  All rights reserved.
@@ -50,7 +50,7 @@ shopt -s extglob
 
 #system
 readonly APP="${0##*/}"
-readonly _VERSION_='0.6.20-20260620'
+readonly _VERSION_='0.6.27-20260627'
 declare -g DEPENDENCIES=(
 	dialog
 	gettext
@@ -1027,7 +1027,7 @@ sh_cmd_job_progressbox() {
 		logmessage="$(strip_ansi "$last_msg")"
 		{
 			eval "$cjob"
-      echo $? > /tmp/job_status
+			echo $? >/tmp/job_status
 		} 2>&1 | ${DIALOG} \
 			--no-collapse \
 			--colors \
@@ -1036,13 +1036,13 @@ sh_cmd_job_progressbox() {
 			--backtitle "$ctitle" \
 			--progressbox 15 80
 
-    sleep 0.5
-    lretval=$(cat /tmp/job_status)
-    rm -f /tmp/job_status
-#    lretval=${PIPESTATUS[0]}
+		sleep 0.5
+		lretval=$(cat /tmp/job_status)
+		rm -f /tmp/job_status
+		#    lretval=${PIPESTATUS[0]}
 	else
 		eval "$cjob"
-    lretval=$?
+		lretval=$?
 	fi
 	[[ -z "$erro_fatal" ]] && return "$lretval" || return "$erro_fatal"
 }
@@ -1739,8 +1739,12 @@ sh_get_iface() {
 
 	# Nenhuma interface encontrada ?
 	if [[ "${#iface_array[@]}" -eq 0 ]]; then
-		show_network_diagnostics
-		return 1
+		if sh_try_up_interface; then
+			sh_get_iface
+		else
+			show_network_diagnostics
+			return 1
+		fi
 	fi
 
 	menu_items=()
@@ -2116,7 +2120,7 @@ sh_nm_disable_autoconnect_others() {
 }
 
 has_running() {
-  sv status "$1" 2>/dev/null | grep -q '^run:'
+	sv status "$1" 2>/dev/null | grep -q '^run:'
 }
 
 sh_restart_services() {
@@ -2158,13 +2162,13 @@ switch_to_networkmanager() {
 has_internet() {
 	local iface="$1"
 
-  sh_cmd_job_progressbox "${iface}: $(gettext "Testando internet")" '
+	sh_cmd_job_progressbox "${iface}: $(gettext "Testando internet")" '
     curl --interface wlo1 --connect-timeout 5 ifconfig.me/ip
   '
 }
 
 sh_restart_wpa() {
-  sh_cmd_job_progressbox "Reiniciando wpa_supplicant" '
+	sh_cmd_job_progressbox "Reiniciando wpa_supplicant" '
     sh_down_wpa
     sv up wpa_supplicant
     sleep 1
@@ -2186,7 +2190,7 @@ sh_prepare_dhcpcd() {
 }
 
 sh_show_connection_status() {
-  info "${_WIFI_NETWORK}" "\
+	info "${_WIFI_NETWORK}" "\
     ${GREEN}Conectado com sucesso!${RST}\n\n\
     Interface: ${YELLOW}$iface${RST}\n\
     SSID     : ${YELLOW}${_WIFI_NETWORK}${RST}\n\
@@ -2199,11 +2203,98 @@ sh_show_connection_status() {
   "
 }
 
-sh_down_iwd() {
-  if has_running iwd; then
-	  echo "iwd rodando, iniciando rotina de reset..."
+sh_try_up_interface() {
+	local iface driver child timeout=10
 
-  	# Para o serviço iwd
+	sh_info_msg "$(gettext "Trying to bring up wireless interface...")"
+
+	# Caso 1: a interface existe. Apenas tenta levantá-la.
+	iface=$(iw dev | awk '$1 == "Interface" { print $2; exit }')
+
+	if [[ -n "$iface" ]]; then
+		sh_info_msg "$(gettext "Wireless interface found:") $iface"
+
+		rfkill unblock wifi >/dev/null 2>&1
+		ip link set "$iface" up >/dev/null 2>&1
+
+		if ip link show "$iface" | grep -q "state UP"; then
+			sh_info_msg "$(gettext "Wireless interface is up.")"
+			return 0
+		fi
+
+		sh_info_msg "$(gettext "Failed to bring interface up. Reloading driver...")"
+	fi
+
+	# Descobre o módulo da placa wireless.
+	driver=$(
+		lspci -k |
+			awk -F': ' '
+            /Network controller|Wireless/ { found=1; next }
+            found && /Kernel modules:/ {
+                split($2, m, ",")
+                gsub(/^[[:space:]]+|[[:space:]]+$/, "", m[1])
+                print m[1]
+                exit
+            }
+            /^$/ { found=0 }
+        '
+	)
+
+	if [[ -z "$driver" ]]; then
+		sh_info_msg "$(gettext "Unable to determine the wireless driver.")"
+		return 1
+	fi
+
+	sh_info_msg "$(gettext "Wireless module:") $driver"
+
+	# Remove primeiro os módulos dependentes (holders).
+	while read -r child; do
+		[[ -z "$child" ]] && continue
+		sh_info_msg "$(gettext "Removing dependent module:") $child"
+		modprobe -r "$child" >/dev/null 2>&1 || true
+	done < <(ls -1 "/sys/module/$driver/holders" 2>/dev/null)
+
+	# Remove o módulo principal.
+	sh_info_msg "$(gettext "Removing module:") $driver"
+	modprobe -r "$driver" >/dev/null 2>&1 || true
+
+	sleep 1
+
+	# Recarrega o módulo.
+	sh_info_msg "$(gettext "Loading module:") $driver"
+	modprobe "$driver" >/dev/null 2>&1 || {
+		sh_info_msg "$(gettext "Failed to load module:") $driver"
+		return 1
+	}
+
+	# Aguarda a interface reaparecer.
+	while ((timeout-- > 0)); do
+		iface=$(iw dev | awk '$1 == "Interface" { print $2; exit }')
+
+		if [[ -n "$iface" ]]; then
+			sh_info_msg "$(gettext "Wireless interface detected:") $iface"
+
+			rfkill unblock wifi >/dev/null 2>&1
+			ip link set "$iface" up >/dev/null 2>&1
+
+			if ip link show "$iface" | grep -q "state UP"; then
+				sh_info_msg "$(gettext "Wireless interface is up.")"
+				return 0
+			fi
+		fi
+
+		sleep 1
+	done
+
+	alerta "$(gettext "Failed to restore the wireless interface.")"
+	return 1
+}
+
+sh_down_iwd() {
+	if has_running iwd; then
+		echo "iwd rodando, iniciando rotina de reset..."
+
+		# Para o serviço iwd
 		sv down iwd
 
 		# Identifica o driver da placa
@@ -2228,41 +2319,41 @@ sh_down_iwd() {
 }
 
 sh_down_wpa() {
-  if has_running wpa_supplicant; then
-	  echo "wpa_supplicant rodando, iniciando rotina de reset..."
-    sv down wpa_supplicant
-    pkill -9 wpa_supplicant
-    # Garante a limpeza do socket
-    rm -rf /run/wpa_supplicant/*
-  fi
+	if has_running wpa_supplicant; then
+		echo "wpa_supplicant rodando, iniciando rotina de reset..."
+		sv down wpa_supplicant
+		pkill -9 wpa_supplicant
+		# Garante a limpeza do socket
+		rm -rf /run/wpa_supplicant/*
+	fi
 }
 
 sh_down_nm() {
-  if has_running NetworkManager; then
-    echo "NetworkManager rodando, iniciando rotina de reset..."
-    sv down NetworkManager
-  fi
+	if has_running NetworkManager; then
+		echo "NetworkManager rodando, iniciando rotina de reset..."
+		sv down NetworkManager
+	fi
 }
 
 sh_alternar_backend() {
 	local novo_backend="$1"
 
-  case "$novo_backend" in
+	case "$novo_backend" in
 	NetworkManager)
-    sh_down_iwd
-    sh_down_wpa
-    ! has_running NetworkManager &&	sv up NetworkManager
+		sh_down_iwd
+		sh_down_wpa
+		! has_running NetworkManager && sv up NetworkManager
 		;;
 	iwd)
-    sh_down_wpa
-    sh_down_nm
-    ! has_running iwd && sv up iwd
-    ;;
+		sh_down_wpa
+		sh_down_nm
+		! has_running iwd && sv up iwd
+		;;
 	wpa_supplicant)
-    sh_down_iwd
-    sh_down_nm
-    ! has_running wpa_supplicant && sv up wpa_supplicant
-    ;;
+		sh_down_iwd
+		sh_down_nm
+		! has_running wpa_supplicant && sv up wpa_supplicant
+		;;
 	esac
 }
 
