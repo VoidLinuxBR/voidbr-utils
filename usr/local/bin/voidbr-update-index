@@ -2,8 +2,8 @@
 
 set -euo pipefail
 
+ISO_BASE_DIR="/vg/void-mirror/iso"
 ISO_DIR="/vg/void-mirror/iso/current"
-ISO_LINK_DIR="/vg/void-mirror/iso"
 INDEX="/vg/void-mirror/www/voidbr/index.html"
 
 # Cores
@@ -29,7 +29,7 @@ fi
 	exit 1
 }
 
-voidbr_update_index() {
+voidbr_update_index_html() {
 	[[ -f "$INDEX" ]] || {
 		msg "${RED}Erro:${RESET} arquivo não encontrado: ${YELLOW}$INDEX${RESET}"
 		exit 1
@@ -110,11 +110,56 @@ voidbr_update_iso_links() {
 
 		link="voidbr-live-${flavor}-current.iso"
 
-		ln -sfn "current/$latest" "$ISO_LINK_DIR/$link"
+		ln -sfn "current/$latest" "$ISO_BASE_DIR/$link"
 		msg "${BLUE}[LINK]${RESET} ${link} ${CYAN}->${RESET} ${GREEN}${latest}${RESET}"
 	done
 	msg "Feito!"
 }
 
-voidbr_update_index
+voidbr_archive_old_isos() {
+	local flavor latest iso
+
+	mkdir -p "$ISO_BASE_DIR/old"
+
+	msg "${CYAN}==============================================${RESET}"
+	msg "${CYAN}     Movendo ISOs antigas para ${ISO_BASE_DIR}/old/${RESET}"
+	msg "${CYAN}==============================================${RESET}"
+
+	for flavor in $(find "$ISO_BASE_DIR/current" -maxdepth 1 -name 'voidbr-live-*-x86_64-*.iso' |
+		sed -E 's#.*/voidbr-live-([^-]+)-x86_64-.*#\1#' |
+		sort -u); do
+
+		latest=$(
+			find "$ISO_BASE_DIR/current" -maxdepth 1 \
+				-name "voidbr-live-${flavor}-x86_64-*.iso" \
+				-printf '%f\n' |
+				sort -V |
+				tail -n1
+		)
+
+		[[ -n "$latest" ]] || continue
+
+		while IFS= read -r iso; do
+			iso="${iso##*/}"
+
+			[[ "$iso" == "$latest" ]] && continue
+
+			mv -f \
+				"$ISO_BASE_DIR/current/$iso" \
+				"$ISO_BASE_DIR/old/$iso"
+
+			msg "${BLUE}[MOVE]${RESET} ${GREEN}${iso}${RESET} ${CYAN}->${RESET} old/"
+		done < <(
+			find "$ISO_BASE_DIR/current" -maxdepth 1 \
+				-name "voidbr-live-${flavor}-x86_64-*.iso" \
+				-printf '%f\n'
+		)
+
+	done
+
+	msg "${GREEN}Feito!${RESET}"
+}
+
+voidbr_update_index_html
 voidbr_update_iso_links
+voidbr_archive_old_isos
