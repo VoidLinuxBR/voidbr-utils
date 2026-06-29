@@ -3,14 +3,15 @@
 #  void-chroot - chroot util compatible with all likeunix
 #
 #  Created: 2019/04/05
-#  Altered: 2024/04/27
+#  Updated: seg 29 jun 2026 16:06:44 -04
 #
-#  Copyright (c) 2019-2024, Vilmar Catafesta <vcatafesta@gmail.com>
-#  Chili GNU/Linux - https://github.com/vcatafesta
-#  					 	https://github.com/chililinux
-#							https://github.com/voidlinux-br/void-install
-#  					 	https://chililinux.com
-#  					 	https://chilios.com.br
+#  Copyright (c) 2019-2026, Vilmar Catafesta <vcatafesta@gmail.com>
+#  Chili GNU/Linux -  https://github.com/vcatafesta
+#  					 	        https://github.com/chililinux
+#       							https://github.com/voidlinuxbr/voidbr-utils
+#  			        		 	https://chililinux.com
+#  		        			 	https://voidbr.org
+#  					         	https://voidlinux.com.br
 #
 #  Redistribution and use in source and binary forms, with or without
 #  modification, are permitted provided that the following conditions
@@ -128,5 +129,24 @@ sh_init_bind() {
 	fi
 }
 
+sh_checkroot() {
+  (( EUID != 0 )) && elevate_to_root "$@" || return 0
+}
+
+elevate_to_root() {
+  msg "This script must be run as root. Elevating privileges..."
+  ccabec+='root [elevated]'
+  # Tenta usar sudo primeiro (caso esteja configurado)
+  if command -v sudo >/dev/null 2>&1; then
+    exec sudo bash "$0" "$@"
+  fi
+  # Se sudo falhar, tenta su
+  if command -v su >/dev/null 2>&1; then
+    exec su -c "$0 $*"
+  fi
+  die "Error: Unable to elevate privileges. Run manually as root."
+}
+
 sh_setenvironment
+sh_checkroot
 sh_init_bind "$@"
