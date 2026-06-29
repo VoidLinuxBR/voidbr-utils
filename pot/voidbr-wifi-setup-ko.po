@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: chili-tradutor-go 2.1.20-20260201\n"
-"POT-Creation-Date: 2026-06-21 00:07-0400\n"
-"PO-Revision-Date: 2026-06-21 00:07-0400\n"
+"POT-Creation-Date: 2026-06-29 13:01-0400\n"
+"PO-Revision-Date: 2026-06-29 13:01-0400\n"
 "Last-Translator: Vilmar Catafesta <vcatafesta@gmail.com>\n"
 "Language-Team: Portuguese <https://github.com/chililinux/chili-tradutor-go>\n"
 "MIME-Version: 1.0\n"
@@ -209,7 +209,7 @@ msgstr "설치 메뉴"
 
 #: usr/local/bin/voidbr-wifi-setup:1472
 msgid "Desmontando ambiente"
-msgstr "환경 해체"
+msgstr "해체환경"
 
 #: usr/local/bin/voidbr-wifi-setup:1473
 msgid "Montando ambiente"
@@ -217,7 +217,7 @@ msgstr "환경 설정"
 
 #: usr/local/bin/voidbr-wifi-setup:1474
 msgid "Entrando no ambiente chroot"
-msgstr "chroot 환경에 들어가지 않음"
+msgstr "chroot 환경에 들어가기"
 
 #: usr/local/bin/voidbr-wifi-setup:1475
 msgid "Montando partição"
@@ -237,7 +237,7 @@ msgstr "사자"
 
 #: usr/local/bin/voidbr-wifi-setup:1479
 msgid "Descompactando"
-msgstr "압축 해제"
+msgstr "포장 풀기"
 
 #: usr/local/bin/voidbr-wifi-setup:1480
 msgid "Atualizando"
@@ -313,7 +313,7 @@ msgstr "터미널만 해당, 그래픽 인터페이스 없음"
 
 #: usr/local/bin/voidbr-wifi-setup:1500
 msgid "Servidor Void"
-msgstr "하인 공허"
+msgstr "보이드 서버"
 
 #: usr/local/bin/voidbr-wifi-setup:1501
 msgid "Selecionar espelho dos pacotes"
@@ -357,7 +357,7 @@ msgstr "로그인 관리자 선택"
 
 #: usr/local/bin/voidbr-wifi-setup:1511
 msgid "Definir rede e senha wifi (opcional)"
-msgstr "WiFi 네트워크 및 비밀번호 설정(선택사항)"
+msgstr "WiFi 네트워크 및 비밀번호 설정(선택 사항)"
 
 #: usr/local/bin/voidbr-wifi-setup:1512
 msgid "opcional"
@@ -433,7 +433,7 @@ msgstr "계속하다"
 
 #: usr/local/bin/voidbr-wifi-setup:1530
 msgid "Info disco"
-msgstr "정보 디스코"
+msgstr "디스크 정보"
 
 #: usr/local/bin/voidbr-wifi-setup:1531
 msgid "Info partição"
@@ -457,11 +457,11 @@ msgstr "대상 디스크"
 
 #: usr/local/bin/voidbr-wifi-setup:1538
 msgid "Escolha o disco de DESTINO:"
-msgstr "DESTINATION 디스크를 선택하세요."
+msgstr "DESTINATION 디스크를 선택하세요:"
 
 #: usr/local/bin/voidbr-wifi-setup:1539
 msgid "Sim"
-msgstr "심"
+msgstr "예"
 
 #: usr/local/bin/voidbr-wifi-setup:1540
 msgid "Não"
@@ -537,7 +537,7 @@ msgstr "스왑 파티션"
 
 #: usr/local/bin/voidbr-wifi-setup:1558
 msgid "Criando diretório"
-msgstr "디렉터리 생성 중"
+msgstr "디렉토리 생성 중"
 
 #: usr/local/bin/voidbr-wifi-setup:1559
 msgid "Atualizando instalação"
@@ -585,7 +585,7 @@ msgstr "다른 키보드 레이아웃 선택"
 
 #: usr/local/bin/voidbr-wifi-setup:1570
 msgid "Layout atual"
-msgstr "레이아웃 실제"
+msgstr "현재 레이아웃"
 
 #: usr/local/bin/voidbr-wifi-setup:1571
 msgid "Aguarde, Desmontando particao de trabalho"
@@ -617,7 +617,7 @@ msgstr "이 스크립트에는 위에 나열된 명령이 필요합니다."
 
 #: usr/local/bin/voidbr-wifi-setup:1578
 msgid "Instale-os e/ou verifique se estão no seu"
-msgstr "설치 및/또는 귀하의 컴퓨터에 있는지 확인하십시오."
+msgstr "이를 설치하거나 귀하의 컴퓨터에 있는지 확인하십시오."
 
 #: usr/local/bin/voidbr-wifi-setup:1579
 msgid "Instalar o(s) comando(s)"
@@ -769,7 +769,7 @@ msgstr "구성 파일 로드"
 
 #: usr/local/bin/voidbr-wifi-setup:1619
 msgid "Nome Completo"
-msgstr "성명"
+msgstr "이름"
 
 #: usr/local/bin/voidbr-wifi-setup:1620
 msgid "Nome usuario"
@@ -867,116 +867,164 @@ msgstr "=== WIFI 백엔드 ==="
 msgid "Selecione o backend Wi-Fi:"
 msgstr "Wi-Fi 백엔드를 선택합니다."
 
-#: usr/local/bin/voidbr-wifi-setup:1756
+#: usr/local/bin/voidbr-wifi-setup:1760
 msgid "interface"
 msgstr "인터페이스"
 
-#: usr/local/bin/voidbr-wifi-setup:1759
+#: usr/local/bin/voidbr-wifi-setup:1763
 msgid "Selecione a interface Wi-Fi:"
 msgstr "Wi-Fi 인터페이스 선택:"
 
-#: usr/local/bin/voidbr-wifi-setup:2010
+#: usr/local/bin/voidbr-wifi-setup:2014
 msgid "Escaneando redes wifi..."
 msgstr "Wi-Fi 네트워크 검색 중..."
 
-#: usr/local/bin/voidbr-wifi-setup:2021
+#: usr/local/bin/voidbr-wifi-setup:2025
 msgid "Nenhuma rede wifi encontrada."
 msgstr "Wi-Fi 네트워크를 찾을 수 없습니다."
 
-#: usr/local/bin/voidbr-wifi-setup:2050
+#: usr/local/bin/voidbr-wifi-setup:2054
 msgid "Escolha a rede que deseja conectar:"
 msgstr "연결하려는 네트워크를 선택하세요."
 
-#: usr/local/bin/voidbr-wifi-setup:2071
+#: usr/local/bin/voidbr-wifi-setup:2075
 msgid "Nenhuma interface de Wi-fi encontrada!"
 msgstr "Wi-Fi 인터페이스를 찾을 수 없습니다!"
 
-#: usr/local/bin/voidbr-wifi-setup:2073
+#: usr/local/bin/voidbr-wifi-setup:2077
 msgid ""
 "Para ativar/levantar a interface de Wi-fi, caso exista,\n"
 "tente seguir estes passos no terminal:"
 msgstr ""
 
-#: usr/local/bin/voidbr-wifi-setup:2076
+#: usr/local/bin/voidbr-wifi-setup:2080
 msgid "Identifique o dispositivo"
 msgstr "장치 식별"
 
-#: usr/local/bin/voidbr-wifi-setup:2077
+#: usr/local/bin/voidbr-wifi-setup:2081
 msgid "ou"
 msgstr "또는"
 
-#: usr/local/bin/voidbr-wifi-setup:2078
+#: usr/local/bin/voidbr-wifi-setup:2082
 msgid "Carregue o driver necessário"
 msgstr "필요한 드라이버를 로드하세요"
 
-#: usr/local/bin/voidbr-wifi-setup:2079
+#: usr/local/bin/voidbr-wifi-setup:2083
 msgid "Levante a interface"
 msgstr "레반떼 인터페이스"
 
-#: usr/local/bin/voidbr-wifi-setup:2080
+#: usr/local/bin/voidbr-wifi-setup:2084
 msgid "Verifique se há firmware faltando"
 msgstr "누락된 펌웨어 확인"
 
-#: usr/local/bin/voidbr-wifi-setup:2081
+#: usr/local/bin/voidbr-wifi-setup:2085
 msgid "(Re)Instale os drivers"
 msgstr "(재)드라이버 설치"
 
-#: usr/local/bin/voidbr-wifi-setup:2088
+#: usr/local/bin/voidbr-wifi-setup:2092
 msgid "WIFI - Diagnóstico de Rede"
 msgstr "WIFI - 네트워크 진단"
 
-#: usr/local/bin/voidbr-wifi-setup:2187
+#: usr/local/bin/voidbr-wifi-setup:2165
 msgid "Testando internet"
 msgstr "인터넷 테스트"
 
-#: usr/local/bin/voidbr-wifi-setup:2316
+#: usr/local/bin/voidbr-wifi-setup:2209
+msgid "Trying to bring up wireless interface..."
+msgstr "무선 인터페이스를 불러오는 중..."
+
+#: usr/local/bin/voidbr-wifi-setup:2215
+msgid "Wireless interface found:"
+msgstr "발견된 무선 인터페이스:"
+
+#: usr/local/bin/voidbr-wifi-setup:2221 usr/local/bin/voidbr-wifi-setup:2281
+msgid "Wireless interface is up."
+msgstr "무선 인터페이스가 작동 중입니다."
+
+#: usr/local/bin/voidbr-wifi-setup:2225
+msgid "Failed to bring interface up. Reloading driver..."
+msgstr "인터페이스를 불러오지 못했습니다. 드라이버를 다시 로드하는 중..."
+
+#: usr/local/bin/voidbr-wifi-setup:2244
+msgid "Unable to determine the wireless driver."
+msgstr "무선 드라이버를 확인할 수 없습니다."
+
+#: usr/local/bin/voidbr-wifi-setup:2248
+msgid "Wireless module:"
+msgstr "무선 모듈:"
+
+#: usr/local/bin/voidbr-wifi-setup:2253
+msgid "Removing dependent module:"
+msgstr "종속 모듈 제거:"
+
+#: usr/local/bin/voidbr-wifi-setup:2258
+msgid "Removing module:"
+msgstr "모듈 제거:"
+
+#: usr/local/bin/voidbr-wifi-setup:2264
+msgid "Loading module:"
+msgstr "모듈 로드 중:"
+
+#: usr/local/bin/voidbr-wifi-setup:2266
+msgid "Failed to load module:"
+msgstr "모듈을 로드하지 못했습니다:"
+
+#: usr/local/bin/voidbr-wifi-setup:2275
+msgid "Wireless interface detected:"
+msgstr "무선 인터페이스가 감지되었습니다:"
+
+#: usr/local/bin/voidbr-wifi-setup:2289
+msgid "Failed to restore the wireless interface."
+msgstr "무선 인터페이스를 복원하지 못했습니다."
+
+#: usr/local/bin/voidbr-wifi-setup:2368
 msgid "A Interface selecionada já tem acesso à internet!"
 msgstr "선택한 인터페이스는 이미 인터넷에 접속되어 있습니다!"
 
-#: usr/local/bin/voidbr-wifi-setup:2317
+#: usr/local/bin/voidbr-wifi-setup:2369
 msgid "Ainda deseja prosseguir ?"
-msgstr "그래도 계속하시겠습니까?"
+msgstr "아직도 계속하시겠습니까?"
 
-#: usr/local/bin/voidbr-wifi-setup:2326
+#: usr/local/bin/voidbr-wifi-setup:2378
 msgid "Nenhum backend Wi-Fi encontrado."
 msgstr "Wi-Fi 백엔드를 찾을 수 없습니다."
 
-#: usr/local/bin/voidbr-wifi-setup:2327
+#: usr/local/bin/voidbr-wifi-setup:2379
 msgid "Instale o NetworkManager, ou iwd, ou wpa_supplicant."
 msgstr "NetworkManager, iwd 또는 wpa_supplicant를 설치합니다."
 
-#: usr/local/bin/voidbr-wifi-setup:2341
+#: usr/local/bin/voidbr-wifi-setup:2389
 msgid "Reiniciando serviços/interface e desbloquendo rfkill"
 msgstr "서비스/인터페이스 다시 시작 및 rfkill 잠금 해제"
 
-#: usr/local/bin/voidbr-wifi-setup:2359
+#: usr/local/bin/voidbr-wifi-setup:2406
 msgid "Deixe em branco o campo Interface Wi-Fi para listar interfaces"
 msgstr "인터페이스를 나열하려면 Wi-Fi 인터페이스 필드를 비워 두세요."
 
-#: usr/local/bin/voidbr-wifi-setup:2360
+#: usr/local/bin/voidbr-wifi-setup:2407
 msgid "Deixe em branco o campo Rede Wi-Fi para escanear redes"
 msgstr "네트워크를 검색하려면 Wi-Fi 네트워크 필드를 비워 두세요."
 
-#: usr/local/bin/voidbr-wifi-setup:2370
+#: usr/local/bin/voidbr-wifi-setup:2416
 msgid "=== WIFI ==="
 msgstr "=== 와이파이 ==="
 
-#: usr/local/bin/voidbr-wifi-setup:2435 usr/local/bin/voidbr-wifi-setup:2451
+#: usr/local/bin/voidbr-wifi-setup:2480 usr/local/bin/voidbr-wifi-setup:2496
 msgid "Já existe um perfil para essa rede.\\nDeseja utilizar ?"
 msgstr "이 네트워크에 대한 프로필이 이미 존재합니다.\n이 프로필을 사용하시겠습니까?"
 
-#: usr/local/bin/voidbr-wifi-setup:2468
+#: usr/local/bin/voidbr-wifi-setup:2513
 msgid "Isso é deliberado ?"
 msgstr "이것은 고의적인 것입니까?"
 
-#: usr/local/bin/voidbr-wifi-setup:2478
+#: usr/local/bin/voidbr-wifi-setup:2523
 msgid "Deseja configurar IP fixo?"
 msgstr "고정 IP를 구성하시겠습니까?"
 
-#: usr/local/bin/voidbr-wifi-setup:2484
+#: usr/local/bin/voidbr-wifi-setup:2529
 msgid "Prosseguir com a configuração e conexão ?"
 msgstr "구성 및 연결을 계속하시겠습니까?"
 
-#: usr/local/bin/voidbr-wifi-setup:2574
+#: usr/local/bin/voidbr-wifi-setup:2619
 msgid "Deseja escanear por redes wifi?"
 msgstr "WiFi 네트워크를 통해 스캔하시겠습니까?"

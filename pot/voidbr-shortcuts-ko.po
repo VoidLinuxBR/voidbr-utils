@@ -1,0 +1,236 @@
+# Chili Tradutor Go - 2.1.20-20260201
+# Copyright (C) 2019-2026 Vilmar Catafesta <vcatafesta@gmail.com>
+# This file is distributed under the same license as the chili-tradutor-go package.
+msgid ""
+msgstr ""
+"Project-Id-Version: chili-tradutor-go 2.1.20-20260201\n"
+"POT-Creation-Date: 2026-06-29 13:00-0400\n"
+"PO-Revision-Date: 2026-06-29 13:00-0400\n"
+"Last-Translator: Vilmar Catafesta <vcatafesta@gmail.com>\n"
+"Language-Team: Portuguese <https://github.com/chililinux/chili-tradutor-go>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ko\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: usr/local/bin/voidbr-shortcuts:16
+msgid "Geral"
+msgstr "일반적인"
+
+#: usr/local/bin/voidbr-shortcuts:17
+msgid "Abrir terminal"
+msgstr "터미널 열기"
+
+#: usr/local/bin/voidbr-shortcuts:18
+msgid "Abrir lançador de aplicativos"
+msgstr "애플리케이션 실행기 열기"
+
+#: usr/local/bin/voidbr-shortcuts:19
+msgid "Recarregar configuração do Sway"
+msgstr "Sway 구성 다시 로드"
+
+#: usr/local/bin/voidbr-shortcuts:20
+msgid "Reiniciar o Sway"
+msgstr "Sway 다시 시작"
+
+#: usr/local/bin/voidbr-shortcuts:21
+msgid "Encerrar sessão do Sway"
+msgstr "Sway에서 로그아웃"
+
+#: usr/local/bin/voidbr-shortcuts:22
+msgid "Fechar janela em foco"
+msgstr "초점이 맞춰진 창 닫기"
+
+#: usr/local/bin/voidbr-shortcuts:23
+msgid "Bloquear tela"
+msgstr "잠금 화면"
+
+#: usr/local/bin/voidbr-shortcuts:24
+msgid "Capturar tela"
+msgstr "화면 캡쳐"
+
+#: usr/local/bin/voidbr-shortcuts:26
+msgid "Foco"
+msgstr "집중하다"
+
+#: usr/local/bin/voidbr-shortcuts:27 usr/local/bin/voidbr-shortcuts:31
+msgid "Mover foco para a esquerda"
+msgstr "초점을 왼쪽으로 이동"
+
+#: usr/local/bin/voidbr-shortcuts:28 usr/local/bin/voidbr-shortcuts:32
+msgid "Mover foco para baixo"
+msgstr "초점을 아래로 이동"
+
+#: usr/local/bin/voidbr-shortcuts:29 usr/local/bin/voidbr-shortcuts:33
+msgid "Mover foco para cima"
+msgstr "초점을 위로 이동"
+
+#: usr/local/bin/voidbr-shortcuts:30 usr/local/bin/voidbr-shortcuts:34
+msgid "Mover foco para a direita"
+msgstr "초점을 오른쪽으로 이동"
+
+#: usr/local/bin/voidbr-shortcuts:35
+msgid "Mover foco para o contêiner pai"
+msgstr "포커스를 상위 컨테이너로 이동"
+
+#: usr/local/bin/voidbr-shortcuts:36
+msgid "Alternar para a janela anterior"
+msgstr "이전 창으로 전환"
+
+#: usr/local/bin/voidbr-shortcuts:38
+msgid "Mover Janelas"
+msgstr "창 이동"
+
+#: usr/local/bin/voidbr-shortcuts:39 usr/local/bin/voidbr-shortcuts:43
+msgid "Mover janela para a esquerda"
+msgstr "창을 왼쪽으로 이동"
+
+#: usr/local/bin/voidbr-shortcuts:40 usr/local/bin/voidbr-shortcuts:44
+msgid "Mover janela para baixo"
+msgstr "창을 아래로 이동"
+
+#: usr/local/bin/voidbr-shortcuts:41 usr/local/bin/voidbr-shortcuts:45
+msgid "Mover janela para cima"
+msgstr "창을 위로 이동"
+
+#: usr/local/bin/voidbr-shortcuts:42 usr/local/bin/voidbr-shortcuts:46
+msgid "Mover janela para a direita"
+msgstr "창을 오른쪽으로 이동"
+
+#: usr/local/bin/voidbr-shortcuts:48
+msgid "Layouts"
+msgstr "레이아웃"
+
+#: usr/local/bin/voidbr-shortcuts:49
+msgid "Divisão horizontal"
+msgstr "수평 분할"
+
+#: usr/local/bin/voidbr-shortcuts:50
+msgid "Divisão vertical"
+msgstr "수직분할"
+
+#: usr/local/bin/voidbr-shortcuts:51
+msgid "Layout empilhado"
+msgstr "스택 레이아웃"
+
+#: usr/local/bin/voidbr-shortcuts:52
+msgid "Layout em abas"
+msgstr "레이아웃 em abas"
+
+#: usr/local/bin/voidbr-shortcuts:53
+msgid "Alternar modo de divisão"
+msgstr "분할 모드 전환"
+
+#: usr/local/bin/voidbr-shortcuts:54
+msgid "Alternar tela cheia"
+msgstr "전체 화면 전환"
+
+#: usr/local/bin/voidbr-shortcuts:55
+msgid "Alternar modo flutuante"
+msgstr "플로팅 모드 전환"
+
+#: usr/local/bin/voidbr-shortcuts:56
+msgid "Alternar modo de foco"
+msgstr "초점 모드 전환"
+
+#: usr/local/bin/voidbr-shortcuts:58
+msgid "Scratchpad"
+msgstr "스크래치패드"
+
+#: usr/local/bin/voidbr-shortcuts:59
+msgid "Enviar janela para o scratchpad"
+msgstr "창을 스크래치패드로 보내기"
+
+#: usr/local/bin/voidbr-shortcuts:60
+msgid "Exibir scratchpad"
+msgstr "스크래치패드 표시"
+
+#: usr/local/bin/voidbr-shortcuts:62
+msgid "Áreas de Trabalho"
+msgstr "작업 영역"
+
+#: usr/local/bin/voidbr-shortcuts:63
+msgid "Alternar área de trabalho"
+msgstr "데스크톱 전환"
+
+#: usr/local/bin/voidbr-shortcuts:64
+msgid "Mover janela para a área de trabalho"
+msgstr "창을 데스크탑으로 이동"
+
+#: usr/local/bin/voidbr-shortcuts:66
+msgid "Redimensionamento"
+msgstr "크기 조정"
+
+#: usr/local/bin/voidbr-shortcuts:67
+msgid "Entrar no modo de redimensionamento"
+msgstr "크기 조정 모드 시작"
+
+#: usr/local/bin/voidbr-shortcuts:68 usr/local/bin/voidbr-shortcuts:83
+msgid "Redimensionar janela"
+msgstr "창 크기 조정"
+
+#: usr/local/bin/voidbr-shortcuts:69
+msgid "Sair do modo de redimensionamento"
+msgstr "크기 조정 모드 종료"
+
+#: usr/local/bin/voidbr-shortcuts:71
+msgid "Multimídia"
+msgstr "멀티미디어"
+
+#: usr/local/bin/voidbr-shortcuts:72
+msgid "Aumentar volume"
+msgstr "볼륨 높이기"
+
+#: usr/local/bin/voidbr-shortcuts:73
+msgid "Diminuir volume"
+msgstr "볼륨 줄이기"
+
+#: usr/local/bin/voidbr-shortcuts:74
+msgid "Ativar/Desativar mudo"
+msgstr "음소거/음소거 해제"
+
+#: usr/local/bin/voidbr-shortcuts:75
+msgid "Reproduzir/Pausar"
+msgstr "재생/일시 정지"
+
+#: usr/local/bin/voidbr-shortcuts:76
+msgid "Próxima faixa"
+msgstr "다음 트랙"
+
+#: usr/local/bin/voidbr-shortcuts:77
+msgid "Faixa anterior"
+msgstr "이전 트랙"
+
+#: usr/local/bin/voidbr-shortcuts:78
+msgid "Aumentar brilho"
+msgstr "밝기 증가"
+
+#: usr/local/bin/voidbr-shortcuts:79
+msgid "Diminuir brilho"
+msgstr "밝기 감소"
+
+#: usr/local/bin/voidbr-shortcuts:81
+msgid "Mouse"
+msgstr "생쥐"
+
+#: usr/local/bin/voidbr-shortcuts:82
+msgid "Mover janela"
+msgstr "창 이동"
+
+#: usr/local/bin/voidbr-shortcuts:85
+msgid "VoidBR"
+msgstr "보이드BR"
+
+#: usr/local/bin/voidbr-shortcuts:86 usr/local/bin/voidbr-shortcuts:102
+#: usr/local/bin/voidbr-shortcuts:113
+msgid "Atalhos do VoidBR Sway"
+msgstr "VoidBR 스웨이 단축키"
+
+#: usr/local/bin/voidbr-shortcuts:124
+msgid "Pesquisar atalhos..."
+msgstr "바로가기 검색..."
+
+#: usr/local/bin/voidbr-shortcuts:162
+msgid "Fechar"
+msgstr "닫으려면"
