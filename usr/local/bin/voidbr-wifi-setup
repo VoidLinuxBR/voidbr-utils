@@ -30,7 +30,7 @@
 #  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ##############################################################################
 export LANGUAGE="${LANGUAGE:-pt_BR}"
-export TEXTDOMAINDIR=/usr/share/locale
+export TEXTDOMAINDIR=usr/share/locale
 export TEXTDOMAIN=voidbr-wifi-setup
 
 #todo
@@ -520,7 +520,7 @@ sh_checkroot() {
 }
 
 elevate_to_root() {
-	log_ok "This script must be run as root. Elevating privileges..."
+	log_ok "$(gettext 'This script must be run as root. Elevating privileges...')"
 	ccabec+='root [elevated]'
 	# Tenta usar sudo primeiro (caso esteja configurado)
 	if command -v sudo >/dev/null 2>&1; then
@@ -1662,8 +1662,9 @@ sh_select_wifi_backend() {
 	choice="$(
 		${DIALOG} \
 			--colors \
+			--clear \
 			--backtitle "$ccabec" \
-			--title "$(gettext "=== WIFI backend ===")" \
+			--title "=== WIFI backend ===" \
 			--ok-label "${cmsg_ButtonEscolher}" \
 			--cancel-label "${cmsg_Exit}" \
 			--insecure "$@" \
@@ -2286,16 +2287,32 @@ sh_try_up_interface() {
 		sleep 1
 	done
 
-	alerta "$(gettext "Failed to restore the wireless interface.")"
+	alerta "sh_show_connection_status" "$(gettext 'Failed to restore the wireless interface.')"
 	return 1
+}
+
+sh_up_service() {
+  local service="$1"
+
+  if ! has_running "$service"; then
+		sh_info_msg "${service} $(gettext 'não está rodando, iniciando rotina para iniciar')"
+		ln -sf /etc/sv/"${service}" /var/service/
+		sv up "${service}"
+		sleep 2
+
+		if ! has_running "${service}"; then
+			alerta "sh_up_service" "${RED}$(gettext 'Erro: Não foi possivel iniciar') ${service}${RST}"
+			return 1
+		fi
+	fi
+	return 0
 }
 
 sh_down_iwd() {
 	if has_running iwd; then
-		echo "iwd rodando, iniciando rotina de reset..."
-
-		# Para o serviço iwd
+		sh_info_msg "$(gettext 'iwd rodando, iniciando rotina de reset')"
 		sv down iwd
+#		rm -f /var/service/iwd
 
 		# Identifica o driver da placa
 		local driver_path="/sys/class/net/$iface/device/driver"
@@ -2307,21 +2324,24 @@ sh_down_iwd() {
 
 		# Executa o reset do módulo
 		if [[ -n "$filho" ]]; then
-			echo "Reiniciando módulo: $filho"
+			sh_info_msg "$(gettext 'Reiniciando módulo)'): $filho"
 			modprobe -r "$filho"
 			sleep 1
 			modprobe "$filho"
 			sleep 3
 		else
-			echo "Erro: Nenhum módulo dependente encontrado para $driver_name"
+			alerta "sh_down_iwd" "${RED}$(gettext 'Erro: Nenhum módulo dependente encontrado para $driver_name')${RST}"
+			return 1
 		fi
 	fi
+	return 0
 }
 
 sh_down_wpa() {
 	if has_running wpa_supplicant; then
-		echo "wpa_supplicant rodando, iniciando rotina de reset..."
+		sh_info_msg "$(gettext 'wpa_supplicant rodando, iniciando rotina de reset')"
 		sv down wpa_supplicant
+#		rm -f /var/service/wpa_supplicant
 		pkill -9 wpa_supplicant
 		# Garante a limpeza do socket
 		rm -rf /run/wpa_supplicant/*
@@ -2330,7 +2350,7 @@ sh_down_wpa() {
 
 sh_down_nm() {
 	if has_running NetworkManager; then
-		echo "NetworkManager rodando, iniciando rotina de reset..."
+		sh_info_msg "$(gettext 'NetworkManager rodando, iniciando rotina de reset')"
 		sv down NetworkManager
 	fi
 }
@@ -2340,19 +2360,19 @@ sh_alternar_backend() {
 
 	case "$novo_backend" in
 	NetworkManager)
+		! has_running NetworkManager && sh_up_service "NetworkManager"
 		sh_down_iwd
 		sh_down_wpa
-		! has_running NetworkManager && sv up NetworkManager
 		;;
 	iwd)
+		! has_running iwd && sh_up_service "iwd"
 		sh_down_wpa
 		sh_down_nm
-		! has_running iwd && sv up iwd
 		;;
 	wpa_supplicant)
+		! has_running wpa_supplicant && sh_up_service "wpa_supplicant"
 		sh_down_iwd
 		sh_down_nm
-		! has_running wpa_supplicant && sv up wpa_supplicant
 		;;
 	esac
 }
@@ -2386,13 +2406,13 @@ sh_confWifi() {
 	fi
 	#debug "1=$_WIFI_NETWORK 2=$_WIFI_CONNECTED"
 
+	sh_info_msg "$(gettext "Reiniciando serviços/interface e desbloquendo rfkill")"
 	sh_cmd_job_progressbox "$(gettext "Reiniciando serviços/interface e desbloquendo rfkill")" '
     sh_alternar_backend "${backend}"
     ip link set "${iface}" up
     rfkill list
     rfkill unblock all
     sleep 0.5
-    :
   '
 
 	case "${backend}" in
@@ -2414,6 +2434,7 @@ sh_confWifi() {
 			${DIALOG} \
 				--stdout \
 				--title "$(gettext "=== WIFI ===")" \
+				--clear \
 				--colors \
 				--ok-label "${cmsg_Conectar}" \
 				--cancel-label "${cmsg_Encerrar}" \
