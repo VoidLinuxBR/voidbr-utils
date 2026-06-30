@@ -1,0 +1,236 @@
+# Chili Tradutor Go - 2.1.20-20260201
+# Copyright (C) 2019-2026 Vilmar Catafesta <vcatafesta@gmail.com>
+# This file is distributed under the same license as the chili-tradutor-go package.
+msgid ""
+msgstr ""
+"Project-Id-Version: chili-tradutor-go 2.1.20-20260201\n"
+"POT-Creation-Date: 2026-06-29 13:00-0400\n"
+"PO-Revision-Date: 2026-06-29 13:00-0400\n"
+"Last-Translator: Vilmar Catafesta <vcatafesta@gmail.com>\n"
+"Language-Team: Portuguese <https://github.com/chililinux/chili-tradutor-go>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: usr/local/bin/voidbr-shortcuts:16
+msgid "Geral"
+msgstr "一般的"
+
+#: usr/local/bin/voidbr-shortcuts:17
+msgid "Abrir terminal"
+msgstr "打开终端"
+
+#: usr/local/bin/voidbr-shortcuts:18
+msgid "Abrir lançador de aplicativos"
+msgstr "打开应用程序启动器"
+
+#: usr/local/bin/voidbr-shortcuts:19
+msgid "Recarregar configuração do Sway"
+msgstr "重新加载 Sway 配置"
+
+#: usr/local/bin/voidbr-shortcuts:20
+msgid "Reiniciar o Sway"
+msgstr "重新启动摇摆"
+
+#: usr/local/bin/voidbr-shortcuts:21
+msgid "Encerrar sessão do Sway"
+msgstr "注销 Sway"
+
+#: usr/local/bin/voidbr-shortcuts:22
+msgid "Fechar janela em foco"
+msgstr "关闭焦点窗口"
+
+#: usr/local/bin/voidbr-shortcuts:23
+msgid "Bloquear tela"
+msgstr "锁屏"
+
+#: usr/local/bin/voidbr-shortcuts:24
+msgid "Capturar tela"
+msgstr "捕捉屏幕"
+
+#: usr/local/bin/voidbr-shortcuts:26
+msgid "Foco"
+msgstr "重点"
+
+#: usr/local/bin/voidbr-shortcuts:27 usr/local/bin/voidbr-shortcuts:31
+msgid "Mover foco para a esquerda"
+msgstr "向左移动焦点"
+
+#: usr/local/bin/voidbr-shortcuts:28 usr/local/bin/voidbr-shortcuts:32
+msgid "Mover foco para baixo"
+msgstr "将焦点向下移动"
+
+#: usr/local/bin/voidbr-shortcuts:29 usr/local/bin/voidbr-shortcuts:33
+msgid "Mover foco para cima"
+msgstr "将焦点移至顶部"
+
+#: usr/local/bin/voidbr-shortcuts:30 usr/local/bin/voidbr-shortcuts:34
+msgid "Mover foco para a direita"
+msgstr "向右移动焦点"
+
+#: usr/local/bin/voidbr-shortcuts:35
+msgid "Mover foco para o contêiner pai"
+msgstr "将焦点移至父容器"
+
+#: usr/local/bin/voidbr-shortcuts:36
+msgid "Alternar para a janela anterior"
+msgstr "切换到上一个窗口"
+
+#: usr/local/bin/voidbr-shortcuts:38
+msgid "Mover Janelas"
+msgstr "移动窗户"
+
+#: usr/local/bin/voidbr-shortcuts:39 usr/local/bin/voidbr-shortcuts:43
+msgid "Mover janela para a esquerda"
+msgstr "将窗口移至左侧"
+
+#: usr/local/bin/voidbr-shortcuts:40 usr/local/bin/voidbr-shortcuts:44
+msgid "Mover janela para baixo"
+msgstr "将窗口向下移动"
+
+#: usr/local/bin/voidbr-shortcuts:41 usr/local/bin/voidbr-shortcuts:45
+msgid "Mover janela para cima"
+msgstr "向上移动窗口"
+
+#: usr/local/bin/voidbr-shortcuts:42 usr/local/bin/voidbr-shortcuts:46
+msgid "Mover janela para a direita"
+msgstr "将窗口移至右侧"
+
+#: usr/local/bin/voidbr-shortcuts:48
+msgid "Layouts"
+msgstr "布局"
+
+#: usr/local/bin/voidbr-shortcuts:49
+msgid "Divisão horizontal"
+msgstr "横向划分"
+
+#: usr/local/bin/voidbr-shortcuts:50
+msgid "Divisão vertical"
+msgstr "垂直划分"
+
+#: usr/local/bin/voidbr-shortcuts:51
+msgid "Layout empilhado"
+msgstr "堆叠布局"
+
+#: usr/local/bin/voidbr-shortcuts:52
+msgid "Layout em abas"
+msgstr "布局 em abas"
+
+#: usr/local/bin/voidbr-shortcuts:53
+msgid "Alternar modo de divisão"
+msgstr "切换分割模式"
+
+#: usr/local/bin/voidbr-shortcuts:54
+msgid "Alternar tela cheia"
+msgstr "切换全屏"
+
+#: usr/local/bin/voidbr-shortcuts:55
+msgid "Alternar modo flutuante"
+msgstr "切换浮动模式"
+
+#: usr/local/bin/voidbr-shortcuts:56
+msgid "Alternar modo de foco"
+msgstr "切换对焦模式"
+
+#: usr/local/bin/voidbr-shortcuts:58
+msgid "Scratchpad"
+msgstr "便签本"
+
+#: usr/local/bin/voidbr-shortcuts:59
+msgid "Enviar janela para o scratchpad"
+msgstr "将窗口发送到暂存器"
+
+#: usr/local/bin/voidbr-shortcuts:60
+msgid "Exibir scratchpad"
+msgstr "显示暂存器"
+
+#: usr/local/bin/voidbr-shortcuts:62
+msgid "Áreas de Trabalho"
+msgstr "工作区域"
+
+#: usr/local/bin/voidbr-shortcuts:63
+msgid "Alternar área de trabalho"
+msgstr "切换桌面"
+
+#: usr/local/bin/voidbr-shortcuts:64
+msgid "Mover janela para a área de trabalho"
+msgstr "将窗口移动到桌面"
+
+#: usr/local/bin/voidbr-shortcuts:66
+msgid "Redimensionamento"
+msgstr "调整大小"
+
+#: usr/local/bin/voidbr-shortcuts:67
+msgid "Entrar no modo de redimensionamento"
+msgstr "进入调整大小模式"
+
+#: usr/local/bin/voidbr-shortcuts:68 usr/local/bin/voidbr-shortcuts:83
+msgid "Redimensionar janela"
+msgstr "调整窗口大小"
+
+#: usr/local/bin/voidbr-shortcuts:69
+msgid "Sair do modo de redimensionamento"
+msgstr "退出调整大小模式"
+
+#: usr/local/bin/voidbr-shortcuts:71
+msgid "Multimídia"
+msgstr "多媒体"
+
+#: usr/local/bin/voidbr-shortcuts:72
+msgid "Aumentar volume"
+msgstr "增加音量"
+
+#: usr/local/bin/voidbr-shortcuts:73
+msgid "Diminuir volume"
+msgstr "减小音量"
+
+#: usr/local/bin/voidbr-shortcuts:74
+msgid "Ativar/Desativar mudo"
+msgstr "静音/取消静音"
+
+#: usr/local/bin/voidbr-shortcuts:75
+msgid "Reproduzir/Pausar"
+msgstr "播放/暂停"
+
+#: usr/local/bin/voidbr-shortcuts:76
+msgid "Próxima faixa"
+msgstr "下一曲目"
+
+#: usr/local/bin/voidbr-shortcuts:77
+msgid "Faixa anterior"
+msgstr "上一曲目"
+
+#: usr/local/bin/voidbr-shortcuts:78
+msgid "Aumentar brilho"
+msgstr "增加亮度"
+
+#: usr/local/bin/voidbr-shortcuts:79
+msgid "Diminuir brilho"
+msgstr "降低亮度"
+
+#: usr/local/bin/voidbr-shortcuts:81
+msgid "Mouse"
+msgstr "老鼠"
+
+#: usr/local/bin/voidbr-shortcuts:82
+msgid "Mover janela"
+msgstr "移动窗口"
+
+#: usr/local/bin/voidbr-shortcuts:85
+msgid "VoidBR"
+msgstr "虚空BR"
+
+#: usr/local/bin/voidbr-shortcuts:86 usr/local/bin/voidbr-shortcuts:102
+#: usr/local/bin/voidbr-shortcuts:113
+msgid "Atalhos do VoidBR Sway"
+msgstr "VoidBR Sway 快捷键"
+
+#: usr/local/bin/voidbr-shortcuts:124
+msgid "Pesquisar atalhos..."
+msgstr "搜索快捷方式..."
+
+#: usr/local/bin/voidbr-shortcuts:162
+msgid "Fechar"
+msgstr "关闭"

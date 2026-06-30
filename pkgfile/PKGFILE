@@ -11,7 +11,7 @@ license=('GPL3')
 url="https://github.com/voidlinuxbr/$pkgname"
 source=("git+${url}.git")
 md5sums=('SKIP')
-depends=("bash>=0" smartmontools umc pigz geoip geoipupdate)
+depends=("bash>=0" smartmontools umc pigz geoip geoipupdate dialog gettext)
 
 package() {
 	local dirs=("usr" "etc" "opt")

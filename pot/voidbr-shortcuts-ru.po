@@ -1,0 +1,236 @@
+# Chili Tradutor Go - 2.1.20-20260201
+# Copyright (C) 2019-2026 Vilmar Catafesta <vcatafesta@gmail.com>
+# This file is distributed under the same license as the chili-tradutor-go package.
+msgid ""
+msgstr ""
+"Project-Id-Version: chili-tradutor-go 2.1.20-20260201\n"
+"POT-Creation-Date: 2026-06-29 13:00-0400\n"
+"PO-Revision-Date: 2026-06-29 13:00-0400\n"
+"Last-Translator: Vilmar Catafesta <vcatafesta@gmail.com>\n"
+"Language-Team: Portuguese <https://github.com/chililinux/chili-tradutor-go>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: usr/local/bin/voidbr-shortcuts:16
+msgid "Geral"
+msgstr "Общий"
+
+#: usr/local/bin/voidbr-shortcuts:17
+msgid "Abrir terminal"
+msgstr "Открыть терминал"
+
+#: usr/local/bin/voidbr-shortcuts:18
+msgid "Abrir lançador de aplicativos"
+msgstr "Открыть панель запуска приложений"
+
+#: usr/local/bin/voidbr-shortcuts:19
+msgid "Recarregar configuração do Sway"
+msgstr "Перезагрузить конфигурацию Sway"
+
+#: usr/local/bin/voidbr-shortcuts:20
+msgid "Reiniciar o Sway"
+msgstr "Перезапустить Sway"
+
+#: usr/local/bin/voidbr-shortcuts:21
+msgid "Encerrar sessão do Sway"
+msgstr "Выйти из Sway"
+
+#: usr/local/bin/voidbr-shortcuts:22
+msgid "Fechar janela em foco"
+msgstr "Закрыть окно в фокусе"
+
+#: usr/local/bin/voidbr-shortcuts:23
+msgid "Bloquear tela"
+msgstr "Экран блокировки"
+
+#: usr/local/bin/voidbr-shortcuts:24
+msgid "Capturar tela"
+msgstr "Захват экрана"
+
+#: usr/local/bin/voidbr-shortcuts:26
+msgid "Foco"
+msgstr "Фокус"
+
+#: usr/local/bin/voidbr-shortcuts:27 usr/local/bin/voidbr-shortcuts:31
+msgid "Mover foco para a esquerda"
+msgstr "Переместить фокус влево"
+
+#: usr/local/bin/voidbr-shortcuts:28 usr/local/bin/voidbr-shortcuts:32
+msgid "Mover foco para baixo"
+msgstr "Переместить фокус вниз"
+
+#: usr/local/bin/voidbr-shortcuts:29 usr/local/bin/voidbr-shortcuts:33
+msgid "Mover foco para cima"
+msgstr "Переместить фокус вверх"
+
+#: usr/local/bin/voidbr-shortcuts:30 usr/local/bin/voidbr-shortcuts:34
+msgid "Mover foco para a direita"
+msgstr "Переместить фокус вправо"
+
+#: usr/local/bin/voidbr-shortcuts:35
+msgid "Mover foco para o contêiner pai"
+msgstr "Переместить фокус в родительский контейнер"
+
+#: usr/local/bin/voidbr-shortcuts:36
+msgid "Alternar para a janela anterior"
+msgstr "Перейти к предыдущему окну"
+
+#: usr/local/bin/voidbr-shortcuts:38
+msgid "Mover Janelas"
+msgstr "Переместить окна"
+
+#: usr/local/bin/voidbr-shortcuts:39 usr/local/bin/voidbr-shortcuts:43
+msgid "Mover janela para a esquerda"
+msgstr "Переместить окно влево"
+
+#: usr/local/bin/voidbr-shortcuts:40 usr/local/bin/voidbr-shortcuts:44
+msgid "Mover janela para baixo"
+msgstr "Переместить окно вниз"
+
+#: usr/local/bin/voidbr-shortcuts:41 usr/local/bin/voidbr-shortcuts:45
+msgid "Mover janela para cima"
+msgstr "Переместить окно вверх"
+
+#: usr/local/bin/voidbr-shortcuts:42 usr/local/bin/voidbr-shortcuts:46
+msgid "Mover janela para a direita"
+msgstr "Переместить окно вправо"
+
+#: usr/local/bin/voidbr-shortcuts:48
+msgid "Layouts"
+msgstr "Макеты"
+
+#: usr/local/bin/voidbr-shortcuts:49
+msgid "Divisão horizontal"
+msgstr "Горизонтальное деление"
+
+#: usr/local/bin/voidbr-shortcuts:50
+msgid "Divisão vertical"
+msgstr "Вертикальное деление"
+
+#: usr/local/bin/voidbr-shortcuts:51
+msgid "Layout empilhado"
+msgstr "Сложенный макет"
+
+#: usr/local/bin/voidbr-shortcuts:52
+msgid "Layout em abas"
+msgstr "Макет в Абасе"
+
+#: usr/local/bin/voidbr-shortcuts:53
+msgid "Alternar modo de divisão"
+msgstr "Переключить режим разделения"
+
+#: usr/local/bin/voidbr-shortcuts:54
+msgid "Alternar tela cheia"
+msgstr "Переключить полноэкранный режим"
+
+#: usr/local/bin/voidbr-shortcuts:55
+msgid "Alternar modo flutuante"
+msgstr "Переключить плавающий режим"
+
+#: usr/local/bin/voidbr-shortcuts:56
+msgid "Alternar modo de foco"
+msgstr "Переключить режим фокусировки"
+
+#: usr/local/bin/voidbr-shortcuts:58
+msgid "Scratchpad"
+msgstr "Блокнот"
+
+#: usr/local/bin/voidbr-shortcuts:59
+msgid "Enviar janela para o scratchpad"
+msgstr "Отправить окно в блокнот"
+
+#: usr/local/bin/voidbr-shortcuts:60
+msgid "Exibir scratchpad"
+msgstr "Показать блокнот"
+
+#: usr/local/bin/voidbr-shortcuts:62
+msgid "Áreas de Trabalho"
+msgstr "Рабочие зоны"
+
+#: usr/local/bin/voidbr-shortcuts:63
+msgid "Alternar área de trabalho"
+msgstr "Переключить рабочий стол"
+
+#: usr/local/bin/voidbr-shortcuts:64
+msgid "Mover janela para a área de trabalho"
+msgstr "Переместить окно на рабочий стол"
+
+#: usr/local/bin/voidbr-shortcuts:66
+msgid "Redimensionamento"
+msgstr "Изменение размера"
+
+#: usr/local/bin/voidbr-shortcuts:67
+msgid "Entrar no modo de redimensionamento"
+msgstr "Войдите в режим изменения размера"
+
+#: usr/local/bin/voidbr-shortcuts:68 usr/local/bin/voidbr-shortcuts:83
+msgid "Redimensionar janela"
+msgstr "Изменение размера окна"
+
+#: usr/local/bin/voidbr-shortcuts:69
+msgid "Sair do modo de redimensionamento"
+msgstr "Выйти из режима изменения размера"
+
+#: usr/local/bin/voidbr-shortcuts:71
+msgid "Multimídia"
+msgstr "Мультимедиа"
+
+#: usr/local/bin/voidbr-shortcuts:72
+msgid "Aumentar volume"
+msgstr "Увеличение громкости"
+
+#: usr/local/bin/voidbr-shortcuts:73
+msgid "Diminuir volume"
+msgstr "Уменьшить громкость"
+
+#: usr/local/bin/voidbr-shortcuts:74
+msgid "Ativar/Desativar mudo"
+msgstr "Отключить/включить звук"
+
+#: usr/local/bin/voidbr-shortcuts:75
+msgid "Reproduzir/Pausar"
+msgstr "Воспроизведение/Пауза"
+
+#: usr/local/bin/voidbr-shortcuts:76
+msgid "Próxima faixa"
+msgstr "Следующий трек"
+
+#: usr/local/bin/voidbr-shortcuts:77
+msgid "Faixa anterior"
+msgstr "Предыдущий трек"
+
+#: usr/local/bin/voidbr-shortcuts:78
+msgid "Aumentar brilho"
+msgstr "Увеличение яркости"
+
+#: usr/local/bin/voidbr-shortcuts:79
+msgid "Diminuir brilho"
+msgstr "Уменьшить яркость"
+
+#: usr/local/bin/voidbr-shortcuts:81
+msgid "Mouse"
+msgstr "Мышь"
+
+#: usr/local/bin/voidbr-shortcuts:82
+msgid "Mover janela"
+msgstr "Переместить окно"
+
+#: usr/local/bin/voidbr-shortcuts:85
+msgid "VoidBR"
+msgstr "ПустотаBR"
+
+#: usr/local/bin/voidbr-shortcuts:86 usr/local/bin/voidbr-shortcuts:102
+#: usr/local/bin/voidbr-shortcuts:113
+msgid "Atalhos do VoidBR Sway"
+msgstr "Ярлыки VoidBR Sway"
+
+#: usr/local/bin/voidbr-shortcuts:124
+msgid "Pesquisar atalhos..."
+msgstr "Искать ярлыки..."
+
+#: usr/local/bin/voidbr-shortcuts:162
+msgid "Fechar"
+msgstr "Закрыть"
