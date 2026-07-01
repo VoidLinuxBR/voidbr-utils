@@ -4,7 +4,7 @@
 #
 #  voidbr-wifi-setup
 #  Created: qua 17 jun 2026 00:46:30 -04
-#  Updated: sáb 27 jun 2026 17:17:44 -04
+#  Updated: ter 30 jun 2026 20:39:17 -04
 #
 #  Copyright (c) 2019-2026, Vilmar Catafesta <vcatafesta@gmail.com>
 #  All rights reserved.
@@ -50,7 +50,7 @@ shopt -s extglob
 
 #system
 readonly APP="${0##*/}"
-readonly _VERSION_='0.6.27-20260627'
+readonly _VERSION_='0.6.30-20260630'
 declare -g DEPENDENCIES=(
 	dialog
 	gettext
@@ -675,11 +675,11 @@ msg() {
 	last_msg="$2"
 	logmessage="$ufmt $last_msg"
 	logmessage=${logmessage/INFO /}
-	clean_logmessage="$(strip_ansi "$logmessage")"
+	clean_logmessage="$(sh_strip_ansi "$logmessage")"
 	printf "%s\n" "$(timespec) [ $cinfo ]$ufmt ${clean_logmessage}" 2>&1 | tee -i -a "$BOOTLOG" >$LOGGER
 
 	if ((grafico)); then
-		logmessage="$(strip_ansi "$last_msg")"
+		logmessage="$(sh_strip_ansi "$last_msg")"
 		${DIALOG} \
 			--no-collapse \
 			--colors \
@@ -1024,7 +1024,7 @@ sh_cmd_job_progressbox() {
 	logmessage=${logmessage/INFO /}
 
 	if ((grafico)); then
-		logmessage="$(strip_ansi "$last_msg")"
+		logmessage="$(sh_strip_ansi "$last_msg")"
 		{
 			eval "$cjob"
 			echo $? >/tmp/job_status
@@ -1133,7 +1133,7 @@ sh_run_clean() {
 	local ret
 
 	eval "$1" 2>&1 |
-		strip_ansi |
+		sh_strip_ansi |
 		tee -i -a "$BOOTLOG" \
 			>"$LOGGER"
 	ret="${PIPESTATUS[0]}"
@@ -1141,9 +1141,15 @@ sh_run_clean() {
 	return "$ret"
 }
 
-strip_ansi() {
+sh_strip_dialog_colors() {
+  local text="$1"
+  printf '%s' "${text//\\Z?}"
+}
+
+sh_strip_ansi() {
 	printf '%s' "$1" |
 		sed -E '
+      s/\\Z.//g;                # Remove cores do dialog (\Z1, \Zn, \Zr...)
       s/\x1B\[[0-9;]*m//g;      # Remove SGR (Cores, negrito, etc: 1m, 38;5;196m)
       s/\x1B\[[0-9;?]*[@-~]//g; # Remove outros CSI (Movimento de cursor, etc)
       s/\x1B\([a-zA-Z]//g;      # Remove Charset (O ^[(B que apareceu antes)
@@ -1177,7 +1183,7 @@ sh_cmd_job() {
 
 	if ((grafico)); then
 		read LINES COLUMNS <<<"$(stty size)"
-		cmsg=$(strip_ansi "$cmsg")
+		cmsg=$(sh_strip_ansi "$cmsg")
 		eval "$cjob" 2>&1 | tee -i -a "$BOOTLOG" |
 			${DIALOG} \
 				--colors \
@@ -1744,6 +1750,8 @@ sh_get_iface() {
 			sh_get_iface
 		else
 			show_network_diagnostics
+			clear
+			sh_strip_ansi "${cmsgdiagnostics}"
 			return 1
 		fi
 	fi
@@ -2072,18 +2080,16 @@ sh_choosewifi() {
 }
 
 show_network_diagnostics() {
-	local cmsg="
+	declare -g cmsgdiagnostics="
 ${RED}${REVERSE}$(gettext "Nenhuma interface de Wi-fi encontrada!")${RST}
 
-${YELLOW}$(gettext "Para ativar/levantar a interface de Wi-fi, caso exista,
-tente seguir estes passos no terminal:")${RST}
-
-1. $(gettext "Identifique o dispositivo"):${CYAN} $ lspci -knn | grep -iA3 net${RST}
-2. $(gettext "ou"):${CYAN} $ lsusb${RST}
-3. $(gettext "Carregue o driver necessário"): ${CYAN}$ sudo modprobe <nome_do_driver>${RST}
-4. $(gettext "Levante a interface"):${CYAN} $ sudo ip link set <interface> up${RST}
-5. $(gettext "Verifique se há firmware faltando"):${CYAN} $ dmesg | grep -i firmware ${RST}
-6. $(gettext "(Re)Instale os drivers"):${CYAN} $ sudo xbps-install -Syuf linux-firmware linux-firmware-network${RST}
+${YELLOW}$(gettext "Para detectar e ativar a interface Wi-Fi:")${RST}
+  1. $(gettext "Identifique o dispositivo"):${CYAN} $ lspci -knn | grep -iA3 net${RST}
+  2. $(gettext "ou"):${CYAN} $ lsusb${RST}
+  3. $(gettext "Carregue o driver necessário"): ${CYAN}$ sudo modprobe <nome_do_driver>${RST}
+  4. $(gettext "Ative o dispositivo"): ${CYAN}$ sudo ip link set <interface> up${RST}
+  5. $(gettext "Verifique se há firmware faltando"):${CYAN} $ dmesg | grep -i firmware ${RST}
+  6. $(gettext "(Re)Instale os drivers"):${CYAN} $ sudo xbps-install -Syuf linux-firmware linux-firmware-network${RST}
 
 "
 
@@ -2091,7 +2097,7 @@ tente seguir estes passos no terminal:")${RST}
 		--backtitle "${ccabec}" \
 		--colors \
 		--title "== $(gettext "WIFI - Diagnóstico de Rede") ==" \
-		--msgbox "${cmsg}" 0 0
+		--msgbox "${cmsgdiagnostics=}" 0 0
 }
 
 sh_nm_release_iface() {
