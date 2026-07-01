@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: chili-tradutor-go 2.1.20-20260201\n"
-"POT-Creation-Date: 2026-06-30 21:23-0400\n"
-"PO-Revision-Date: 2026-06-30 21:23-0400\n"
+"POT-Creation-Date: 2026-06-30 21:45-0400\n"
+"PO-Revision-Date: 2026-06-30 21:45-0400\n"
 "Last-Translator: Vilmar Catafesta <vcatafesta@gmail.com>\n"
 "Language-Team: Portuguese <https://github.com/chililinux/chili-tradutor-go>\n"
 "MIME-Version: 1.0\n"
@@ -920,12 +920,16 @@ msgid "(Re)Instale os drivers"
 msgstr "(재)드라이버 설치"
 
 #: usr/local/bin/voidbr-wifi-setup:2099
-msgid "WIFI - Diagnóstico de Rede"
-msgstr "WIFI - 네트워크 진단"
+msgid " - Diagnóstico de Rede"
+msgstr "- 네트워크 진단"
 
 #: usr/local/bin/voidbr-wifi-setup:2172
 msgid "Testando internet"
 msgstr "인터넷 테스트"
+
+#: usr/local/bin/voidbr-wifi-setup:2178
+msgid "Reiniciando"
+msgstr "다시 시작하는 중"
 
 #: usr/local/bin/voidbr-wifi-setup:2216
 msgid "Trying to bring up wireless interface..."
@@ -983,9 +987,10 @@ msgstr "실행 중이 아닙니다. 루틴을 시작하는 중입니다."
 msgid "Erro: Não foi possivel iniciar"
 msgstr "오류: 시작할 수 없습니다."
 
-#: usr/local/bin/voidbr-wifi-setup:2319
-msgid "iwd rodando, iniciando rotina de reset"
-msgstr "iwd 실행 중, 재설정 루틴 시작 중"
+#: usr/local/bin/voidbr-wifi-setup:2319 usr/local/bin/voidbr-wifi-setup:2348
+#: usr/local/bin/voidbr-wifi-setup:2359
+msgid "rodando, iniciando rotina de reset"
+msgstr "실행 중, 재설정 루틴 시작 중"
 
 #: usr/local/bin/voidbr-wifi-setup:2333
 msgid "Reiniciando módulo)"
@@ -995,14 +1000,6 @@ msgstr "모듈 재시작)"
 #, sh-format
 msgid "Erro: Nenhum módulo dependente encontrado para $driver_name"
 msgstr "오류: $driver_name에 대한 종속 모듈을 찾을 수 없습니다."
-
-#: usr/local/bin/voidbr-wifi-setup:2348
-msgid "wpa_supplicant rodando, iniciando rotina de reset"
-msgstr "wpa_supplicant 실행 중, 재설정 루틴 시작 중"
-
-#: usr/local/bin/voidbr-wifi-setup:2359
-msgid "NetworkManager rodando, iniciando rotina de reset"
-msgstr "NetworkManager 실행 중, 재설정 루틴 시작 중"
 
 #: usr/local/bin/voidbr-wifi-setup:2394
 msgid "A Interface selecionada já tem acesso à internet!"
@@ -1023,6 +1020,10 @@ msgstr "NetworkManager, iwd 또는 wpa_supplicant를 설치합니다."
 #: usr/local/bin/voidbr-wifi-setup:2415 usr/local/bin/voidbr-wifi-setup:2416
 msgid "Reiniciando serviços/interface e desbloquendo rfkill"
 msgstr "서비스/인터페이스 다시 시작 및 rfkill 잠금 해제"
+
+#: usr/local/bin/voidbr-wifi-setup:2426
+msgid "Entregando interface ao NM"
+msgstr "NM에 인터페이스 제공"
 
 #: usr/local/bin/voidbr-wifi-setup:2432
 msgid "Deixe em branco o campo Interface Wi-Fi para listar interfaces"
@@ -1051,6 +1052,34 @@ msgstr "고정 IP를 구성하시겠습니까?"
 #: usr/local/bin/voidbr-wifi-setup:2556
 msgid "Prosseguir com a configuração e conexão ?"
 msgstr "구성 및 연결을 계속하시겠습니까?"
+
+#: usr/local/bin/voidbr-wifi-setup:2562
+msgid "Removendo conexão antiga"
+msgstr "이전 연결 제거"
+
+#: usr/local/bin/voidbr-wifi-setup:2567
+msgid "Configurando conexão"
+msgstr "연결 구성"
+
+#: usr/local/bin/voidbr-wifi-setup:2575
+msgid "Configurando autoconexão"
+msgstr "자동 연결 구성"
+
+#: usr/local/bin/voidbr-wifi-setup:2580
+msgid "Configurando ip fixo"
+msgstr "고정 IP 구성"
+
+#: usr/local/bin/voidbr-wifi-setup:2589
+msgid "Configurando dns"
+msgstr "DNS 구성"
+
+#: usr/local/bin/voidbr-wifi-setup:2599
+msgid "Preparando ambiente DHCP"
+msgstr "Preparando ambiente DHCP"
+
+#: usr/local/bin/voidbr-wifi-setup:2609
+msgid "solicita configuração IP"
+msgstr "IP 구성을 요청합니다"
 
 #: usr/local/bin/voidbr-wifi-setup:2646
 msgid "Deseja escanear por redes wifi?"

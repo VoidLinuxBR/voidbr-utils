@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: chili-tradutor-go 2.1.20-20260201\n"
-"POT-Creation-Date: 2026-06-30 21:23-0400\n"
-"PO-Revision-Date: 2026-06-30 21:23-0400\n"
+"POT-Creation-Date: 2026-06-30 21:46-0400\n"
+"PO-Revision-Date: 2026-06-30 21:46-0400\n"
 "Last-Translator: Vilmar Catafesta <vcatafesta@gmail.com>\n"
 "Language-Team: Portuguese <https://github.com/chililinux/chili-tradutor-go>\n"
 "MIME-Version: 1.0\n"
@@ -920,12 +920,16 @@ msgid "(Re)Instale os drivers"
 msgstr "ドライバーを(再)インストールする"
 
 #: usr/local/bin/voidbr-wifi-setup:2099
-msgid "WIFI - Diagnóstico de Rede"
-msgstr "WIFI - ネットワーク診断"
+msgid " - Diagnóstico de Rede"
+msgstr "- ネットワーク診断"
 
 #: usr/local/bin/voidbr-wifi-setup:2172
 msgid "Testando internet"
 msgstr "インターネットのテスト"
+
+#: usr/local/bin/voidbr-wifi-setup:2178
+msgid "Reiniciando"
+msgstr "再起動中"
 
 #: usr/local/bin/voidbr-wifi-setup:2216
 msgid "Trying to bring up wireless interface..."
@@ -983,9 +987,10 @@ msgstr "実行されていません。ルーチンを開始して開始します
 msgid "Erro: Não foi possivel iniciar"
 msgstr "エラー: 開始できません"
 
-#: usr/local/bin/voidbr-wifi-setup:2319
-msgid "iwd rodando, iniciando rotina de reset"
-msgstr "iwd 実行中、リセット ルーチンを開始"
+#: usr/local/bin/voidbr-wifi-setup:2319 usr/local/bin/voidbr-wifi-setup:2348
+#: usr/local/bin/voidbr-wifi-setup:2359
+msgid "rodando, iniciando rotina de reset"
+msgstr "実行中、リセット ルーチンを開始します"
 
 #: usr/local/bin/voidbr-wifi-setup:2333
 msgid "Reiniciando módulo)"
@@ -995,14 +1000,6 @@ msgstr "モジュールを再起動中)"
 #, sh-format
 msgid "Erro: Nenhum módulo dependente encontrado para $driver_name"
 msgstr "エラー: $driver_name に依存するモジュールが見つかりませんでした"
-
-#: usr/local/bin/voidbr-wifi-setup:2348
-msgid "wpa_supplicant rodando, iniciando rotina de reset"
-msgstr "wpa_supplicant が実行中、リセット ルーチンが開始中"
-
-#: usr/local/bin/voidbr-wifi-setup:2359
-msgid "NetworkManager rodando, iniciando rotina de reset"
-msgstr "NetworkManager が実行中、リセット ルーチンが開始中"
 
 #: usr/local/bin/voidbr-wifi-setup:2394
 msgid "A Interface selecionada já tem acesso à internet!"
@@ -1023,6 +1020,10 @@ msgstr "NetworkManager、iwd、または wpa_supplicant をインストールし
 #: usr/local/bin/voidbr-wifi-setup:2415 usr/local/bin/voidbr-wifi-setup:2416
 msgid "Reiniciando serviços/interface e desbloquendo rfkill"
 msgstr "サービス/インターフェイスの再起動と rfkill のロック解除"
+
+#: usr/local/bin/voidbr-wifi-setup:2426
+msgid "Entregando interface ao NM"
+msgstr "NM へのインターフェースの提供"
 
 #: usr/local/bin/voidbr-wifi-setup:2432
 msgid "Deixe em branco o campo Interface Wi-Fi para listar interfaces"
@@ -1051,6 +1052,34 @@ msgstr "固定IPを設定しますか?"
 #: usr/local/bin/voidbr-wifi-setup:2556
 msgid "Prosseguir com a configuração e conexão ?"
 msgstr "設定と接続を続行しますか?"
+
+#: usr/local/bin/voidbr-wifi-setup:2562
+msgid "Removendo conexão antiga"
+msgstr "古い接続を削除しています"
+
+#: usr/local/bin/voidbr-wifi-setup:2567
+msgid "Configurando conexão"
+msgstr "接続の設定"
+
+#: usr/local/bin/voidbr-wifi-setup:2575
+msgid "Configurando autoconexão"
+msgstr "自動接続の構成"
+
+#: usr/local/bin/voidbr-wifi-setup:2580
+msgid "Configurando ip fixo"
+msgstr "固定IPの設定"
+
+#: usr/local/bin/voidbr-wifi-setup:2589
+msgid "Configurando dns"
+msgstr "DNSの設定"
+
+#: usr/local/bin/voidbr-wifi-setup:2599
+msgid "Preparando ambiente DHCP"
+msgstr "DHCP環境の準備"
+
+#: usr/local/bin/voidbr-wifi-setup:2609
+msgid "solicita configuração IP"
+msgstr "IP構成を要求します"
 
 #: usr/local/bin/voidbr-wifi-setup:2646
 msgid "Deseja escanear por redes wifi?"

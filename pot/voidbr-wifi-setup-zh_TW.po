@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: chili-tradutor-go 2.1.20-20260201\n"
-"POT-Creation-Date: 2026-06-30 21:23-0400\n"
-"PO-Revision-Date: 2026-06-30 21:23-0400\n"
+"POT-Creation-Date: 2026-06-30 21:45-0400\n"
+"PO-Revision-Date: 2026-06-30 21:45-0400\n"
 "Last-Translator: Vilmar Catafesta <vcatafesta@gmail.com>\n"
 "Language-Team: Portuguese <https://github.com/chililinux/chili-tradutor-go>\n"
 "MIME-Version: 1.0\n"
@@ -920,12 +920,16 @@ msgid "(Re)Instale os drivers"
 msgstr "（重新）安裝驅動程式"
 
 #: usr/local/bin/voidbr-wifi-setup:2099
-msgid "WIFI - Diagnóstico de Rede"
-msgstr "WIFI - 網路診斷"
+msgid " - Diagnóstico de Rede"
+msgstr "- 網路診斷"
 
 #: usr/local/bin/voidbr-wifi-setup:2172
 msgid "Testando internet"
 msgstr "測試互聯網"
+
+#: usr/local/bin/voidbr-wifi-setup:2178
+msgid "Reiniciando"
+msgstr "正在重啟"
 
 #: usr/local/bin/voidbr-wifi-setup:2216
 msgid "Trying to bring up wireless interface..."
@@ -983,9 +987,10 @@ msgstr "未運行，正在啟動例程"
 msgid "Erro: Não foi possivel iniciar"
 msgstr "錯誤：無法啟動"
 
-#: usr/local/bin/voidbr-wifi-setup:2319
-msgid "iwd rodando, iniciando rotina de reset"
-msgstr "iwd 正在運行，開始重置例程"
+#: usr/local/bin/voidbr-wifi-setup:2319 usr/local/bin/voidbr-wifi-setup:2348
+#: usr/local/bin/voidbr-wifi-setup:2359
+msgid "rodando, iniciando rotina de reset"
+msgstr "運行，開始重置例程"
 
 #: usr/local/bin/voidbr-wifi-setup:2333
 msgid "Reiniciando módulo)"
@@ -995,14 +1000,6 @@ msgstr "重新啟動模組）"
 #, sh-format
 msgid "Erro: Nenhum módulo dependente encontrado para $driver_name"
 msgstr "錯誤：找不到 $driver_name 的依賴模組"
-
-#: usr/local/bin/voidbr-wifi-setup:2348
-msgid "wpa_supplicant rodando, iniciando rotina de reset"
-msgstr "wpa_supplicant 正在運行，正在啟動重置例程"
-
-#: usr/local/bin/voidbr-wifi-setup:2359
-msgid "NetworkManager rodando, iniciando rotina de reset"
-msgstr "NetworkManager 正在運行，正在啟動重置例程"
 
 #: usr/local/bin/voidbr-wifi-setup:2394
 msgid "A Interface selecionada já tem acesso à internet!"
@@ -1023,6 +1020,10 @@ msgstr "安裝 NetworkManager、iwd 或 wpa_supplicant。"
 #: usr/local/bin/voidbr-wifi-setup:2415 usr/local/bin/voidbr-wifi-setup:2416
 msgid "Reiniciando serviços/interface e desbloquendo rfkill"
 msgstr "重新啟動服務/介面並解鎖 rfkill"
+
+#: usr/local/bin/voidbr-wifi-setup:2426
+msgid "Entregando interface ao NM"
+msgstr "向NM下發接口"
 
 #: usr/local/bin/voidbr-wifi-setup:2432
 msgid "Deixe em branco o campo Interface Wi-Fi para listar interfaces"
@@ -1051,6 +1052,34 @@ msgstr "您要配置固定IP嗎？"
 #: usr/local/bin/voidbr-wifi-setup:2556
 msgid "Prosseguir com a configuração e conexão ?"
 msgstr "繼續配置和連接嗎？"
+
+#: usr/local/bin/voidbr-wifi-setup:2562
+msgid "Removendo conexão antiga"
+msgstr "刪除舊連接"
+
+#: usr/local/bin/voidbr-wifi-setup:2567
+msgid "Configurando conexão"
+msgstr "配置連接"
+
+#: usr/local/bin/voidbr-wifi-setup:2575
+msgid "Configurando autoconexão"
+msgstr "配置自動連接"
+
+#: usr/local/bin/voidbr-wifi-setup:2580
+msgid "Configurando ip fixo"
+msgstr "配置固定IP"
+
+#: usr/local/bin/voidbr-wifi-setup:2589
+msgid "Configurando dns"
+msgstr "配置域名"
+
+#: usr/local/bin/voidbr-wifi-setup:2599
+msgid "Preparando ambiente DHCP"
+msgstr "準備DHCP環境"
+
+#: usr/local/bin/voidbr-wifi-setup:2609
+msgid "solicita configuração IP"
+msgstr "請求IP配置"
 
 #: usr/local/bin/voidbr-wifi-setup:2646
 msgid "Deseja escanear por redes wifi?"

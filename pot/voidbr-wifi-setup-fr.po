@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: chili-tradutor-go 2.1.20-20260201\n"
-"POT-Creation-Date: 2026-06-30 21:23-0400\n"
-"PO-Revision-Date: 2026-06-30 21:23-0400\n"
+"POT-Creation-Date: 2026-06-30 21:45-0400\n"
+"PO-Revision-Date: 2026-06-30 21:45-0400\n"
 "Last-Translator: Vilmar Catafesta <vcatafesta@gmail.com>\n"
 "Language-Team: Portuguese <https://github.com/chililinux/chili-tradutor-go>\n"
 "MIME-Version: 1.0\n"
@@ -920,12 +920,16 @@ msgid "(Re)Instale os drivers"
 msgstr "(Ré)installer les pilotes"
 
 #: usr/local/bin/voidbr-wifi-setup:2099
-msgid "WIFI - Diagnóstico de Rede"
-msgstr "WIFI - Diagnostic réseau"
+msgid " - Diagnóstico de Rede"
+msgstr "- Diagnostic réseau"
 
 #: usr/local/bin/voidbr-wifi-setup:2172
 msgid "Testando internet"
 msgstr "Tester Internet"
+
+#: usr/local/bin/voidbr-wifi-setup:2178
+msgid "Reiniciando"
+msgstr "Redémarrage"
 
 #: usr/local/bin/voidbr-wifi-setup:2216
 msgid "Trying to bring up wireless interface..."
@@ -983,9 +987,10 @@ msgstr "ne fonctionne pas, démarre la routine pour commencer"
 msgid "Erro: Não foi possivel iniciar"
 msgstr "Erreur : Impossible de démarrer"
 
-#: usr/local/bin/voidbr-wifi-setup:2319
-msgid "iwd rodando, iniciando rotina de reset"
-msgstr "iwd en cours d'exécution, démarrage de la routine de réinitialisation"
+#: usr/local/bin/voidbr-wifi-setup:2319 usr/local/bin/voidbr-wifi-setup:2348
+#: usr/local/bin/voidbr-wifi-setup:2359
+msgid "rodando, iniciando rotina de reset"
+msgstr "en cours d'exécution, démarrage de la routine de réinitialisation"
 
 #: usr/local/bin/voidbr-wifi-setup:2333
 msgid "Reiniciando módulo)"
@@ -995,14 +1000,6 @@ msgstr "Module de redémarrage)"
 #, sh-format
 msgid "Erro: Nenhum módulo dependente encontrado para $driver_name"
 msgstr "Erreur : aucun module dépendant trouvé pour $driver_name"
-
-#: usr/local/bin/voidbr-wifi-setup:2348
-msgid "wpa_supplicant rodando, iniciando rotina de reset"
-msgstr "wpa_supplicant en cours d'exécution, démarrage de la routine de réinitialisation"
-
-#: usr/local/bin/voidbr-wifi-setup:2359
-msgid "NetworkManager rodando, iniciando rotina de reset"
-msgstr "NetworkManager en cours d'exécution, démarrage de la routine de réinitialisation"
 
 #: usr/local/bin/voidbr-wifi-setup:2394
 msgid "A Interface selecionada já tem acesso à internet!"
@@ -1023,6 +1020,10 @@ msgstr "Installez NetworkManager, ou iwd, ou wpa_supplicant."
 #: usr/local/bin/voidbr-wifi-setup:2415 usr/local/bin/voidbr-wifi-setup:2416
 msgid "Reiniciando serviços/interface e desbloquendo rfkill"
 msgstr "Redémarrage des services/interface et déverrouillage de rfkill"
+
+#: usr/local/bin/voidbr-wifi-setup:2426
+msgid "Entregando interface ao NM"
+msgstr "Fournir une interface à NM"
 
 #: usr/local/bin/voidbr-wifi-setup:2432
 msgid "Deixe em branco o campo Interface Wi-Fi para listar interfaces"
@@ -1051,6 +1052,34 @@ msgstr "Voulez-vous configurer une IP fixe ?"
 #: usr/local/bin/voidbr-wifi-setup:2556
 msgid "Prosseguir com a configuração e conexão ?"
 msgstr "Procéder à la configuration et à la connexion ?"
+
+#: usr/local/bin/voidbr-wifi-setup:2562
+msgid "Removendo conexão antiga"
+msgstr "Suppression de l'ancienne connexion"
+
+#: usr/local/bin/voidbr-wifi-setup:2567
+msgid "Configurando conexão"
+msgstr "Configuration de la connexion"
+
+#: usr/local/bin/voidbr-wifi-setup:2575
+msgid "Configurando autoconexão"
+msgstr "Configuration de la connexion automatique"
+
+#: usr/local/bin/voidbr-wifi-setup:2580
+msgid "Configurando ip fixo"
+msgstr "Configuration d'une IP fixe"
+
+#: usr/local/bin/voidbr-wifi-setup:2589
+msgid "Configurando dns"
+msgstr "Configuration du DNS"
+
+#: usr/local/bin/voidbr-wifi-setup:2599
+msgid "Preparando ambiente DHCP"
+msgstr "Préparation de l'environnement DHCP"
+
+#: usr/local/bin/voidbr-wifi-setup:2609
+msgid "solicita configuração IP"
+msgstr "demande la configuration IP"
 
 #: usr/local/bin/voidbr-wifi-setup:2646
 msgid "Deseja escanear por redes wifi?"

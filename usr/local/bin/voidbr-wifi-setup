@@ -30,7 +30,7 @@
 #  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ##############################################################################
 export LANGUAGE="${LANGUAGE:-pt_BR}"
-export TEXTDOMAINDIR=usr/share/locale
+export TEXTDOMAINDIR=/usr/share/locale
 export TEXTDOMAIN=voidbr-wifi-setup
 
 #todo
@@ -2096,7 +2096,7 @@ ${YELLOW}$(gettext "Para detectar e ativar a interface Wi-Fi:")${RST}
 	${DIALOG} \
 		--backtitle "${ccabec}" \
 		--colors \
-		--title "== $(gettext "WIFI - Diagnóstico de Rede") ==" \
+		--title "== WIFI $(gettext " - Diagnóstico de Rede") ==" \
 		--msgbox "${cmsgdiagnostics=}" 0 0
 }
 
@@ -2175,7 +2175,7 @@ has_internet() {
 }
 
 sh_restart_wpa() {
-	sh_cmd_job_progressbox "Reiniciando wpa_supplicant" '
+	sh_cmd_job_progressbox "$(gettext "Reiniciando") wpa_supplicant" '
     sh_down_wpa
     sv up wpa_supplicant
     sleep 1
@@ -2293,7 +2293,7 @@ sh_try_up_interface() {
 		sleep 1
 	done
 
-	alerta "sh_show_connection_status" "$(gettext 'Failed to restore the wireless interface.')"
+	alerta "sh_show_connection_status" "$(gettext "Failed to restore the wireless interface.")"
 	return 1
 }
 
@@ -2301,13 +2301,13 @@ sh_up_service() {
   local service="$1"
 
   if ! has_running "$service"; then
-		sh_info_msg "${service} $(gettext 'não está rodando, iniciando rotina para iniciar')"
+		sh_info_msg "${service} $(gettext "não está rodando, iniciando rotina para iniciar")"
 		ln -sf /etc/sv/"${service}" /var/service/
 		sv up "${service}"
 		sleep 2
 
 		if ! has_running "${service}"; then
-			alerta "sh_up_service" "${RED}$(gettext 'Erro: Não foi possivel iniciar') ${service}${RST}"
+			alerta "sh_up_service" "${RED}$(gettext "Erro: Não foi possivel iniciar") ${service}${RST}"
 			return 1
 		fi
 	fi
@@ -2316,7 +2316,7 @@ sh_up_service() {
 
 sh_down_iwd() {
 	if has_running iwd; then
-		sh_info_msg "$(gettext 'iwd rodando, iniciando rotina de reset')"
+		sh_info_msg "iwd $(gettext "rodando, iniciando rotina de reset")"
 		sv down iwd
 #		rm -f /var/service/iwd
 
@@ -2345,7 +2345,7 @@ sh_down_iwd() {
 
 sh_down_wpa() {
 	if has_running wpa_supplicant; then
-		sh_info_msg "$(gettext 'wpa_supplicant rodando, iniciando rotina de reset')"
+		sh_info_msg "wpa_supplicant $(gettext "rodando, iniciando rotina de reset")"
 		sv down wpa_supplicant
 #		rm -f /var/service/wpa_supplicant
 		pkill -9 wpa_supplicant
@@ -2356,7 +2356,7 @@ sh_down_wpa() {
 
 sh_down_nm() {
 	if has_running NetworkManager; then
-		sh_info_msg "$(gettext 'NetworkManager rodando, iniciando rotina de reset')"
+		sh_info_msg "NetworkManager $(gettext "rodando, iniciando rotina de reset")"
 		sv down NetworkManager
 	fi
 }
@@ -2423,14 +2423,14 @@ sh_confWifi() {
 
 	case "${backend}" in
 	NetworkManager)
-		sh_cmd_job_progressbox "${backend}: Entregando interface ao NM" '
+		sh_cmd_job_progressbox "${backend}: $(gettext "Entregando interface ao NM")" '
       switch_to_networkmanager "${iface}"
     ' $err_not_fatal
 		;;
 	esac
 
-	cextra+="➡ ${YELLOW}$(gettext 'Deixe em branco o campo Interface Wi-Fi para listar interfaces')\n"
-	cextra+="➡ ${YELLOW}$(gettext 'Deixe em branco o campo Rede Wi-Fi para escanear redes')"
+	cextra+="➡ ${YELLOW}$(gettext "Deixe em branco o campo Interface Wi-Fi para listar interfaces")\n"
+	cextra+="➡ ${YELLOW}$(gettext "Deixe em branco o campo Rede Wi-Fi para escanear redes")"
 	iface_edit=0
 	rede_edit=0
 	senha_edit=1
@@ -2559,12 +2559,12 @@ sh_confWifi() {
 
 			case "${backend}" in
 			NetworkManager)
-				sh_cmd_job_progressbox "${backend}: Removendo conexão antiga" '
+				sh_cmd_job_progressbox "${backend}: $(gettext "Removendo conexão antiga")" '
 	  			sh_nm_disable_autoconnect_others "$iface" "$_WIFI_NETWORK"
           nmcli connection delete ${_WIFI_NETWORK}
         ' $err_not_fatal
 
-				sh_cmd_job_progressbox "${backend}: Configurando conexão ${_WIFI_NETWORK}" '
+				sh_cmd_job_progressbox "${backend}: $(gettext "Configurando conexão") ${_WIFI_NETWORK}" '
           #nmcli device disconnect "${iface}"
 				  nmcli device wifi connect "${_WIFI_NETWORK}" \
 					  password "${_WIFI_PASSWORD}" \
@@ -2572,12 +2572,12 @@ sh_confWifi() {
 	  		  sleep 0.5
 				' $err_fatal
 
-				sh_cmd_job_progressbox "${backend}: Configurando autoconexão ${_WIFI_NETWORK}" '
+				sh_cmd_job_progressbox "${backend}: $(gettext 'Configurando autoconexão') ${_WIFI_NETWORK}" '
           nmcli connection modify "${_WIFI_NETWORK}" connection.autoconnect yes
         '
 
 				if $USE_STATIC_IP; then
-					sh_cmd_job_progressbox "${backend}: Configurando ip fixo" '
+					sh_cmd_job_progressbox "${backend}: $(gettext 'Configurando ip fixo')" '
 				    AsDhcp[CONNECTION]=$(nmcli -g GENERAL.CONNECTION device show "$iface")
       			sh_save_nm_static_ip "${AsDhcp[CONNECTION]}"
     				nmcli connection down "${AsDhcp[CONNECTION]}"
@@ -2586,7 +2586,7 @@ sh_confWifi() {
 				  ' $err_not_fatal
 				fi
 
-				sh_cmd_job_progressbox "${backend}: Configurando dns" '
+				sh_cmd_job_progressbox "${backend}: $(gettext 'Configurando dns')" '
   				sh_get_net_info
 				  echo "IP     : $wifi_ip"
 				  echo "GATEWAY: $wifi_gateway"
@@ -2596,7 +2596,7 @@ sh_confWifi() {
 				;;
 
 			iwd)
-				sh_cmd_job_progressbox "${backend}: Preparando ambiente DHCP" '
+				sh_cmd_job_progressbox "${backend}: $(gettext 'Preparando ambiente DHCP')" '
           sh_prepare_dhcpcd
         '
 
@@ -2606,7 +2606,7 @@ sh_confWifi() {
 	  				station "$iface" connect "$_WIFI_NETWORK"
         ' $err_fatal
 
-				sh_cmd_job_progressbox "${backend}: solicita configuração IP" '
+				sh_cmd_job_progressbox "${backend}: $(gettext 'solicita configuração IP')" '
   				dhcpcd "$iface"
 	      '
 
