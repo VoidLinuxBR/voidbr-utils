@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: chili-tradutor-go 2.1.20-20260201\n"
-"POT-Creation-Date: 2026-06-30 16:24-0400\n"
-"PO-Revision-Date: 2026-06-30 16:24-0400\n"
+"POT-Creation-Date: 2026-06-30 21:45-0400\n"
+"PO-Revision-Date: 2026-06-30 21:45-0400\n"
 "Last-Translator: Vilmar Catafesta <vcatafesta@gmail.com>\n"
 "Language-Team: Portuguese <https://github.com/chililinux/chili-tradutor-go>\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr "在繼續之前，請調整終端的大小"
 
 #: usr/local/bin/voidbr-wifi-setup:454
 msgid "para que ele meça pelo menos 80 x 24 caracteres."
-msgstr "以便其長度至少為 80 x 24 個字元。"
+msgstr "因此它的長度至少為 80 x 24 個字元。"
 
 #: usr/local/bin/voidbr-wifi-setup:455
 msgid "Caso contrário, "
@@ -42,1014 +42,1045 @@ msgstr "該腳本必須以 root 身分執行。提升權限..."
 msgid "Error: Unable to elevate privileges. Run manually as root."
 msgstr "錯誤：無法提升權限。以 root 身分手動執行。"
 
-#: usr/local/bin/voidbr-wifi-setup:1210
+#: usr/local/bin/voidbr-wifi-setup:1216
 msgid "não disponível"
 msgstr "無法使用"
 
-#: usr/local/bin/voidbr-wifi-setup:1213
+#: usr/local/bin/voidbr-wifi-setup:1219
 msgid "mais avançado"
 msgstr "更先進"
 
-#: usr/local/bin/voidbr-wifi-setup:1219
+#: usr/local/bin/voidbr-wifi-setup:1225
 msgid "Loading configuration file"
 msgstr "載入設定檔"
 
-#: usr/local/bin/voidbr-wifi-setup:1234
+#: usr/local/bin/voidbr-wifi-setup:1240
 msgid "Analisando o arquivo de configuração"
 msgstr "分析設定檔"
 
-#: usr/local/bin/voidbr-wifi-setup:1257
+#: usr/local/bin/voidbr-wifi-setup:1263
 msgid "Configuração de IP fixo (dhcpcd)"
 msgstr "固定 IP 配置 (dhcpcd)"
 
-#: usr/local/bin/voidbr-wifi-setup:1258
+#: usr/local/bin/voidbr-wifi-setup:1264
 msgid "Preencha os dados:"
 msgstr "填寫數據："
 
-#: usr/local/bin/voidbr-wifi-setup:1260
+#: usr/local/bin/voidbr-wifi-setup:1266
 msgid "Interface:"
 msgstr "介面:"
 
-#: usr/local/bin/voidbr-wifi-setup:1261
+#: usr/local/bin/voidbr-wifi-setup:1267
 msgid "IP:"
 msgstr "IP:"
 
-#: usr/local/bin/voidbr-wifi-setup:1262
+#: usr/local/bin/voidbr-wifi-setup:1268
 msgid "Máscara (CIDR):"
 msgstr "遮罩（CIDR）："
 
-#: usr/local/bin/voidbr-wifi-setup:1263
+#: usr/local/bin/voidbr-wifi-setup:1269
 msgid "Gateway:"
 msgstr "網關："
 
-#: usr/local/bin/voidbr-wifi-setup:1264
+#: usr/local/bin/voidbr-wifi-setup:1270
 msgid "DNS 1:"
 msgstr "域名系統 1："
 
-#: usr/local/bin/voidbr-wifi-setup:1265
+#: usr/local/bin/voidbr-wifi-setup:1271
 msgid "DNS 2:"
 msgstr "域名解析2："
 
-#: usr/local/bin/voidbr-wifi-setup:1285
+#: usr/local/bin/voidbr-wifi-setup:1291
 msgid "Aplicar essas configurações?"
 msgstr "應用這些設定？"
 
-#: usr/local/bin/voidbr-wifi-setup:1286
+#: usr/local/bin/voidbr-wifi-setup:1292
 msgid "Interface"
 msgstr "介面"
 
-#: usr/local/bin/voidbr-wifi-setup:1287
+#: usr/local/bin/voidbr-wifi-setup:1293
 msgid "IP"
 msgstr "智慧財產"
 
-#: usr/local/bin/voidbr-wifi-setup:1288
+#: usr/local/bin/voidbr-wifi-setup:1294
 msgid "Gateway"
 msgstr "閘道"
 
-#: usr/local/bin/voidbr-wifi-setup:1289
+#: usr/local/bin/voidbr-wifi-setup:1295
 msgid "DNS"
 msgstr "域名系統"
 
-#: usr/local/bin/voidbr-wifi-setup:1431
+#: usr/local/bin/voidbr-wifi-setup:1437
 msgid "Licença GPL v3+: GNU GPL versão 3 ou posterior"
 msgstr "GPL v3+ 授權：GNU GPL 版本 3 或更高版本"
 
-#: usr/local/bin/voidbr-wifi-setup:1432
+#: usr/local/bin/voidbr-wifi-setup:1438
 msgid "Este é um software livre: você é livre para alterá-lo e redistribuí-lo."
 msgstr "這是免費軟體：您可以自由更改和重新分發它。"
 
-#: usr/local/bin/voidbr-wifi-setup:1433
+#: usr/local/bin/voidbr-wifi-setup:1439
 msgid "NÃO HÁ QUALQUER GARANTIA, na máxima extensão permitida em lei."
 msgstr "在法律允許的最大範圍內，不提供任何保證。"
 
-#: usr/local/bin/voidbr-wifi-setup:1444
+#: usr/local/bin/voidbr-wifi-setup:1450
 msgid "Use as teclas"
 msgstr "用作 Teclas"
 
-#: usr/local/bin/voidbr-wifi-setup:1445
+#: usr/local/bin/voidbr-wifi-setup:1451
 msgid "PARA CIMA"
 msgstr "登頂"
 
-#: usr/local/bin/voidbr-wifi-setup:1446
+#: usr/local/bin/voidbr-wifi-setup:1452
 msgid "e"
 msgstr "e"
 
-#: usr/local/bin/voidbr-wifi-setup:1447
+#: usr/local/bin/voidbr-wifi-setup:1453
 msgid "PARA BAIXO"
 msgstr "向下"
 
-#: usr/local/bin/voidbr-wifi-setup:1448
+#: usr/local/bin/voidbr-wifi-setup:1454
 msgid "para navegar"
 msgstr "導航"
 
-#: usr/local/bin/voidbr-wifi-setup:1449
+#: usr/local/bin/voidbr-wifi-setup:1455
 msgid "Use"
 msgstr "使用"
 
-#: usr/local/bin/voidbr-wifi-setup:1450
+#: usr/local/bin/voidbr-wifi-setup:1456
 msgid "para alternar entre os botões"
 msgstr "在按鈕之間切換"
 
-#: usr/local/bin/voidbr-wifi-setup:1451
+#: usr/local/bin/voidbr-wifi-setup:1457
 msgid "para selecionar/aceitar"
 msgstr "選擇/接受"
 
-#: usr/local/bin/voidbr-wifi-setup:1458
+#: usr/local/bin/voidbr-wifi-setup:1464
 msgid "Tamanho disco insuficiente para criar partições com swap"
 msgstr "磁碟大小不足以建立交換分割區"
 
-#: usr/local/bin/voidbr-wifi-setup:1459
+#: usr/local/bin/voidbr-wifi-setup:1465
 msgid "Deseja prosseguir SEM partição de swap?"
 msgstr "您想在沒有交換分割區的情況下繼續嗎？"
 
-#: usr/local/bin/voidbr-wifi-setup:1460
+#: usr/local/bin/voidbr-wifi-setup:1466
 msgid "Deseja criar partição de swap ?"
 msgstr "您想建立交換分割區嗎？"
 
-#: usr/local/bin/voidbr-wifi-setup:1461
+#: usr/local/bin/voidbr-wifi-setup:1467
 msgid "Acompanhe a evolução da instalação            "
 msgstr "追蹤安裝進度"
 
-#: usr/local/bin/voidbr-wifi-setup:1462
+#: usr/local/bin/voidbr-wifi-setup:1468
 msgid "e/ou pelo terminal tty8        "
 msgstr "和/或透過 tty8 終端"
 
-#: usr/local/bin/voidbr-wifi-setup:1463
+#: usr/local/bin/voidbr-wifi-setup:1469
 msgid "Usar os pacotes já presentes na imagem ISO (clonagem da ISO)"
 msgstr "使用 ISO 映像中已有的套件（ISO 克隆）"
 
-#: usr/local/bin/voidbr-wifi-setup:1464
+#: usr/local/bin/voidbr-wifi-setup:1470
 msgid ""
 "Baixar todos os pacotes diretamente da internet (requer host Void Linux)"
 msgstr ""
 
-#: usr/local/bin/voidbr-wifi-setup:1465
+#: usr/local/bin/voidbr-wifi-setup:1471
 msgid "Selecionar fonte da instalação"
 msgstr "選擇安裝來源"
 
-#: usr/local/bin/voidbr-wifi-setup:1466
+#: usr/local/bin/voidbr-wifi-setup:1472
 msgid "Definições"
 msgstr "定義"
 
-#: usr/local/bin/voidbr-wifi-setup:1467
+#: usr/local/bin/voidbr-wifi-setup:1473
 msgid "não definido"
 msgstr "未定義"
 
-#: usr/local/bin/voidbr-wifi-setup:1468
+#: usr/local/bin/voidbr-wifi-setup:1474
 msgid "Ajustando senha usuário"
 msgstr "設定用戶密碼"
 
-#: usr/local/bin/voidbr-wifi-setup:1469
+#: usr/local/bin/voidbr-wifi-setup:1475
 msgid "Ativando o bash para o usuário"
 msgstr "為用戶啟用 bash"
 
-#: usr/local/bin/voidbr-wifi-setup:1470
+#: usr/local/bin/voidbr-wifi-setup:1476
 msgid "Criando usuário"
 msgstr "創建用戶"
 
-#: usr/local/bin/voidbr-wifi-setup:1471
+#: usr/local/bin/voidbr-wifi-setup:1477
 msgid "MENU DE INSTALAÇÃO"
 msgstr "安裝選單"
 
-#: usr/local/bin/voidbr-wifi-setup:1472
+#: usr/local/bin/voidbr-wifi-setup:1478
 msgid "Desmontando ambiente"
 msgstr "拆除環境"
 
-#: usr/local/bin/voidbr-wifi-setup:1473
+#: usr/local/bin/voidbr-wifi-setup:1479
 msgid "Montando ambiente"
 msgstr "設定環境"
 
-#: usr/local/bin/voidbr-wifi-setup:1474
+#: usr/local/bin/voidbr-wifi-setup:1480
 msgid "Entrando no ambiente chroot"
 msgstr "進入無chroot環境"
 
-#: usr/local/bin/voidbr-wifi-setup:1475
+#: usr/local/bin/voidbr-wifi-setup:1481
 msgid "Montando partição"
 msgstr "安裝隔板"
 
-#: usr/local/bin/voidbr-wifi-setup:1476
+#: usr/local/bin/voidbr-wifi-setup:1482
 msgid "Gerando"
 msgstr "產生"
 
-#: usr/local/bin/voidbr-wifi-setup:1477
+#: usr/local/bin/voidbr-wifi-setup:1483
 msgid "Ajustando"
 msgstr "調整"
 
-#: usr/local/bin/voidbr-wifi-setup:1478
+#: usr/local/bin/voidbr-wifi-setup:1484
 msgid "Copiando"
 msgstr "複印"
 
-#: usr/local/bin/voidbr-wifi-setup:1479
+#: usr/local/bin/voidbr-wifi-setup:1485
 msgid "Descompactando"
 msgstr "解壓縮"
 
-#: usr/local/bin/voidbr-wifi-setup:1480
+#: usr/local/bin/voidbr-wifi-setup:1486
 msgid "Atualizando"
 msgstr "更新中"
 
-#: usr/local/bin/voidbr-wifi-setup:1481
+#: usr/local/bin/voidbr-wifi-setup:1487
 msgid "Instalando"
 msgstr "安裝中"
 
-#: usr/local/bin/voidbr-wifi-setup:1482
+#: usr/local/bin/voidbr-wifi-setup:1488
 msgid "Configurando"
 msgstr "配置"
 
-#: usr/local/bin/voidbr-wifi-setup:1484
+#: usr/local/bin/voidbr-wifi-setup:1490
 msgid "ERRO"
 msgstr "錯誤"
 
-#: usr/local/bin/voidbr-wifi-setup:1485
+#: usr/local/bin/voidbr-wifi-setup:1491
 msgid "Aceitar"
 msgstr "接受"
 
-#: usr/local/bin/voidbr-wifi-setup:1486
+#: usr/local/bin/voidbr-wifi-setup:1492
 msgid "Conectar"
 msgstr "連接"
 
-#: usr/local/bin/voidbr-wifi-setup:1487
+#: usr/local/bin/voidbr-wifi-setup:1493
 msgid "Configurar"
 msgstr "配置"
 
-#: usr/local/bin/voidbr-wifi-setup:1488
+#: usr/local/bin/voidbr-wifi-setup:1494
 msgid "Não definido"
 msgstr "未定義"
 
-#: usr/local/bin/voidbr-wifi-setup:1489
+#: usr/local/bin/voidbr-wifi-setup:1495
 msgid "Mudar"
 msgstr "改變"
 
-#: usr/local/bin/voidbr-wifi-setup:1490 usr/local/bin/voidbr-wifi-setup:1533
+#: usr/local/bin/voidbr-wifi-setup:1496 usr/local/bin/voidbr-wifi-setup:1539
 msgid "Sair"
 msgstr "出去"
 
-#: usr/local/bin/voidbr-wifi-setup:1491 usr/local/bin/voidbr-wifi-setup:1611
+#: usr/local/bin/voidbr-wifi-setup:1497 usr/local/bin/voidbr-wifi-setup:1617
 msgid "Instalar"
 msgstr "安裝"
 
-#: usr/local/bin/voidbr-wifi-setup:1492
+#: usr/local/bin/voidbr-wifi-setup:1498
 msgid "Espelho"
 msgstr "鏡子"
 
-#: usr/local/bin/voidbr-wifi-setup:1494
+#: usr/local/bin/voidbr-wifi-setup:1500
 msgid "Sistema de Arquivos"
 msgstr "檔案系統"
 
-#: usr/local/bin/voidbr-wifi-setup:1495
+#: usr/local/bin/voidbr-wifi-setup:1501
 msgid "não foi revisado!"
 msgstr "還沒審核過！"
 
-#: usr/local/bin/voidbr-wifi-setup:1496
+#: usr/local/bin/voidbr-wifi-setup:1502
 msgid "Armazenamento"
 msgstr "貯存"
 
-#: usr/local/bin/voidbr-wifi-setup:1497
+#: usr/local/bin/voidbr-wifi-setup:1503
 msgid "Teclado"
 msgstr "鍵盤"
 
-#: usr/local/bin/voidbr-wifi-setup:1498
+#: usr/local/bin/voidbr-wifi-setup:1504
 msgid "Sair sem instalar"
 msgstr "退出而不安裝"
 
-#: usr/local/bin/voidbr-wifi-setup:1499
+#: usr/local/bin/voidbr-wifi-setup:1505
 msgid "Somente terminal, sem interface gráfica"
 msgstr "僅終端，無圖形介面"
 
-#: usr/local/bin/voidbr-wifi-setup:1500
+#: usr/local/bin/voidbr-wifi-setup:1506
 msgid "Servidor Void"
 msgstr "伺服器無效"
 
-#: usr/local/bin/voidbr-wifi-setup:1501
+#: usr/local/bin/voidbr-wifi-setup:1507
 msgid "Selecionar espelho dos pacotes"
 msgstr "選擇包鏡像"
 
-#: usr/local/bin/voidbr-wifi-setup:1502
+#: usr/local/bin/voidbr-wifi-setup:1508
 msgid "Selecionar disco e partições"
 msgstr "選擇磁碟和分割區"
 
-#: usr/local/bin/voidbr-wifi-setup:1503
+#: usr/local/bin/voidbr-wifi-setup:1509
 msgid "Configurar sistema de arquivos e pontos de montagem"
 msgstr "設定檔系統和掛載點"
 
-#: usr/local/bin/voidbr-wifi-setup:1504
+#: usr/local/bin/voidbr-wifi-setup:1510
 msgid "Escolhar disco para o bootloader"
 msgstr "選擇引導程式的磁碟"
 
-#: usr/local/bin/voidbr-wifi-setup:1505
+#: usr/local/bin/voidbr-wifi-setup:1511
 msgid "Selecionar layout do teclado"
 msgstr "選擇鍵盤佈局"
 
-#: usr/local/bin/voidbr-wifi-setup:1506
+#: usr/local/bin/voidbr-wifi-setup:1512
 msgid "Selecionar fuso horário"
 msgstr "選擇時區"
 
-#: usr/local/bin/voidbr-wifi-setup:1507
+#: usr/local/bin/voidbr-wifi-setup:1513
 msgid "Selecionar versão do kernel"
 msgstr "選擇核心版本"
 
-#: usr/local/bin/voidbr-wifi-setup:1508
+#: usr/local/bin/voidbr-wifi-setup:1514
 msgid "Selecionar localidade do sistema"
 msgstr "選擇系統區域設定"
 
-#: usr/local/bin/voidbr-wifi-setup:1509
+#: usr/local/bin/voidbr-wifi-setup:1515
 msgid "Selecionar interface gráfico/gerenciador de janelas"
 msgstr "選擇圖形介面/視窗管理器"
 
-#: usr/local/bin/voidbr-wifi-setup:1510
+#: usr/local/bin/voidbr-wifi-setup:1516
 msgid "Selecionar gerenciador de login"
 msgstr "選擇登入管理員"
 
-#: usr/local/bin/voidbr-wifi-setup:1511
+#: usr/local/bin/voidbr-wifi-setup:1517
 msgid "Definir rede e senha wifi (opcional)"
 msgstr "設定 WiFi 網路和密碼（可選）"
 
-#: usr/local/bin/voidbr-wifi-setup:1512
+#: usr/local/bin/voidbr-wifi-setup:1518
 msgid "opcional"
 msgstr "選修的"
 
-#: usr/local/bin/voidbr-wifi-setup:1513 usr/local/bin/voidbr-wifi-setup:1596
+#: usr/local/bin/voidbr-wifi-setup:1519 usr/local/bin/voidbr-wifi-setup:1602
 msgid "Usuário"
 msgstr "使用者"
 
-#: usr/local/bin/voidbr-wifi-setup:1514
+#: usr/local/bin/voidbr-wifi-setup:1520
 msgid "Definir usuário,senha,hostname"
 msgstr "設定使用者、密碼、主機名"
 
-#: usr/local/bin/voidbr-wifi-setup:1515
+#: usr/local/bin/voidbr-wifi-setup:1521
 msgid "Iniciar instalação"
 msgstr "開始安裝"
 
-#: usr/local/bin/voidbr-wifi-setup:1516
+#: usr/local/bin/voidbr-wifi-setup:1522
 msgid "Encerrar instalação"
 msgstr "終止安裝"
 
-#: usr/local/bin/voidbr-wifi-setup:1517
+#: usr/local/bin/voidbr-wifi-setup:1523
 msgid "Instalação abortada"
 msgstr "安裝已中止"
 
-#: usr/local/bin/voidbr-wifi-setup:1518
+#: usr/local/bin/voidbr-wifi-setup:1524
 msgid "Checando rota de internet para o servidor"
 msgstr "檢查到伺服器的網際網路路由"
 
-#: usr/local/bin/voidbr-wifi-setup:1519
+#: usr/local/bin/voidbr-wifi-setup:1525
 msgid "ERRO: falha de abertura de"
 msgstr "錯誤：開啟失敗"
 
-#: usr/local/bin/voidbr-wifi-setup:1520
+#: usr/local/bin/voidbr-wifi-setup:1526
 msgid "erro: você não pode realizar esta operação a menos que seja root."
 msgstr "錯誤：除非您是 root，否則無法執行此操作。"
 
-#: usr/local/bin/voidbr-wifi-setup:1521
+#: usr/local/bin/voidbr-wifi-setup:1527
 msgid "erro: operação não suportada"
 msgstr "錯誤：不支援操作"
 
-#: usr/local/bin/voidbr-wifi-setup:1522
+#: usr/local/bin/voidbr-wifi-setup:1528
 msgid "Encerrar"
 msgstr "關閉"
 
-#: usr/local/bin/voidbr-wifi-setup:1523
+#: usr/local/bin/voidbr-wifi-setup:1529
 msgid "Voltar"
 msgstr "要回去"
 
-#: usr/local/bin/voidbr-wifi-setup:1524
+#: usr/local/bin/voidbr-wifi-setup:1530
 msgid "Feito"
 msgstr "完畢"
 
-#: usr/local/bin/voidbr-wifi-setup:1525
+#: usr/local/bin/voidbr-wifi-setup:1531
 msgid "Escolher"
 msgstr "來選擇"
 
-#: usr/local/bin/voidbr-wifi-setup:1526 usr/local/bin/voidbr-wifi-setup:1534
+#: usr/local/bin/voidbr-wifi-setup:1532 usr/local/bin/voidbr-wifi-setup:1540
 msgid "Selecionar"
 msgstr "選擇"
 
-#: usr/local/bin/voidbr-wifi-setup:1527
+#: usr/local/bin/voidbr-wifi-setup:1533
 msgid "Cancelar"
 msgstr "取消"
 
-#: usr/local/bin/voidbr-wifi-setup:1528
+#: usr/local/bin/voidbr-wifi-setup:1534
 msgid "Revisar"
 msgstr "審查"
 
-#: usr/local/bin/voidbr-wifi-setup:1529
+#: usr/local/bin/voidbr-wifi-setup:1535
 msgid "Prosseguir"
 msgstr "繼續"
 
-#: usr/local/bin/voidbr-wifi-setup:1530
+#: usr/local/bin/voidbr-wifi-setup:1536
 msgid "Info disco"
 msgstr "資訊迪斯可"
 
-#: usr/local/bin/voidbr-wifi-setup:1531
+#: usr/local/bin/voidbr-wifi-setup:1537
 msgid "Info partição"
 msgstr "分區資訊"
 
-#: usr/local/bin/voidbr-wifi-setup:1532
+#: usr/local/bin/voidbr-wifi-setup:1538
 msgid "Ok"
 msgstr "好的"
 
-#: usr/local/bin/voidbr-wifi-setup:1535
+#: usr/local/bin/voidbr-wifi-setup:1541
 msgid "DISCO DE ORIGEM"
 msgstr "來源磁碟"
 
-#: usr/local/bin/voidbr-wifi-setup:1536
+#: usr/local/bin/voidbr-wifi-setup:1542
 msgid "Fonte"
 msgstr "來源"
 
-#: usr/local/bin/voidbr-wifi-setup:1537
+#: usr/local/bin/voidbr-wifi-setup:1543
 msgid "DISCO DE DESTINO"
 msgstr "目標磁碟"
 
-#: usr/local/bin/voidbr-wifi-setup:1538
+#: usr/local/bin/voidbr-wifi-setup:1544
 msgid "Escolha o disco de DESTINO:"
 msgstr "選擇目標磁碟："
 
-#: usr/local/bin/voidbr-wifi-setup:1539
+#: usr/local/bin/voidbr-wifi-setup:1545
 msgid "Sim"
-msgstr "西姆"
+msgstr "辛"
 
-#: usr/local/bin/voidbr-wifi-setup:1540
+#: usr/local/bin/voidbr-wifi-setup:1546
 msgid "Não"
 msgstr "不"
 
-#: usr/local/bin/voidbr-wifi-setup:1541
+#: usr/local/bin/voidbr-wifi-setup:1547
 msgid "Ao prosseguir, todos os dados disco DESTINO serão perdidos!"
 msgstr "繼續操作時，DESTINATION 磁碟上的所有資料都會遺失！"
 
-#: usr/local/bin/voidbr-wifi-setup:1542
+#: usr/local/bin/voidbr-wifi-setup:1548
 msgid "=== AVISO ==="
 msgstr "===通知==="
 
-#: usr/local/bin/voidbr-wifi-setup:1543
+#: usr/local/bin/voidbr-wifi-setup:1549
 msgid "Desmontando sistema de arquivos"
 msgstr "解除安裝檔案系統"
 
-#: usr/local/bin/voidbr-wifi-setup:1544
+#: usr/local/bin/voidbr-wifi-setup:1550
 msgid "Instalação finalizada com sucesso"
 msgstr "安裝成功完成"
 
-#: usr/local/bin/voidbr-wifi-setup:1545
+#: usr/local/bin/voidbr-wifi-setup:1551
 msgid "para"
 msgstr "到"
 
-#: usr/local/bin/voidbr-wifi-setup:1546
+#: usr/local/bin/voidbr-wifi-setup:1552
 msgid "Configurações salvas para instalação"
 msgstr "儲存安裝設定"
 
-#: usr/local/bin/voidbr-wifi-setup:1547
+#: usr/local/bin/voidbr-wifi-setup:1553
 msgid "nenhuma operação especificada - usar -h para ajuda"
 msgstr "未指定操作 - 使用 -h 尋求協助"
 
-#: usr/local/bin/voidbr-wifi-setup:1548
+#: usr/local/bin/voidbr-wifi-setup:1554
 msgid "apenas uma operação pode ser usada por vez"
 msgstr "一次只能使用一項操作"
 
-#: usr/local/bin/voidbr-wifi-setup:1549
+#: usr/local/bin/voidbr-wifi-setup:1555
 msgid "Testando disco"
 msgstr "測試磁碟"
 
-#: usr/local/bin/voidbr-wifi-setup:1550
+#: usr/local/bin/voidbr-wifi-setup:1556
 msgid "Continuar com o particionamento em"
 msgstr "繼續分區"
 
-#: usr/local/bin/voidbr-wifi-setup:1551
+#: usr/local/bin/voidbr-wifi-setup:1557
 msgid "Formatando partição"
 msgstr "格式化分割區"
 
-#: usr/local/bin/voidbr-wifi-setup:1552
+#: usr/local/bin/voidbr-wifi-setup:1558
 msgid "Ativando serviço"
 msgstr "啟動服務"
 
-#: usr/local/bin/voidbr-wifi-setup:1553
+#: usr/local/bin/voidbr-wifi-setup:1559
 msgid "Iniciando serviço"
 msgstr "開始服務"
 
-#: usr/local/bin/voidbr-wifi-setup:1554
+#: usr/local/bin/voidbr-wifi-setup:1560
 msgid "permissões"
 msgstr "權限"
 
-#: usr/local/bin/voidbr-wifi-setup:1555
+#: usr/local/bin/voidbr-wifi-setup:1561
 msgid "Iniciando download de"
 msgstr "開始下載"
 
-#: usr/local/bin/voidbr-wifi-setup:1556
+#: usr/local/bin/voidbr-wifi-setup:1562
 msgid "Criando partições em"
 msgstr "在中建立分區"
 
-#: usr/local/bin/voidbr-wifi-setup:1557
+#: usr/local/bin/voidbr-wifi-setup:1563
 msgid "Partição Swap"
 msgstr "交換分割區"
 
-#: usr/local/bin/voidbr-wifi-setup:1558
+#: usr/local/bin/voidbr-wifi-setup:1564
 msgid "Criando diretório"
 msgstr "建立目錄"
 
-#: usr/local/bin/voidbr-wifi-setup:1559
+#: usr/local/bin/voidbr-wifi-setup:1565
 msgid "Atualizando instalação"
 msgstr "更新安裝"
 
-#: usr/local/bin/voidbr-wifi-setup:1560
+#: usr/local/bin/voidbr-wifi-setup:1566
 msgid "Removendo pacotes antigos/absoletos"
 msgstr "刪除舊的/過時的包"
 
-#: usr/local/bin/voidbr-wifi-setup:1561
+#: usr/local/bin/voidbr-wifi-setup:1567
 msgid "Instalando meta pacote X"
 msgstr "安裝元包"
 
-#: usr/local/bin/voidbr-wifi-setup:1562
+#: usr/local/bin/voidbr-wifi-setup:1568
 msgid "Atualizando pacotes base"
 msgstr "更新基礎包"
 
-#: usr/local/bin/voidbr-wifi-setup:1563
+#: usr/local/bin/voidbr-wifi-setup:1569
 msgid "Atualizando pacotes adicionais em"
 msgstr "更新附加套件"
 
-#: usr/local/bin/voidbr-wifi-setup:1564
+#: usr/local/bin/voidbr-wifi-setup:1570
 msgid "Visualizar partições do disco"
 msgstr "查看磁碟分割區"
 
-#: usr/local/bin/voidbr-wifi-setup:1565
+#: usr/local/bin/voidbr-wifi-setup:1571
 msgid "=== ARMAZENAMENTO ==="
 msgstr "=== 儲存 ==="
 
-#: usr/local/bin/voidbr-wifi-setup:1566
+#: usr/local/bin/voidbr-wifi-setup:1572
 msgid "=== FILE SYSTEM ==="
 msgstr "=== 檔案系統 ==="
 
-#: usr/local/bin/voidbr-wifi-setup:1567
+#: usr/local/bin/voidbr-wifi-setup:1573
 msgid "Checando por partições montadas no disco"
 msgstr "檢查磁碟上已安裝的分割區"
 
-#: usr/local/bin/voidbr-wifi-setup:1568
+#: usr/local/bin/voidbr-wifi-setup:1574
 msgid "O disco selecionado contém partições montadas"
 msgstr "所選磁碟包含已安裝的分割區"
 
-#: usr/local/bin/voidbr-wifi-setup:1569
+#: usr/local/bin/voidbr-wifi-setup:1575
 msgid "Escolher outro layout de teclado"
 msgstr "選擇其他鍵盤佈局"
 
-#: usr/local/bin/voidbr-wifi-setup:1570
+#: usr/local/bin/voidbr-wifi-setup:1576
 msgid "Layout atual"
 msgstr "實際佈局"
 
-#: usr/local/bin/voidbr-wifi-setup:1571
+#: usr/local/bin/voidbr-wifi-setup:1577
 msgid "Aguarde, Desmontando particao de trabalho"
 msgstr "請稍候，正在卸載工作分區"
 
-#: usr/local/bin/voidbr-wifi-setup:1572
+#: usr/local/bin/voidbr-wifi-setup:1578
 msgid "Erro de leitura do disco"
 msgstr "磁碟讀取錯誤"
 
-#: usr/local/bin/voidbr-wifi-setup:1573
+#: usr/local/bin/voidbr-wifi-setup:1579
 msgid "Sem rota para o servidor"
 msgstr "沒有到伺服器的路由"
 
-#: usr/local/bin/voidbr-wifi-setup:1574
+#: usr/local/bin/voidbr-wifi-setup:1580
 msgid "Check sua conexão com a internet!"
 msgstr "檢查您的網路連線！"
 
-#: usr/local/bin/voidbr-wifi-setup:1575
+#: usr/local/bin/voidbr-wifi-setup:1581
 msgid "não encontrei o comando"
 msgstr "我沒找到命令"
 
-#: usr/local/bin/voidbr-wifi-setup:1576
+#: usr/local/bin/voidbr-wifi-setup:1582
 msgid "IMPOSSÍVEL CONTINUAR"
 msgstr "無法繼續"
 
-#: usr/local/bin/voidbr-wifi-setup:1577
+#: usr/local/bin/voidbr-wifi-setup:1583
 msgid "Esse script precisa dos comandos listados acima"
 msgstr "該腳本需要上面列出的命令"
 
-#: usr/local/bin/voidbr-wifi-setup:1578
+#: usr/local/bin/voidbr-wifi-setup:1584
 msgid "Instale-os e/ou verifique se estão no seu"
 msgstr "安裝它們和/或檢查它們是否在您的"
 
-#: usr/local/bin/voidbr-wifi-setup:1579
+#: usr/local/bin/voidbr-wifi-setup:1585
 msgid "Instalar o(s) comando(s)"
 msgstr "安裝命令"
 
-#: usr/local/bin/voidbr-wifi-setup:1580
+#: usr/local/bin/voidbr-wifi-setup:1586
 msgid "INFO: Rode novamente o aplicativo"
 msgstr "訊息：再次運行應用程式"
 
-#: usr/local/bin/voidbr-wifi-setup:1581
+#: usr/local/bin/voidbr-wifi-setup:1587
 msgid "ERRO na instalação dos comandos. Tente manualmente"
 msgstr "安裝命令時發生錯誤。手動嘗試"
 
-#: usr/local/bin/voidbr-wifi-setup:1582
+#: usr/local/bin/voidbr-wifi-setup:1588
 msgid "Criando inicialização padrão/reserva (roaming) para"
 msgstr "建立預設/備用（漫遊）引導"
 
-#: usr/local/bin/voidbr-wifi-setup:1583
+#: usr/local/bin/voidbr-wifi-setup:1589
 msgid "Erro não fatal. Para mais detalhes veja o log"
 msgstr "非致命錯誤。更多詳情請參閱日誌"
 
-#: usr/local/bin/voidbr-wifi-setup:1584
+#: usr/local/bin/voidbr-wifi-setup:1590
 msgid "gerenciador de janelas (wm)"
 msgstr "視窗管理器（wm）"
 
-#: usr/local/bin/voidbr-wifi-setup:1585
+#: usr/local/bin/voidbr-wifi-setup:1591
 msgid "gerenciador de login (dm)"
 msgstr "登入管理員 (dm)"
 
-#: usr/local/bin/voidbr-wifi-setup:1586
+#: usr/local/bin/voidbr-wifi-setup:1592
 msgid "Tabela MBR (dos)"
 msgstr "MBR 表 (dos)"
 
-#: usr/local/bin/voidbr-wifi-setup:1587
+#: usr/local/bin/voidbr-wifi-setup:1593
 msgid "✓ Detectado: sistema iniciado em modo EFI"
 msgstr "✓ 偵測到：系統以 EFI 模式啟動"
 
-#: usr/local/bin/voidbr-wifi-setup:1588
+#: usr/local/bin/voidbr-wifi-setup:1594
 msgid "✓ Recomendado: EFI"
 msgstr "✓ 推薦：EFI"
 
-#: usr/local/bin/voidbr-wifi-setup:1589
+#: usr/local/bin/voidbr-wifi-setup:1595
 msgid "✗ EFI não detectado: sistema iniciado em modo BIOS"
 msgstr "✗ 未偵測到 EFI：系統以 BIOS 模式啟動"
 
-#: usr/local/bin/voidbr-wifi-setup:1590
+#: usr/local/bin/voidbr-wifi-setup:1596
 msgid "✓ Recomendado: GPT_BIOS ou MBR_BIOS"
 msgstr "✓ 建議：GPT_BIOS 或 MBR_BIOS"
 
-#: usr/local/bin/voidbr-wifi-setup:1591
+#: usr/local/bin/voidbr-wifi-setup:1597
 msgid "Detectado boot via ISO ↓ é recomendável instalar ↓"
 msgstr "透過ISO啟動偵測到↓建議安裝↓"
 
-#: usr/local/bin/voidbr-wifi-setup:1592
+#: usr/local/bin/voidbr-wifi-setup:1598
 msgid "ISO não detectado ↓ é recomendável usar NETWORK ↓"
 msgstr "未偵測到 ISO ↓ 建議使用 NETWORK ↓"
 
-#: usr/local/bin/voidbr-wifi-setup:1593
+#: usr/local/bin/voidbr-wifi-setup:1599
 msgid "Host VOID não detectado ↓ é recomendável usar NETWORK↓"
-msgstr "Host VOID não detectado ↓ é recomendável usar NETWORK↓"
+msgstr "未偵測到主機 VOID ↓ 建議使用 NETWORK ↓"
 
-#: usr/local/bin/voidbr-wifi-setup:1595
+#: usr/local/bin/voidbr-wifi-setup:1601
 msgid "Escolha o idioma"
 msgstr "選擇語言"
 
-#: usr/local/bin/voidbr-wifi-setup:1597
+#: usr/local/bin/voidbr-wifi-setup:1603
 msgid "Usuário não pode ser root! Novamente?"
 msgstr "使用者不能是root！再一次？"
 
-#: usr/local/bin/voidbr-wifi-setup:1598
+#: usr/local/bin/voidbr-wifi-setup:1604
 msgid "Usuário não pode estar vazio! Novamente?"
 msgstr "用戶不能為空！再一次？"
 
-#: usr/local/bin/voidbr-wifi-setup:1599
+#: usr/local/bin/voidbr-wifi-setup:1605
 msgid "Senha do usuário não pode ser vazia! Novamente?"
 msgstr "用戶密碼不能為空！再一次？"
 
-#: usr/local/bin/voidbr-wifi-setup:1600
+#: usr/local/bin/voidbr-wifi-setup:1606
 msgid "Senha de root não pode ser vazia! Novamente?"
 msgstr "root密碼不能為空！再一次？"
 
-#: usr/local/bin/voidbr-wifi-setup:1601
+#: usr/local/bin/voidbr-wifi-setup:1607
 msgid "Usuário não pode iniciar com números! Novamente?"
 msgstr "用戶不能以數字開頭！再一次？"
 
-#: usr/local/bin/voidbr-wifi-setup:1602
+#: usr/local/bin/voidbr-wifi-setup:1608
 msgid "Usuário não pode iniciar com letras maiúsculas! Novamente?"
 msgstr "用戶不能以大寫字母開頭！再一次？"
 
-#: usr/local/bin/voidbr-wifi-setup:1603
+#: usr/local/bin/voidbr-wifi-setup:1609
 msgid "Cadastro de usuário cancelado"
 msgstr "用戶註冊已取消"
 
-#: usr/local/bin/voidbr-wifi-setup:1604
+#: usr/local/bin/voidbr-wifi-setup:1610
 msgid "Rede Wi-Fi"
 msgstr "無線網路"
 
-#: usr/local/bin/voidbr-wifi-setup:1605
+#: usr/local/bin/voidbr-wifi-setup:1611
 msgid "Senha Wi-Fi"
 msgstr "無線網路密碼"
 
-#: usr/local/bin/voidbr-wifi-setup:1606
+#: usr/local/bin/voidbr-wifi-setup:1612
 msgid "Interface Wi-Fi"
 msgstr "介面 無線網路"
 
-#: usr/local/bin/voidbr-wifi-setup:1607
+#: usr/local/bin/voidbr-wifi-setup:1613
 msgid "↓ é recomendável ext4 ↓"
 msgstr "↓ 推薦使用ext4 ↓"
 
-#: usr/local/bin/voidbr-wifi-setup:1608
+#: usr/local/bin/voidbr-wifi-setup:1614
 msgid "Utilitário void-services (opcional)"
 msgstr "void-services 實用程式（可選）"
 
-#: usr/local/bin/voidbr-wifi-setup:1609
+#: usr/local/bin/voidbr-wifi-setup:1615
 msgid "Serviços"
 msgstr "服務"
 
-#: usr/local/bin/voidbr-wifi-setup:1610
+#: usr/local/bin/voidbr-wifi-setup:1616
 msgid "Estilo"
 msgstr "風格"
 
-#: usr/local/bin/voidbr-wifi-setup:1612
+#: usr/local/bin/voidbr-wifi-setup:1618
 msgid "Rodar chroot na partição instalada"
 msgstr "在已安裝的分割區上執行 chroot"
 
-#: usr/local/bin/voidbr-wifi-setup:1613
+#: usr/local/bin/voidbr-wifi-setup:1619
 msgid "Ativar modo gráfico"
 msgstr "啟動圖形模式"
 
-#: usr/local/bin/voidbr-wifi-setup:1614
+#: usr/local/bin/voidbr-wifi-setup:1620
 msgid "Saída resumida"
 msgstr "摘要輸出"
 
-#: usr/local/bin/voidbr-wifi-setup:1615
+#: usr/local/bin/voidbr-wifi-setup:1621
 msgid "Mostrar versão do aplicativo"
 msgstr "顯示應用程式版本"
 
-#: usr/local/bin/voidbr-wifi-setup:1616
+#: usr/local/bin/voidbr-wifi-setup:1622
 msgid "Remove cores da saída"
 msgstr "從輸出中刪除顏色"
 
-#: usr/local/bin/voidbr-wifi-setup:1617
+#: usr/local/bin/voidbr-wifi-setup:1623
 msgid "Este help"
 msgstr "這是幫助"
 
-#: usr/local/bin/voidbr-wifi-setup:1618
+#: usr/local/bin/voidbr-wifi-setup:1624
 msgid "Carregar arquivo de configuração"
 msgstr "載入設定檔"
 
-#: usr/local/bin/voidbr-wifi-setup:1619
+#: usr/local/bin/voidbr-wifi-setup:1625
 msgid "Nome Completo"
 msgstr "姓名"
 
-#: usr/local/bin/voidbr-wifi-setup:1620
+#: usr/local/bin/voidbr-wifi-setup:1626
 msgid "Nome usuario"
 msgstr "使用者名稱"
 
-#: usr/local/bin/voidbr-wifi-setup:1621
+#: usr/local/bin/voidbr-wifi-setup:1627
 msgid "Senha usuario"
 msgstr "使用者密碼"
 
-#: usr/local/bin/voidbr-wifi-setup:1622
+#: usr/local/bin/voidbr-wifi-setup:1628
 msgid "Senha root"
 msgstr "根密碼"
 
-#: usr/local/bin/voidbr-wifi-setup:1623
+#: usr/local/bin/voidbr-wifi-setup:1629
 msgid "Disco destino"
 msgstr "目標磁碟"
 
-#: usr/local/bin/voidbr-wifi-setup:1624
+#: usr/local/bin/voidbr-wifi-setup:1630
 msgid "Gerenciador Janelas"
 msgstr "視窗管理器"
 
-#: usr/local/bin/voidbr-wifi-setup:1625
+#: usr/local/bin/voidbr-wifi-setup:1631
 msgid "EFI + GPT (recomendado) PCs modernos"
 msgstr "EFI + GPT（建議）現代 PC"
 
-#: usr/local/bin/voidbr-wifi-setup:1626
+#: usr/local/bin/voidbr-wifi-setup:1632
 msgid "BIOS + GPT Compatibilide avançada"
 msgstr "BIOS + GPT 高階相容性"
 
-#: usr/local/bin/voidbr-wifi-setup:1627
+#: usr/local/bin/voidbr-wifi-setup:1633
 msgid "BIOS + MBR Computadores antigos"
 msgstr "BIOS + MBR 舊電腦"
 
-#: usr/local/bin/voidbr-wifi-setup:1628
+#: usr/local/bin/voidbr-wifi-setup:1634
 msgid "Tabela GPT"
 msgstr "GPT表"
 
-#: usr/local/bin/voidbr-wifi-setup:1629
+#: usr/local/bin/voidbr-wifi-setup:1635
 msgid "não foi configurado!"
 msgstr "尚未配置！"
 
-#: usr/local/bin/voidbr-wifi-setup:1630
+#: usr/local/bin/voidbr-wifi-setup:1636
 msgid "Disco não foi configurado!"
 msgstr "磁碟尚未配置！"
 
-#: usr/local/bin/voidbr-wifi-setup:1631
+#: usr/local/bin/voidbr-wifi-setup:1637
 msgid "Filesystem não foi configurado!"
 msgstr "檔案系統尚未配置！"
 
-#: usr/local/bin/voidbr-wifi-setup:1632
+#: usr/local/bin/voidbr-wifi-setup:1638
 msgid "Bootloader não foi configurado!"
 msgstr "引導程式尚未配置！"
 
-#: usr/local/bin/voidbr-wifi-setup:1633
+#: usr/local/bin/voidbr-wifi-setup:1639
 msgid "Teclado não foi configurado!"
 msgstr "鍵盤尚未配置！"
 
-#: usr/local/bin/voidbr-wifi-setup:1634
+#: usr/local/bin/voidbr-wifi-setup:1640
 msgid "Timezone não foi configurado!"
 msgstr "時區尚未配置！"
 
-#: usr/local/bin/voidbr-wifi-setup:1635
+#: usr/local/bin/voidbr-wifi-setup:1641
 msgid "Gerenciador de Janelas não foi configurado!"
 msgstr "視窗管理器尚未配置！"
 
-#: usr/local/bin/voidbr-wifi-setup:1636
+#: usr/local/bin/voidbr-wifi-setup:1642
 msgid "Rede wifi não foi configurado!"
 msgstr "WiFi網路尚未配置！"
 
-#: usr/local/bin/voidbr-wifi-setup:1637
+#: usr/local/bin/voidbr-wifi-setup:1643
 msgid "Usuário não foi configurado!"
 msgstr "用戶尚未配置！"
 
-#: usr/local/bin/voidbr-wifi-setup:1638
+#: usr/local/bin/voidbr-wifi-setup:1644
 msgid "Selecionar sistema de áudio"
 msgstr "選擇音訊系統"
 
-#: usr/local/bin/voidbr-wifi-setup:1646
+#: usr/local/bin/voidbr-wifi-setup:1652
 msgid "Network Management daemon (recommended)"
 msgstr "網路管理守護程式（推薦）"
 
-#: usr/local/bin/voidbr-wifi-setup:1649
+#: usr/local/bin/voidbr-wifi-setup:1655
 msgid "Internet Wireless Daemon by Intel that aims to replace wpa_supplicant"
 msgstr "Intel 的網路無線守護程式旨在取代 wpa_supplicant"
 
-#: usr/local/bin/voidbr-wifi-setup:1652
+#: usr/local/bin/voidbr-wifi-setup:1658
 msgid "WPA/WPA2/IEEE 802.1X Supplicant"
 msgstr "WPA/WPA2/IEEE 802.1X 請求方"
 
-#: usr/local/bin/voidbr-wifi-setup:1666
-msgid "=== WIFI backend ==="
-msgstr "=== WIFI後端==="
-
-#: usr/local/bin/voidbr-wifi-setup:1671
+#: usr/local/bin/voidbr-wifi-setup:1678
 msgid "Selecione o backend Wi-Fi:"
 msgstr "選擇 Wi-Fi 後端："
 
-#: usr/local/bin/voidbr-wifi-setup:1760
+#: usr/local/bin/voidbr-wifi-setup:1769
 msgid "interface"
 msgstr "介面"
 
-#: usr/local/bin/voidbr-wifi-setup:1763
+#: usr/local/bin/voidbr-wifi-setup:1772
 msgid "Selecione a interface Wi-Fi:"
 msgstr "選擇Wi-Fi介面："
 
-#: usr/local/bin/voidbr-wifi-setup:2014
+#: usr/local/bin/voidbr-wifi-setup:2023
 msgid "Escaneando redes wifi..."
 msgstr "正在掃描 Wi-Fi 網路..."
 
-#: usr/local/bin/voidbr-wifi-setup:2025
+#: usr/local/bin/voidbr-wifi-setup:2034
 msgid "Nenhuma rede wifi encontrada."
 msgstr "未找到 wifi 網路。"
 
-#: usr/local/bin/voidbr-wifi-setup:2054
+#: usr/local/bin/voidbr-wifi-setup:2063
 msgid "Escolha a rede que deseja conectar:"
 msgstr "選擇您要連接的網路："
 
-#: usr/local/bin/voidbr-wifi-setup:2075
+#: usr/local/bin/voidbr-wifi-setup:2084
 msgid "Nenhuma interface de Wi-fi encontrada!"
 msgstr "找不到 Wi-Fi 介面！"
 
-#: usr/local/bin/voidbr-wifi-setup:2077
-msgid ""
-"Para ativar/levantar a interface de Wi-fi, caso exista,\n"
-"tente seguir estes passos no terminal:"
-msgstr ""
+#: usr/local/bin/voidbr-wifi-setup:2086
+msgid "Para detectar e ativar a interface Wi-Fi:"
+msgstr "若要偵測並啟動 Wi-Fi 介面："
 
-#: usr/local/bin/voidbr-wifi-setup:2080
+#: usr/local/bin/voidbr-wifi-setup:2087
 msgid "Identifique o dispositivo"
 msgstr "識別設備"
 
-#: usr/local/bin/voidbr-wifi-setup:2081
+#: usr/local/bin/voidbr-wifi-setup:2088
 msgid "ou"
 msgstr "或者"
 
-#: usr/local/bin/voidbr-wifi-setup:2082
+#: usr/local/bin/voidbr-wifi-setup:2089
 msgid "Carregue o driver necessário"
 msgstr "載入所需的驅動程式"
 
-#: usr/local/bin/voidbr-wifi-setup:2083
-msgid "Levante a interface"
-msgstr "萊萬特介面"
+#: usr/local/bin/voidbr-wifi-setup:2090
+msgid "Ative o dispositivo"
+msgstr "啟動裝置"
 
-#: usr/local/bin/voidbr-wifi-setup:2084
+#: usr/local/bin/voidbr-wifi-setup:2091
 msgid "Verifique se há firmware faltando"
 msgstr "檢查是否缺少韌體"
 
-#: usr/local/bin/voidbr-wifi-setup:2085
+#: usr/local/bin/voidbr-wifi-setup:2092
 msgid "(Re)Instale os drivers"
 msgstr "（重新）安裝驅動程式"
 
-#: usr/local/bin/voidbr-wifi-setup:2092
-msgid "WIFI - Diagnóstico de Rede"
-msgstr "WIFI - 網路診斷"
+#: usr/local/bin/voidbr-wifi-setup:2099
+msgid " - Diagnóstico de Rede"
+msgstr "- 網路診斷"
 
-#: usr/local/bin/voidbr-wifi-setup:2165
+#: usr/local/bin/voidbr-wifi-setup:2172
 msgid "Testando internet"
 msgstr "測試互聯網"
 
-#: usr/local/bin/voidbr-wifi-setup:2209
+#: usr/local/bin/voidbr-wifi-setup:2178
+msgid "Reiniciando"
+msgstr "正在重啟"
+
+#: usr/local/bin/voidbr-wifi-setup:2216
 msgid "Trying to bring up wireless interface..."
 msgstr "正在嘗試調出無線介面..."
 
-#: usr/local/bin/voidbr-wifi-setup:2215
+#: usr/local/bin/voidbr-wifi-setup:2222
 msgid "Wireless interface found:"
 msgstr "發現無線介面："
 
-#: usr/local/bin/voidbr-wifi-setup:2221 usr/local/bin/voidbr-wifi-setup:2281
+#: usr/local/bin/voidbr-wifi-setup:2228 usr/local/bin/voidbr-wifi-setup:2288
 msgid "Wireless interface is up."
 msgstr "無線接口已開啟。"
 
-#: usr/local/bin/voidbr-wifi-setup:2225
+#: usr/local/bin/voidbr-wifi-setup:2232
 msgid "Failed to bring interface up. Reloading driver..."
 msgstr "無法調出介面。正在重新載入驅動程式..."
 
-#: usr/local/bin/voidbr-wifi-setup:2244
+#: usr/local/bin/voidbr-wifi-setup:2251
 msgid "Unable to determine the wireless driver."
 msgstr "無法確定無線驅動程式。"
 
-#: usr/local/bin/voidbr-wifi-setup:2248
+#: usr/local/bin/voidbr-wifi-setup:2255
 msgid "Wireless module:"
 msgstr "無線模組："
 
-#: usr/local/bin/voidbr-wifi-setup:2253
+#: usr/local/bin/voidbr-wifi-setup:2260
 msgid "Removing dependent module:"
 msgstr "刪除依賴模組："
 
-#: usr/local/bin/voidbr-wifi-setup:2258
+#: usr/local/bin/voidbr-wifi-setup:2265
 msgid "Removing module:"
 msgstr "刪除模組："
 
-#: usr/local/bin/voidbr-wifi-setup:2264
+#: usr/local/bin/voidbr-wifi-setup:2271
 msgid "Loading module:"
 msgstr "加載模組："
 
-#: usr/local/bin/voidbr-wifi-setup:2266
+#: usr/local/bin/voidbr-wifi-setup:2273
 msgid "Failed to load module:"
 msgstr "無法加載模組："
 
-#: usr/local/bin/voidbr-wifi-setup:2275
+#: usr/local/bin/voidbr-wifi-setup:2282
 msgid "Wireless interface detected:"
 msgstr "偵測到無線接口："
 
-#: usr/local/bin/voidbr-wifi-setup:2289
+#: usr/local/bin/voidbr-wifi-setup:2296
 msgid "Failed to restore the wireless interface."
 msgstr "無法恢復無線介面。"
 
-#: usr/local/bin/voidbr-wifi-setup:2295
-msgid "iwd rodando, iniciando rotina de reset"
-msgstr "iwd 正在運行，開始重置例程"
+#: usr/local/bin/voidbr-wifi-setup:2304
+msgid "não está rodando, iniciando rotina para iniciar"
+msgstr "未運行，正在啟動例程"
 
-#: usr/local/bin/voidbr-wifi-setup:2309
+#: usr/local/bin/voidbr-wifi-setup:2310
+msgid "Erro: Não foi possivel iniciar"
+msgstr "錯誤：無法啟動"
+
+#: usr/local/bin/voidbr-wifi-setup:2319 usr/local/bin/voidbr-wifi-setup:2348
+#: usr/local/bin/voidbr-wifi-setup:2359
+msgid "rodando, iniciando rotina de reset"
+msgstr "運行，開始重置例程"
+
+#: usr/local/bin/voidbr-wifi-setup:2333
 msgid "Reiniciando módulo)"
 msgstr "重新啟動模組）"
 
-#: usr/local/bin/voidbr-wifi-setup:2315
+#: usr/local/bin/voidbr-wifi-setup:2339
 #, sh-format
 msgid "Erro: Nenhum módulo dependente encontrado para $driver_name"
 msgstr "錯誤：找不到 $driver_name 的依賴模組"
 
-#: usr/local/bin/voidbr-wifi-setup:2324
-msgid "wpa_supplicant rodando, iniciando rotina de reset"
-msgstr "wpa_supplicant 正在運行，正在啟動重置例程"
-
-#: usr/local/bin/voidbr-wifi-setup:2335
-msgid "NetworkManager rodando, iniciando rotina de reset"
-msgstr "NetworkManager 正在運行，正在啟動重置例程"
-
-#: usr/local/bin/voidbr-wifi-setup:2370
+#: usr/local/bin/voidbr-wifi-setup:2394
 msgid "A Interface selecionada já tem acesso à internet!"
 msgstr "所選介面已經可以存取互聯網！"
 
-#: usr/local/bin/voidbr-wifi-setup:2371
+#: usr/local/bin/voidbr-wifi-setup:2395
 msgid "Ainda deseja prosseguir ?"
 msgstr "您還想繼續嗎？"
 
-#: usr/local/bin/voidbr-wifi-setup:2380
+#: usr/local/bin/voidbr-wifi-setup:2404
 msgid "Nenhum backend Wi-Fi encontrado."
 msgstr "未找到 Wi-Fi 後端。"
 
-#: usr/local/bin/voidbr-wifi-setup:2381
+#: usr/local/bin/voidbr-wifi-setup:2405
 msgid "Instale o NetworkManager, ou iwd, ou wpa_supplicant."
 msgstr "安裝 NetworkManager、iwd 或 wpa_supplicant。"
 
-#: usr/local/bin/voidbr-wifi-setup:2391
+#: usr/local/bin/voidbr-wifi-setup:2415 usr/local/bin/voidbr-wifi-setup:2416
 msgid "Reiniciando serviços/interface e desbloquendo rfkill"
 msgstr "重新啟動服務/介面並解鎖 rfkill"
 
-#: usr/local/bin/voidbr-wifi-setup:2408
+#: usr/local/bin/voidbr-wifi-setup:2426
+msgid "Entregando interface ao NM"
+msgstr "向NM下發接口"
+
+#: usr/local/bin/voidbr-wifi-setup:2432
 msgid "Deixe em branco o campo Interface Wi-Fi para listar interfaces"
 msgstr "將 Wi-Fi 介面欄位留空以列出介面"
 
-#: usr/local/bin/voidbr-wifi-setup:2409
+#: usr/local/bin/voidbr-wifi-setup:2433
 msgid "Deixe em branco o campo Rede Wi-Fi para escanear redes"
 msgstr "將 Wi-Fi 網路欄位留空以掃描網絡"
 
-#: usr/local/bin/voidbr-wifi-setup:2418
+#: usr/local/bin/voidbr-wifi-setup:2442
 msgid "=== WIFI ==="
 msgstr "===無線網路==="
 
-#: usr/local/bin/voidbr-wifi-setup:2482 usr/local/bin/voidbr-wifi-setup:2498
+#: usr/local/bin/voidbr-wifi-setup:2507 usr/local/bin/voidbr-wifi-setup:2523
 msgid "Já existe um perfil para essa rede.\\nDeseja utilizar ?"
 msgstr "該網路的設定檔已存在。 \n您想使用它嗎?"
 
-#: usr/local/bin/voidbr-wifi-setup:2515
+#: usr/local/bin/voidbr-wifi-setup:2540
 msgid "Isso é deliberado ?"
 msgstr "這是故意的嗎？"
 
-#: usr/local/bin/voidbr-wifi-setup:2525
+#: usr/local/bin/voidbr-wifi-setup:2550
 msgid "Deseja configurar IP fixo?"
 msgstr "您要配置固定IP嗎？"
 
-#: usr/local/bin/voidbr-wifi-setup:2531
+#: usr/local/bin/voidbr-wifi-setup:2556
 msgid "Prosseguir com a configuração e conexão ?"
 msgstr "繼續配置和連接嗎？"
 
-#: usr/local/bin/voidbr-wifi-setup:2621
+#: usr/local/bin/voidbr-wifi-setup:2562
+msgid "Removendo conexão antiga"
+msgstr "刪除舊連接"
+
+#: usr/local/bin/voidbr-wifi-setup:2567
+msgid "Configurando conexão"
+msgstr "配置連接"
+
+#: usr/local/bin/voidbr-wifi-setup:2575
+msgid "Configurando autoconexão"
+msgstr "配置自動連接"
+
+#: usr/local/bin/voidbr-wifi-setup:2580
+msgid "Configurando ip fixo"
+msgstr "配置固定IP"
+
+#: usr/local/bin/voidbr-wifi-setup:2589
+msgid "Configurando dns"
+msgstr "配置域名"
+
+#: usr/local/bin/voidbr-wifi-setup:2599
+msgid "Preparando ambiente DHCP"
+msgstr "準備DHCP環境"
+
+#: usr/local/bin/voidbr-wifi-setup:2609
+msgid "solicita configuração IP"
+msgstr "請求IP配置"
+
+#: usr/local/bin/voidbr-wifi-setup:2646
 msgid "Deseja escanear por redes wifi?"
 msgstr "您想透過 WiFi 網路進行掃描嗎？"
