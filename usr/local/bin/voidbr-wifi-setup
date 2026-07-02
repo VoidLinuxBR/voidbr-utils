@@ -4,7 +4,7 @@
 #
 #  voidbr-wifi-setup
 #  Created: qua 17 jun 2026 00:46:30 -04
-#  Updated: sáb 27 jun 2026 17:17:44 -04
+#  Updated: ter 30 jun 2026 20:39:17 -04
 #
 #  Copyright (c) 2019-2026, Vilmar Catafesta <vcatafesta@gmail.com>
 #  All rights reserved.
@@ -50,7 +50,7 @@ shopt -s extglob
 
 #system
 readonly APP="${0##*/}"
-readonly _VERSION_='0.6.27-20260627'
+readonly _VERSION_='0.6.30-20260630'
 declare -g DEPENDENCIES=(
 	dialog
 	gettext
@@ -520,7 +520,7 @@ sh_checkroot() {
 }
 
 elevate_to_root() {
-	log_ok "This script must be run as root. Elevating privileges..."
+	log_ok "$(gettext 'This script must be run as root. Elevating privileges...')"
 	ccabec+='root [elevated]'
 	# Tenta usar sudo primeiro (caso esteja configurado)
 	if command -v sudo >/dev/null 2>&1; then
@@ -675,11 +675,11 @@ msg() {
 	last_msg="$2"
 	logmessage="$ufmt $last_msg"
 	logmessage=${logmessage/INFO /}
-	clean_logmessage="$(strip_ansi "$logmessage")"
+	clean_logmessage="$(sh_strip_ansi "$logmessage")"
 	printf "%s\n" "$(timespec) [ $cinfo ]$ufmt ${clean_logmessage}" 2>&1 | tee -i -a "$BOOTLOG" >$LOGGER
 
 	if ((grafico)); then
-		logmessage="$(strip_ansi "$last_msg")"
+		logmessage="$(sh_strip_ansi "$last_msg")"
 		${DIALOG} \
 			--no-collapse \
 			--colors \
@@ -1024,7 +1024,7 @@ sh_cmd_job_progressbox() {
 	logmessage=${logmessage/INFO /}
 
 	if ((grafico)); then
-		logmessage="$(strip_ansi "$last_msg")"
+		logmessage="$(sh_strip_ansi "$last_msg")"
 		{
 			eval "$cjob"
 			echo $? >/tmp/job_status
@@ -1133,7 +1133,7 @@ sh_run_clean() {
 	local ret
 
 	eval "$1" 2>&1 |
-		strip_ansi |
+		sh_strip_ansi |
 		tee -i -a "$BOOTLOG" \
 			>"$LOGGER"
 	ret="${PIPESTATUS[0]}"
@@ -1141,9 +1141,15 @@ sh_run_clean() {
 	return "$ret"
 }
 
-strip_ansi() {
+sh_strip_dialog_colors() {
+  local text="$1"
+  printf '%s' "${text//\\Z?}"
+}
+
+sh_strip_ansi() {
 	printf '%s' "$1" |
 		sed -E '
+      s/\\Z.//g;                # Remove cores do dialog (\Z1, \Zn, \Zr...)
       s/\x1B\[[0-9;]*m//g;      # Remove SGR (Cores, negrito, etc: 1m, 38;5;196m)
       s/\x1B\[[0-9;?]*[@-~]//g; # Remove outros CSI (Movimento de cursor, etc)
       s/\x1B\([a-zA-Z]//g;      # Remove Charset (O ^[(B que apareceu antes)
@@ -1177,7 +1183,7 @@ sh_cmd_job() {
 
 	if ((grafico)); then
 		read LINES COLUMNS <<<"$(stty size)"
-		cmsg=$(strip_ansi "$cmsg")
+		cmsg=$(sh_strip_ansi "$cmsg")
 		eval "$cjob" 2>&1 | tee -i -a "$BOOTLOG" |
 			${DIALOG} \
 				--colors \
@@ -1662,8 +1668,9 @@ sh_select_wifi_backend() {
 	choice="$(
 		${DIALOG} \
 			--colors \
+			--clear \
 			--backtitle "$ccabec" \
-			--title "$(gettext "=== WIFI backend ===")" \
+			--title "=== WIFI backend ===" \
 			--ok-label "${cmsg_ButtonEscolher}" \
 			--cancel-label "${cmsg_Exit}" \
 			--insecure "$@" \
@@ -1743,6 +1750,8 @@ sh_get_iface() {
 			sh_get_iface
 		else
 			show_network_diagnostics
+			clear
+			sh_strip_ansi "${cmsgdiagnostics}"
 			return 1
 		fi
 	fi
@@ -2071,26 +2080,24 @@ sh_choosewifi() {
 }
 
 show_network_diagnostics() {
-	local cmsg="
+	declare -g cmsgdiagnostics="
 ${RED}${REVERSE}$(gettext "Nenhuma interface de Wi-fi encontrada!")${RST}
 
-${YELLOW}$(gettext "Para ativar/levantar a interface de Wi-fi, caso exista,
-tente seguir estes passos no terminal:")${RST}
-
-1. $(gettext "Identifique o dispositivo"):${CYAN} $ lspci -knn | grep -iA3 net${RST}
-2. $(gettext "ou"):${CYAN} $ lsusb${RST}
-3. $(gettext "Carregue o driver necessário"): ${CYAN}$ sudo modprobe <nome_do_driver>${RST}
-4. $(gettext "Levante a interface"):${CYAN} $ sudo ip link set <interface> up${RST}
-5. $(gettext "Verifique se há firmware faltando"):${CYAN} $ dmesg | grep -i firmware ${RST}
-6. $(gettext "(Re)Instale os drivers"):${CYAN} $ sudo xbps-install -Syuf linux-firmware linux-firmware-network${RST}
+${YELLOW}$(gettext "Para detectar e ativar a interface Wi-Fi:")${RST}
+  1. $(gettext "Identifique o dispositivo"):${CYAN} $ lspci -knn | grep -iA3 net${RST}
+  2. $(gettext "ou"):${CYAN} $ lsusb${RST}
+  3. $(gettext "Carregue o driver necessário"): ${CYAN}$ sudo modprobe <nome_do_driver>${RST}
+  4. $(gettext "Ative o dispositivo"): ${CYAN}$ sudo ip link set <interface> up${RST}
+  5. $(gettext "Verifique se há firmware faltando"):${CYAN} $ dmesg | grep -i firmware ${RST}
+  6. $(gettext "(Re)Instale os drivers"):${CYAN} $ sudo xbps-install -Syuf linux-firmware linux-firmware-network${RST}
 
 "
 
 	${DIALOG} \
 		--backtitle "${ccabec}" \
 		--colors \
-		--title "== $(gettext "WIFI - Diagnóstico de Rede") ==" \
-		--msgbox "${cmsg}" 0 0
+		--title "== WIFI $(gettext " - Diagnóstico de Rede") ==" \
+		--msgbox "${cmsgdiagnostics=}" 0 0
 }
 
 sh_nm_release_iface() {
@@ -2168,7 +2175,7 @@ has_internet() {
 }
 
 sh_restart_wpa() {
-	sh_cmd_job_progressbox "Reiniciando wpa_supplicant" '
+	sh_cmd_job_progressbox "$(gettext "Reiniciando") wpa_supplicant" '
     sh_down_wpa
     sv up wpa_supplicant
     sleep 1
@@ -2286,16 +2293,32 @@ sh_try_up_interface() {
 		sleep 1
 	done
 
-	alerta "$(gettext "Failed to restore the wireless interface.")"
+	alerta "sh_show_connection_status" "$(gettext "Failed to restore the wireless interface.")"
 	return 1
+}
+
+sh_up_service() {
+  local service="$1"
+
+  if ! has_running "$service"; then
+		sh_info_msg "${service} $(gettext "não está rodando, iniciando rotina para iniciar")"
+		ln -sf /etc/sv/"${service}" /var/service/
+		sv up "${service}"
+		sleep 2
+
+		if ! has_running "${service}"; then
+			alerta "sh_up_service" "${RED}$(gettext "Erro: Não foi possivel iniciar") ${service}${RST}"
+			return 1
+		fi
+	fi
+	return 0
 }
 
 sh_down_iwd() {
 	if has_running iwd; then
-		echo "iwd rodando, iniciando rotina de reset..."
-
-		# Para o serviço iwd
+		sh_info_msg "iwd $(gettext "rodando, iniciando rotina de reset")"
 		sv down iwd
+#		rm -f /var/service/iwd
 
 		# Identifica o driver da placa
 		local driver_path="/sys/class/net/$iface/device/driver"
@@ -2307,21 +2330,24 @@ sh_down_iwd() {
 
 		# Executa o reset do módulo
 		if [[ -n "$filho" ]]; then
-			echo "Reiniciando módulo: $filho"
+			sh_info_msg "$(gettext 'Reiniciando módulo)'): $filho"
 			modprobe -r "$filho"
 			sleep 1
 			modprobe "$filho"
 			sleep 3
 		else
-			echo "Erro: Nenhum módulo dependente encontrado para $driver_name"
+			alerta "sh_down_iwd" "${RED}$(gettext 'Erro: Nenhum módulo dependente encontrado para $driver_name')${RST}"
+			return 1
 		fi
 	fi
+	return 0
 }
 
 sh_down_wpa() {
 	if has_running wpa_supplicant; then
-		echo "wpa_supplicant rodando, iniciando rotina de reset..."
+		sh_info_msg "wpa_supplicant $(gettext "rodando, iniciando rotina de reset")"
 		sv down wpa_supplicant
+#		rm -f /var/service/wpa_supplicant
 		pkill -9 wpa_supplicant
 		# Garante a limpeza do socket
 		rm -rf /run/wpa_supplicant/*
@@ -2330,7 +2356,7 @@ sh_down_wpa() {
 
 sh_down_nm() {
 	if has_running NetworkManager; then
-		echo "NetworkManager rodando, iniciando rotina de reset..."
+		sh_info_msg "NetworkManager $(gettext "rodando, iniciando rotina de reset")"
 		sv down NetworkManager
 	fi
 }
@@ -2340,19 +2366,19 @@ sh_alternar_backend() {
 
 	case "$novo_backend" in
 	NetworkManager)
+		! has_running NetworkManager && sh_up_service "NetworkManager"
 		sh_down_iwd
 		sh_down_wpa
-		! has_running NetworkManager && sv up NetworkManager
 		;;
 	iwd)
+		! has_running iwd && sh_up_service "iwd"
 		sh_down_wpa
 		sh_down_nm
-		! has_running iwd && sv up iwd
 		;;
 	wpa_supplicant)
+		! has_running wpa_supplicant && sh_up_service "wpa_supplicant"
 		sh_down_iwd
 		sh_down_nm
-		! has_running wpa_supplicant && sv up wpa_supplicant
 		;;
 	esac
 }
@@ -2386,25 +2412,25 @@ sh_confWifi() {
 	fi
 	#debug "1=$_WIFI_NETWORK 2=$_WIFI_CONNECTED"
 
+	sh_info_msg "$(gettext "Reiniciando serviços/interface e desbloquendo rfkill")"
 	sh_cmd_job_progressbox "$(gettext "Reiniciando serviços/interface e desbloquendo rfkill")" '
     sh_alternar_backend "${backend}"
     ip link set "${iface}" up
     rfkill list
     rfkill unblock all
     sleep 0.5
-    :
   '
 
 	case "${backend}" in
 	NetworkManager)
-		sh_cmd_job_progressbox "${backend}: Entregando interface ao NM" '
+		sh_cmd_job_progressbox "${backend}: $(gettext "Entregando interface ao NM")" '
       switch_to_networkmanager "${iface}"
     ' $err_not_fatal
 		;;
 	esac
 
-	cextra+="➡ ${YELLOW}$(gettext 'Deixe em branco o campo Interface Wi-Fi para listar interfaces')\n"
-	cextra+="➡ ${YELLOW}$(gettext 'Deixe em branco o campo Rede Wi-Fi para escanear redes')"
+	cextra+="➡ ${YELLOW}$(gettext "Deixe em branco o campo Interface Wi-Fi para listar interfaces")\n"
+	cextra+="➡ ${YELLOW}$(gettext "Deixe em branco o campo Rede Wi-Fi para escanear redes")"
 	iface_edit=0
 	rede_edit=0
 	senha_edit=1
@@ -2414,6 +2440,7 @@ sh_confWifi() {
 			${DIALOG} \
 				--stdout \
 				--title "$(gettext "=== WIFI ===")" \
+				--clear \
 				--colors \
 				--ok-label "${cmsg_Conectar}" \
 				--cancel-label "${cmsg_Encerrar}" \
@@ -2532,12 +2559,12 @@ sh_confWifi() {
 
 			case "${backend}" in
 			NetworkManager)
-				sh_cmd_job_progressbox "${backend}: Removendo conexão antiga" '
+				sh_cmd_job_progressbox "${backend}: $(gettext "Removendo conexão antiga")" '
 	  			sh_nm_disable_autoconnect_others "$iface" "$_WIFI_NETWORK"
           nmcli connection delete ${_WIFI_NETWORK}
         ' $err_not_fatal
 
-				sh_cmd_job_progressbox "${backend}: Configurando conexão ${_WIFI_NETWORK}" '
+				sh_cmd_job_progressbox "${backend}: $(gettext "Configurando conexão") ${_WIFI_NETWORK}" '
           #nmcli device disconnect "${iface}"
 				  nmcli device wifi connect "${_WIFI_NETWORK}" \
 					  password "${_WIFI_PASSWORD}" \
@@ -2545,12 +2572,12 @@ sh_confWifi() {
 	  		  sleep 0.5
 				' $err_fatal
 
-				sh_cmd_job_progressbox "${backend}: Configurando autoconexão ${_WIFI_NETWORK}" '
+				sh_cmd_job_progressbox "${backend}: $(gettext 'Configurando autoconexão') ${_WIFI_NETWORK}" '
           nmcli connection modify "${_WIFI_NETWORK}" connection.autoconnect yes
         '
 
 				if $USE_STATIC_IP; then
-					sh_cmd_job_progressbox "${backend}: Configurando ip fixo" '
+					sh_cmd_job_progressbox "${backend}: $(gettext 'Configurando ip fixo')" '
 				    AsDhcp[CONNECTION]=$(nmcli -g GENERAL.CONNECTION device show "$iface")
       			sh_save_nm_static_ip "${AsDhcp[CONNECTION]}"
     				nmcli connection down "${AsDhcp[CONNECTION]}"
@@ -2559,7 +2586,7 @@ sh_confWifi() {
 				  ' $err_not_fatal
 				fi
 
-				sh_cmd_job_progressbox "${backend}: Configurando dns" '
+				sh_cmd_job_progressbox "${backend}: $(gettext 'Configurando dns')" '
   				sh_get_net_info
 				  echo "IP     : $wifi_ip"
 				  echo "GATEWAY: $wifi_gateway"
@@ -2569,7 +2596,7 @@ sh_confWifi() {
 				;;
 
 			iwd)
-				sh_cmd_job_progressbox "${backend}: Preparando ambiente DHCP" '
+				sh_cmd_job_progressbox "${backend}: $(gettext 'Preparando ambiente DHCP')" '
           sh_prepare_dhcpcd
         '
 
@@ -2579,7 +2606,7 @@ sh_confWifi() {
 	  				station "$iface" connect "$_WIFI_NETWORK"
         ' $err_fatal
 
-				sh_cmd_job_progressbox "${backend}: solicita configuração IP" '
+				sh_cmd_job_progressbox "${backend}: $(gettext 'solicita configuração IP')" '
   				dhcpcd "$iface"
 	      '
 
