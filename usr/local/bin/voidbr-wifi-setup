@@ -2170,7 +2170,7 @@ has_internet() {
 	local iface="$1"
 
 	sh_cmd_job_progressbox "${iface}: $(gettext "Testando internet")" '
-    curl --interface wlo1 --connect-timeout 5 ifconfig.me/ip
+    curl --interface "$iface" --connect-timeout 5 ifconfig.me/ip
   '
 }
 
@@ -2570,7 +2570,7 @@ sh_confWifi() {
                     iwctl station "$iface" connect "$_WIFI_NETWORK"
                     dhcpcd "$iface"
                 '
-            display_result "$(iwctl station wlo1 show | sed -r 's/\x1B\[[0-9;]*[[:alpha:]]//g')"
+            display_result "$(iwctl station $iface show | sed -r 's/\x1B\[[0-9;]*[[:alpha:]]//g')"
 						break
 					fi
 				fi
