@@ -2401,27 +2401,31 @@ EOF
 }
 
 sh_iwd_disable_autoconnect_others() {
-	local current="$1"
-	local file
+  local current="$1"
+  local file
+  local value
 
-	for file in /var/lib/iwd/*.{psk,open,8021x}; do
-		[[ -e "$file" ]] || continue
+  for file in /var/lib/iwd/*.{psk,open,8021x}; do
+    [[ -e "$file" ]] || continue
 
-		# ignora o perfil atual
-		[[ "$(basename "$file")" == "${current}".* ]] && continue
+    if [[ "$(basename "$file")" == "${current}".* ]]; then
+      value=true
+    else
+      value=false
+    fi
 
-		if grep -q '^AutoConnect=' "$file"; then
-			sed -i 's/^AutoConnect=.*/AutoConnect=false/' "$file"
-		elif grep -q '^\[Settings\]' "$file"; then
-			sed -i '/^\[Settings\]/a AutoConnect=false' "$file"
-		else
-			cat >>"$file" <<EOF
+    if grep -q '^AutoConnect=' "$file"; then
+      sed -i "s/^AutoConnect=.*/AutoConnect=${value}/" "$file"
+    elif grep -q '^\[Settings\]' "$file"; then
+      sed -i "/^\[Settings\]/a AutoConnect=${value}" "$file"
+    else
+      cat >>"$file" <<EOF
 
 [Settings]
-AutoConnect=false
+AutoConnect=${value}
 EOF
-		fi
-	done
+    fi
+  done
 }
 
 sh_iwd_profile_exists() {
