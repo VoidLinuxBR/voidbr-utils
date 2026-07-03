@@ -4,7 +4,7 @@
 #
 #  voidbr-wifi-setup
 #  Created: qua 17 jun 2026 00:46:30 -04
-#  Updated: ter 30 jun 2026 20:39:17 -04
+#  Updated: sex 03 jul 2026 12:23:24 -04
 #
 #  Copyright (c) 2019-2026, Vilmar Catafesta <vcatafesta@gmail.com>
 #  All rights reserved.
@@ -50,7 +50,7 @@ shopt -s extglob
 
 #system
 readonly APP="${0##*/}"
-readonly _VERSION_='0.6.30-20260630'
+readonly _VERSION_='0.7.03-20260703'
 declare -g DEPENDENCIES=(
 	dialog
 	gettext
@@ -2570,8 +2570,7 @@ sh_confWifi() {
                     iwctl station "$iface" connect "$_WIFI_NETWORK"
                     dhcpcd "$iface"
                 '
-
-						display_result "$(iwctl station "$iface" show)"
+            display_result "$(iwctl station wlo1 show | sed -r 's/\x1B\[[0-9;]*[[:alpha:]]//g')"
 						break
 					fi
 				fi
