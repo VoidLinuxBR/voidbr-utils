@@ -1142,8 +1142,8 @@ sh_run_clean() {
 }
 
 sh_strip_dialog_colors() {
-  local text="$1"
-  printf '%s' "${text//\\Z?}"
+	local text="$1"
+	printf '%s' "${text//\\Z?/}"
 }
 
 sh_strip_ansi() {
@@ -2298,9 +2298,9 @@ sh_try_up_interface() {
 }
 
 sh_up_service() {
-  local service="$1"
+	local service="$1"
 
-  if ! has_running "$service"; then
+	if ! has_running "$service"; then
 		sh_info_msg "${service} $(gettext "não está rodando, iniciando rotina para iniciar")"
 		ln -sf /etc/sv/"${service}" /var/service/
 		sv up "${service}"
@@ -2318,7 +2318,7 @@ sh_down_iwd() {
 	if has_running iwd; then
 		sh_info_msg "iwd $(gettext "rodando, iniciando rotina de reset")"
 		sv down iwd
-#		rm -f /var/service/iwd
+		#		rm -f /var/service/iwd
 
 		# Identifica o driver da placa
 		local driver_path="/sys/class/net/$iface/device/driver"
@@ -2347,7 +2347,7 @@ sh_down_wpa() {
 	if has_running wpa_supplicant; then
 		sh_info_msg "wpa_supplicant $(gettext "rodando, iniciando rotina de reset")"
 		sv down wpa_supplicant
-#		rm -f /var/service/wpa_supplicant
+		#		rm -f /var/service/wpa_supplicant
 		pkill -9 wpa_supplicant
 		# Garante a limpeza do socket
 		rm -rf /run/wpa_supplicant/*
@@ -2381,6 +2381,51 @@ sh_alternar_backend() {
 		sh_down_nm
 		;;
 	esac
+}
+
+sh_iwd_create_profile() {
+	local ssid="$1"
+	local pass="$2"
+	local profile="/var/lib/iwd/${ssid}.psk"
+
+	cat >"$profile" <<EOF
+[Settings]
+AutoConnect=true
+
+[Security]
+Passphrase=${pass}
+
+EOF
+
+	chmod 600 "$profile"
+}
+
+sh_iwd_disable_autoconnect_others() {
+	local current="$1"
+	local file
+
+	for file in /var/lib/iwd/*.{psk,open,8021x}; do
+		[[ -e "$file" ]] || continue
+
+		# ignora o perfil atual
+		[[ "$(basename "$file")" == "${current}".* ]] && continue
+
+		if grep -q '^AutoConnect=' "$file"; then
+			sed -i 's/^AutoConnect=.*/AutoConnect=false/' "$file"
+		elif grep -q '^\[Settings\]' "$file"; then
+			sed -i '/^\[Settings\]/a AutoConnect=false' "$file"
+		else
+			cat >>"$file" <<EOF
+
+[Settings]
+AutoConnect=false
+EOF
+		fi
+	done
+}
+
+sh_iwd_profile_exists() {
+	compgen -G "/var/lib/iwd/$1.*" >/dev/null
 }
 
 sh_confWifi() {
@@ -2516,6 +2561,20 @@ sh_confWifi() {
 				fi
 				;;
 			iwd)
+				if sh_iwd_profile_exists "$_WIFI_NETWORK"; then
+					if conf "=== ${_WIFI_NETWORK} ===" \
+						"\n\n${BOLD}${RED}$(gettext "Já existe um perfil para essa rede.\nDeseja utilizar ?")\n\n"; then
+
+						sh_cmd_job_progressbox "${backend}: Reativando conexão ${_WIFI_NETWORK}" '
+                    sh_iwd_disable_autoconnect_others "$_WIFI_NETWORK"
+                    iwctl station "$iface" connect "$_WIFI_NETWORK"
+                    dhcpcd "$iface"
+                '
+
+						display_result "$(iwctl station "$iface" show)"
+						break
+					fi
+				fi
 				;;
 			wpa_supplicant)
 				if test -e /etc/wpa_supplicant/wpa_supplicant-${iface}.conf; then
@@ -2601,9 +2660,14 @@ sh_confWifi() {
         '
 
 				# conecta!
-				sh_cmd_job_progressbox "${backend}: Iniciando conexão" '
-  				iwctl --passphrase "$_WIFI_PASSWORD" \
-	  				station "$iface" connect "$_WIFI_NETWORK"
+				sh_cmd_job_progressbox "${backend}: $(gettext 'Criando perfil')" '
+        	sh_iwd_disable_autoconnect_others "$_WIFI_NETWORK"
+        	sh_iwd_create_profile "$_WIFI_NETWORK" "$_WIFI_PASSWORD"
+        ' $err_fatal
+
+				sh_cmd_job_progressbox "${backend}: $(gettext 'Iniciando conexão')" '
+          #iwctl --passphrase "$_WIFI_PASSWORD" station "$iface" connect "$_WIFI_NETWORK"
+        	iwctl station "$iface" connect "$_WIFI_NETWORK"
         ' $err_fatal
 
 				sh_cmd_job_progressbox "${backend}: $(gettext 'solicita configuração IP')" '
