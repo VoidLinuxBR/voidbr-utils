@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: chili-tradutor-go 2.1.20-20260201\n"
-"POT-Creation-Date: 2026-06-30 21:45-0400\n"
-"PO-Revision-Date: 2026-06-30 21:45-0400\n"
+"POT-Creation-Date: 2026-07-03 22:26-0400\n"
+"PO-Revision-Date: 2026-07-03 22:26-0400\n"
 "Last-Translator: Vilmar Catafesta <vcatafesta@gmail.com>\n"
 "Language-Team: Portuguese <https://github.com/chililinux/chili-tradutor-go>\n"
 "MIME-Version: 1.0\n"
@@ -110,977 +110,986 @@ msgstr "Tor"
 msgid "DNS"
 msgstr "DNS"
 
-#: usr/local/bin/voidbr-wifi-setup:1437
+#: usr/local/bin/voidbr-wifi-setup:1467
 msgid "Licença GPL v3+: GNU GPL versão 3 ou posterior"
 msgstr "GPL v3+ Lizenz: GNU GPL Version 3 oder höher"
 
-#: usr/local/bin/voidbr-wifi-setup:1438
+#: usr/local/bin/voidbr-wifi-setup:1468
 msgid "Este é um software livre: você é livre para alterá-lo e redistribuí-lo."
 msgstr "Dies ist freie Software: Es steht Ihnen frei, sie zu ändern und weiterzuverbreiten."
 
-#: usr/local/bin/voidbr-wifi-setup:1439
+#: usr/local/bin/voidbr-wifi-setup:1469
 msgid "NÃO HÁ QUALQUER GARANTIA, na máxima extensão permitida em lei."
 msgstr "ES GIBT KEINE GARANTIE, SOWEIT GESETZLICH ZULÄSSIG."
 
-#: usr/local/bin/voidbr-wifi-setup:1450
+#: usr/local/bin/voidbr-wifi-setup:1480
 msgid "Use as teclas"
 msgstr "Verwendung als Teclas"
 
-#: usr/local/bin/voidbr-wifi-setup:1451
+#: usr/local/bin/voidbr-wifi-setup:1481
 msgid "PARA CIMA"
 msgstr "NACH OBEN"
 
-#: usr/local/bin/voidbr-wifi-setup:1452
+#: usr/local/bin/voidbr-wifi-setup:1482
 msgid "e"
 msgstr "e"
 
-#: usr/local/bin/voidbr-wifi-setup:1453
+#: usr/local/bin/voidbr-wifi-setup:1483
 msgid "PARA BAIXO"
 msgstr "RUNTER"
 
-#: usr/local/bin/voidbr-wifi-setup:1454
+#: usr/local/bin/voidbr-wifi-setup:1484
 msgid "para navegar"
 msgstr "navigieren"
 
-#: usr/local/bin/voidbr-wifi-setup:1455
+#: usr/local/bin/voidbr-wifi-setup:1485
 msgid "Use"
 msgstr "Verwenden"
 
-#: usr/local/bin/voidbr-wifi-setup:1456
+#: usr/local/bin/voidbr-wifi-setup:1486
 msgid "para alternar entre os botões"
 msgstr "um zwischen den Tasten zu wechseln"
 
-#: usr/local/bin/voidbr-wifi-setup:1457
+#: usr/local/bin/voidbr-wifi-setup:1487
 msgid "para selecionar/aceitar"
 msgstr "auswählen/annehmen"
 
-#: usr/local/bin/voidbr-wifi-setup:1464
+#: usr/local/bin/voidbr-wifi-setup:1494
 msgid "Tamanho disco insuficiente para criar partições com swap"
 msgstr "Die Festplattengröße reicht nicht aus, um Swap-Partitionen zu erstellen"
 
-#: usr/local/bin/voidbr-wifi-setup:1465
+#: usr/local/bin/voidbr-wifi-setup:1495
 msgid "Deseja prosseguir SEM partição de swap?"
 msgstr "Möchten Sie OHNE Swap-Partition fortfahren?"
 
-#: usr/local/bin/voidbr-wifi-setup:1466
+#: usr/local/bin/voidbr-wifi-setup:1496
 msgid "Deseja criar partição de swap ?"
 msgstr "Möchten Sie eine Swap-Partition erstellen?"
 
-#: usr/local/bin/voidbr-wifi-setup:1467
+#: usr/local/bin/voidbr-wifi-setup:1497
 msgid "Acompanhe a evolução da instalação            "
 msgstr "Verfolgen Sie den Fortschritt der Installation"
 
-#: usr/local/bin/voidbr-wifi-setup:1468
+#: usr/local/bin/voidbr-wifi-setup:1498
 msgid "e/ou pelo terminal tty8        "
 msgstr "und/oder über das tty8-Terminal"
 
-#: usr/local/bin/voidbr-wifi-setup:1469
+#: usr/local/bin/voidbr-wifi-setup:1499
 msgid "Usar os pacotes já presentes na imagem ISO (clonagem da ISO)"
 msgstr "Verwenden Sie die bereits im ISO-Image vorhandenen Pakete (ISO-Klonen)."
 
-#: usr/local/bin/voidbr-wifi-setup:1470
+#: usr/local/bin/voidbr-wifi-setup:1500
 msgid ""
 "Baixar todos os pacotes diretamente da internet (requer host Void Linux)"
 msgstr ""
 
-#: usr/local/bin/voidbr-wifi-setup:1471
+#: usr/local/bin/voidbr-wifi-setup:1501
 msgid "Selecionar fonte da instalação"
 msgstr "Wählen Sie die Installationsquelle aus"
 
-#: usr/local/bin/voidbr-wifi-setup:1472
+#: usr/local/bin/voidbr-wifi-setup:1502
 msgid "Definições"
 msgstr "Definitionen"
 
-#: usr/local/bin/voidbr-wifi-setup:1473
+#: usr/local/bin/voidbr-wifi-setup:1503
 msgid "não definido"
 msgstr "Nicht definiert"
 
-#: usr/local/bin/voidbr-wifi-setup:1474
+#: usr/local/bin/voidbr-wifi-setup:1504
 msgid "Ajustando senha usuário"
 msgstr "Benutzerpasswort festlegen"
 
-#: usr/local/bin/voidbr-wifi-setup:1475
+#: usr/local/bin/voidbr-wifi-setup:1505
 msgid "Ativando o bash para o usuário"
 msgstr "Bash für den Benutzer aktivieren"
 
-#: usr/local/bin/voidbr-wifi-setup:1476
+#: usr/local/bin/voidbr-wifi-setup:1506
 msgid "Criando usuário"
 msgstr "Benutzer erstellen"
 
-#: usr/local/bin/voidbr-wifi-setup:1477
+#: usr/local/bin/voidbr-wifi-setup:1507
 msgid "MENU DE INSTALAÇÃO"
 msgstr "INSTALLATIONSMENÜ"
 
-#: usr/local/bin/voidbr-wifi-setup:1478
+#: usr/local/bin/voidbr-wifi-setup:1508
 msgid "Desmontando ambiente"
 msgstr "Abbau der Umwelt"
 
-#: usr/local/bin/voidbr-wifi-setup:1479
+#: usr/local/bin/voidbr-wifi-setup:1509
 msgid "Montando ambiente"
 msgstr "Einrichten der Umgebung"
 
-#: usr/local/bin/voidbr-wifi-setup:1480
+#: usr/local/bin/voidbr-wifi-setup:1510
 msgid "Entrando no ambiente chroot"
 msgstr "Keine Chroot-Umgebung betreten"
 
-#: usr/local/bin/voidbr-wifi-setup:1481
+#: usr/local/bin/voidbr-wifi-setup:1511
 msgid "Montando partição"
 msgstr "Montagepartition"
 
-#: usr/local/bin/voidbr-wifi-setup:1482
+#: usr/local/bin/voidbr-wifi-setup:1512
 msgid "Gerando"
 msgstr "Generieren"
 
-#: usr/local/bin/voidbr-wifi-setup:1483
+#: usr/local/bin/voidbr-wifi-setup:1513
 msgid "Ajustando"
 msgstr "Anpassen"
 
-#: usr/local/bin/voidbr-wifi-setup:1484
+#: usr/local/bin/voidbr-wifi-setup:1514
 msgid "Copiando"
 msgstr "Kopieren"
 
-#: usr/local/bin/voidbr-wifi-setup:1485
+#: usr/local/bin/voidbr-wifi-setup:1515
 msgid "Descompactando"
 msgstr "Dekompaktieren"
 
-#: usr/local/bin/voidbr-wifi-setup:1486
+#: usr/local/bin/voidbr-wifi-setup:1516
 msgid "Atualizando"
 msgstr "Aktualisierung"
 
-#: usr/local/bin/voidbr-wifi-setup:1487
+#: usr/local/bin/voidbr-wifi-setup:1517
 msgid "Instalando"
 msgstr "Installieren"
 
-#: usr/local/bin/voidbr-wifi-setup:1488
+#: usr/local/bin/voidbr-wifi-setup:1518
 msgid "Configurando"
 msgstr "Konfigurieren"
 
-#: usr/local/bin/voidbr-wifi-setup:1490
+#: usr/local/bin/voidbr-wifi-setup:1520
 msgid "ERRO"
 msgstr "FEHLER"
 
-#: usr/local/bin/voidbr-wifi-setup:1491
+#: usr/local/bin/voidbr-wifi-setup:1521
 msgid "Aceitar"
 msgstr "Akzeptieren"
 
-#: usr/local/bin/voidbr-wifi-setup:1492
+#: usr/local/bin/voidbr-wifi-setup:1522
 msgid "Conectar"
 msgstr "Verbinden"
 
-#: usr/local/bin/voidbr-wifi-setup:1493
+#: usr/local/bin/voidbr-wifi-setup:1523
 msgid "Configurar"
 msgstr "Konfigurieren"
 
-#: usr/local/bin/voidbr-wifi-setup:1494
+#: usr/local/bin/voidbr-wifi-setup:1524
 msgid "Não definido"
 msgstr "Nicht definiert"
 
-#: usr/local/bin/voidbr-wifi-setup:1495
+#: usr/local/bin/voidbr-wifi-setup:1525
 msgid "Mudar"
 msgstr "Zu ändern"
 
-#: usr/local/bin/voidbr-wifi-setup:1496 usr/local/bin/voidbr-wifi-setup:1539
+#: usr/local/bin/voidbr-wifi-setup:1526 usr/local/bin/voidbr-wifi-setup:1569
 msgid "Sair"
 msgstr "Ausgehen"
 
-#: usr/local/bin/voidbr-wifi-setup:1497 usr/local/bin/voidbr-wifi-setup:1617
+#: usr/local/bin/voidbr-wifi-setup:1527 usr/local/bin/voidbr-wifi-setup:1647
 msgid "Instalar"
 msgstr "installieren"
 
-#: usr/local/bin/voidbr-wifi-setup:1498
+#: usr/local/bin/voidbr-wifi-setup:1528
 msgid "Espelho"
 msgstr "Spiegel"
 
-#: usr/local/bin/voidbr-wifi-setup:1500
+#: usr/local/bin/voidbr-wifi-setup:1530
 msgid "Sistema de Arquivos"
 msgstr "Dateisystem"
 
-#: usr/local/bin/voidbr-wifi-setup:1501
+#: usr/local/bin/voidbr-wifi-setup:1531
 msgid "não foi revisado!"
 msgstr "Es wurde nicht überprüft!"
 
-#: usr/local/bin/voidbr-wifi-setup:1502
+#: usr/local/bin/voidbr-wifi-setup:1532
 msgid "Armazenamento"
 msgstr "Lagerung"
 
-#: usr/local/bin/voidbr-wifi-setup:1503
+#: usr/local/bin/voidbr-wifi-setup:1533
 msgid "Teclado"
 msgstr "Tastatur"
 
-#: usr/local/bin/voidbr-wifi-setup:1504
+#: usr/local/bin/voidbr-wifi-setup:1534
 msgid "Sair sem instalar"
 msgstr "Ohne Installation beenden"
 
-#: usr/local/bin/voidbr-wifi-setup:1505
+#: usr/local/bin/voidbr-wifi-setup:1535
 msgid "Somente terminal, sem interface gráfica"
 msgstr "Nur Terminal, keine grafische Oberfläche"
 
-#: usr/local/bin/voidbr-wifi-setup:1506
+#: usr/local/bin/voidbr-wifi-setup:1536
 msgid "Servidor Void"
 msgstr "Server-Leerzeichen"
 
-#: usr/local/bin/voidbr-wifi-setup:1507
+#: usr/local/bin/voidbr-wifi-setup:1537
 msgid "Selecionar espelho dos pacotes"
 msgstr "Paketspiegel auswählen"
 
-#: usr/local/bin/voidbr-wifi-setup:1508
+#: usr/local/bin/voidbr-wifi-setup:1538
 msgid "Selecionar disco e partições"
 msgstr "Wählen Sie Festplatte und Partitionen aus"
 
-#: usr/local/bin/voidbr-wifi-setup:1509
+#: usr/local/bin/voidbr-wifi-setup:1539
 msgid "Configurar sistema de arquivos e pontos de montagem"
 msgstr "Konfigurieren Sie das Dateisystem und die Mount-Punkte"
 
-#: usr/local/bin/voidbr-wifi-setup:1510
+#: usr/local/bin/voidbr-wifi-setup:1540
 msgid "Escolhar disco para o bootloader"
 msgstr "Wählen Sie die Festplatte für den Bootloader"
 
-#: usr/local/bin/voidbr-wifi-setup:1511
+#: usr/local/bin/voidbr-wifi-setup:1541
 msgid "Selecionar layout do teclado"
 msgstr "Tastaturlayout auswählen"
 
-#: usr/local/bin/voidbr-wifi-setup:1512
+#: usr/local/bin/voidbr-wifi-setup:1542
 msgid "Selecionar fuso horário"
 msgstr "Zeitzone auswählen"
 
-#: usr/local/bin/voidbr-wifi-setup:1513
+#: usr/local/bin/voidbr-wifi-setup:1543
 msgid "Selecionar versão do kernel"
 msgstr "Wählen Sie die Kernelversion aus"
 
-#: usr/local/bin/voidbr-wifi-setup:1514
+#: usr/local/bin/voidbr-wifi-setup:1544
 msgid "Selecionar localidade do sistema"
 msgstr "Wählen Sie das Gebietsschema des Systems aus"
 
-#: usr/local/bin/voidbr-wifi-setup:1515
+#: usr/local/bin/voidbr-wifi-setup:1545
 msgid "Selecionar interface gráfico/gerenciador de janelas"
 msgstr "Wählen Sie die grafische Oberfläche/den Fenstermanager aus"
 
-#: usr/local/bin/voidbr-wifi-setup:1516
+#: usr/local/bin/voidbr-wifi-setup:1546
 msgid "Selecionar gerenciador de login"
 msgstr "Wählen Sie den Login-Manager"
 
-#: usr/local/bin/voidbr-wifi-setup:1517
+#: usr/local/bin/voidbr-wifi-setup:1547
 msgid "Definir rede e senha wifi (opcional)"
 msgstr "WLAN-Netzwerk und Passwort festlegen (optional)"
 
-#: usr/local/bin/voidbr-wifi-setup:1518
+#: usr/local/bin/voidbr-wifi-setup:1548
 msgid "opcional"
 msgstr "optional"
 
-#: usr/local/bin/voidbr-wifi-setup:1519 usr/local/bin/voidbr-wifi-setup:1602
+#: usr/local/bin/voidbr-wifi-setup:1549 usr/local/bin/voidbr-wifi-setup:1632
 msgid "Usuário"
 msgstr "Benutzer"
 
-#: usr/local/bin/voidbr-wifi-setup:1520
+#: usr/local/bin/voidbr-wifi-setup:1550
 msgid "Definir usuário,senha,hostname"
 msgstr "Legen Sie Benutzer, Passwort und Hostnamen fest"
 
-#: usr/local/bin/voidbr-wifi-setup:1521
+#: usr/local/bin/voidbr-wifi-setup:1551
 msgid "Iniciar instalação"
 msgstr "Starten Sie die Installation"
 
-#: usr/local/bin/voidbr-wifi-setup:1522
+#: usr/local/bin/voidbr-wifi-setup:1552
 msgid "Encerrar instalação"
 msgstr "Installation beenden"
 
-#: usr/local/bin/voidbr-wifi-setup:1523
+#: usr/local/bin/voidbr-wifi-setup:1553
 msgid "Instalação abortada"
 msgstr "Installation abgebrochen"
 
-#: usr/local/bin/voidbr-wifi-setup:1524
+#: usr/local/bin/voidbr-wifi-setup:1554
 msgid "Checando rota de internet para o servidor"
 msgstr "Internetroute zum Server prüfen"
 
-#: usr/local/bin/voidbr-wifi-setup:1525
+#: usr/local/bin/voidbr-wifi-setup:1555
 msgid "ERRO: falha de abertura de"
 msgstr "FEHLER: Fehler beim Öffnen"
 
-#: usr/local/bin/voidbr-wifi-setup:1526
+#: usr/local/bin/voidbr-wifi-setup:1556
 msgid "erro: você não pode realizar esta operação a menos que seja root."
 msgstr "Fehler: Sie können diesen Vorgang nur ausführen, wenn Sie Root sind."
 
-#: usr/local/bin/voidbr-wifi-setup:1527
+#: usr/local/bin/voidbr-wifi-setup:1557
 msgid "erro: operação não suportada"
 msgstr "Fehler: Vorgang wird nicht unterstützt"
 
-#: usr/local/bin/voidbr-wifi-setup:1528
+#: usr/local/bin/voidbr-wifi-setup:1558
 msgid "Encerrar"
 msgstr "Schließen"
 
-#: usr/local/bin/voidbr-wifi-setup:1529
+#: usr/local/bin/voidbr-wifi-setup:1559
 msgid "Voltar"
 msgstr "Zurückgehen"
 
-#: usr/local/bin/voidbr-wifi-setup:1530
+#: usr/local/bin/voidbr-wifi-setup:1560
 msgid "Feito"
 msgstr "Erledigt"
 
-#: usr/local/bin/voidbr-wifi-setup:1531
+#: usr/local/bin/voidbr-wifi-setup:1561
 msgid "Escolher"
 msgstr "Zur Auswahl"
 
-#: usr/local/bin/voidbr-wifi-setup:1532 usr/local/bin/voidbr-wifi-setup:1540
+#: usr/local/bin/voidbr-wifi-setup:1562 usr/local/bin/voidbr-wifi-setup:1570
 msgid "Selecionar"
 msgstr "Wählen"
 
-#: usr/local/bin/voidbr-wifi-setup:1533
+#: usr/local/bin/voidbr-wifi-setup:1563
 msgid "Cancelar"
 msgstr "Stornieren"
 
-#: usr/local/bin/voidbr-wifi-setup:1534
+#: usr/local/bin/voidbr-wifi-setup:1564
 msgid "Revisar"
 msgstr "Rezension"
 
-#: usr/local/bin/voidbr-wifi-setup:1535
+#: usr/local/bin/voidbr-wifi-setup:1565
 msgid "Prosseguir"
 msgstr "Weitermachen"
 
-#: usr/local/bin/voidbr-wifi-setup:1536
+#: usr/local/bin/voidbr-wifi-setup:1566
 msgid "Info disco"
 msgstr "Info-Disco"
 
-#: usr/local/bin/voidbr-wifi-setup:1537
+#: usr/local/bin/voidbr-wifi-setup:1567
 msgid "Info partição"
 msgstr "Partitionsinformationen"
 
-#: usr/local/bin/voidbr-wifi-setup:1538
+#: usr/local/bin/voidbr-wifi-setup:1568
 msgid "Ok"
 msgstr "OK"
 
-#: usr/local/bin/voidbr-wifi-setup:1541
+#: usr/local/bin/voidbr-wifi-setup:1571
 msgid "DISCO DE ORIGEM"
 msgstr "QUELLENFESTPLATTE"
 
-#: usr/local/bin/voidbr-wifi-setup:1542
+#: usr/local/bin/voidbr-wifi-setup:1572
 msgid "Fonte"
 msgstr "Quelle"
 
-#: usr/local/bin/voidbr-wifi-setup:1543
+#: usr/local/bin/voidbr-wifi-setup:1573
 msgid "DISCO DE DESTINO"
 msgstr "ZIELFESTPLATTE"
 
-#: usr/local/bin/voidbr-wifi-setup:1544
+#: usr/local/bin/voidbr-wifi-setup:1574
 msgid "Escolha o disco de DESTINO:"
 msgstr "Wählen Sie die Zieldiskette:"
 
-#: usr/local/bin/voidbr-wifi-setup:1545
+#: usr/local/bin/voidbr-wifi-setup:1575
 msgid "Sim"
 msgstr "Sim"
 
-#: usr/local/bin/voidbr-wifi-setup:1546
+#: usr/local/bin/voidbr-wifi-setup:1576
 msgid "Não"
 msgstr "NEIN"
 
-#: usr/local/bin/voidbr-wifi-setup:1547
+#: usr/local/bin/voidbr-wifi-setup:1577
 msgid "Ao prosseguir, todos os dados disco DESTINO serão perdidos!"
 msgstr "Beim Fortfahren gehen alle Daten auf der DESTINATION-Festplatte verloren!"
 
-#: usr/local/bin/voidbr-wifi-setup:1548
+#: usr/local/bin/voidbr-wifi-setup:1578
 msgid "=== AVISO ==="
 msgstr "=== HINWEIS ==="
 
-#: usr/local/bin/voidbr-wifi-setup:1549
+#: usr/local/bin/voidbr-wifi-setup:1579
 msgid "Desmontando sistema de arquivos"
 msgstr "Dateisystem aushängen"
 
-#: usr/local/bin/voidbr-wifi-setup:1550
+#: usr/local/bin/voidbr-wifi-setup:1580
 msgid "Instalação finalizada com sucesso"
 msgstr "Installation erfolgreich abgeschlossen"
 
-#: usr/local/bin/voidbr-wifi-setup:1551
+#: usr/local/bin/voidbr-wifi-setup:1581
 msgid "para"
 msgstr "Zu"
 
-#: usr/local/bin/voidbr-wifi-setup:1552
+#: usr/local/bin/voidbr-wifi-setup:1582
 msgid "Configurações salvas para instalação"
 msgstr "Einstellungen für die Installation gespeichert"
 
-#: usr/local/bin/voidbr-wifi-setup:1553
+#: usr/local/bin/voidbr-wifi-setup:1583
 msgid "nenhuma operação especificada - usar -h para ajuda"
 msgstr "Keine Vorgänge angegeben – verwenden Sie -h für Hilfe"
 
-#: usr/local/bin/voidbr-wifi-setup:1554
+#: usr/local/bin/voidbr-wifi-setup:1584
 msgid "apenas uma operação pode ser usada por vez"
 msgstr "Es kann jeweils nur eine Operation verwendet werden"
 
-#: usr/local/bin/voidbr-wifi-setup:1555
+#: usr/local/bin/voidbr-wifi-setup:1585
 msgid "Testando disco"
 msgstr "Festplatte testen"
 
-#: usr/local/bin/voidbr-wifi-setup:1556
+#: usr/local/bin/voidbr-wifi-setup:1586
 msgid "Continuar com o particionamento em"
 msgstr "Fahren Sie mit der Partitionierung fort"
 
-#: usr/local/bin/voidbr-wifi-setup:1557
+#: usr/local/bin/voidbr-wifi-setup:1587
 msgid "Formatando partição"
 msgstr "Partition formatieren"
 
-#: usr/local/bin/voidbr-wifi-setup:1558
+#: usr/local/bin/voidbr-wifi-setup:1588
 msgid "Ativando serviço"
 msgstr "Dienst aktivieren"
 
-#: usr/local/bin/voidbr-wifi-setup:1559
+#: usr/local/bin/voidbr-wifi-setup:1589
 msgid "Iniciando serviço"
 msgstr "Beginn des Dienstes"
 
-#: usr/local/bin/voidbr-wifi-setup:1560
+#: usr/local/bin/voidbr-wifi-setup:1590
 msgid "permissões"
 msgstr "Berechtigungen"
 
-#: usr/local/bin/voidbr-wifi-setup:1561
+#: usr/local/bin/voidbr-wifi-setup:1591
 msgid "Iniciando download de"
 msgstr "Download wird gestartet"
 
-#: usr/local/bin/voidbr-wifi-setup:1562
+#: usr/local/bin/voidbr-wifi-setup:1592
 msgid "Criando partições em"
 msgstr "Partitionen erstellen in"
 
-#: usr/local/bin/voidbr-wifi-setup:1563
+#: usr/local/bin/voidbr-wifi-setup:1593
 msgid "Partição Swap"
 msgstr "Partition tauschen"
 
-#: usr/local/bin/voidbr-wifi-setup:1564
+#: usr/local/bin/voidbr-wifi-setup:1594
 msgid "Criando diretório"
 msgstr "Verzeichnis erstellen"
 
-#: usr/local/bin/voidbr-wifi-setup:1565
+#: usr/local/bin/voidbr-wifi-setup:1595
 msgid "Atualizando instalação"
 msgstr "Installation aktualisieren"
 
-#: usr/local/bin/voidbr-wifi-setup:1566
+#: usr/local/bin/voidbr-wifi-setup:1596
 msgid "Removendo pacotes antigos/absoletos"
 msgstr "Entfernen alter/veralteter Pakete"
 
-#: usr/local/bin/voidbr-wifi-setup:1567
+#: usr/local/bin/voidbr-wifi-setup:1597
 msgid "Instalando meta pacote X"
 msgstr "Metapaket installieren"
 
-#: usr/local/bin/voidbr-wifi-setup:1568
+#: usr/local/bin/voidbr-wifi-setup:1598
 msgid "Atualizando pacotes base"
 msgstr "Basispakete aktualisieren"
 
-#: usr/local/bin/voidbr-wifi-setup:1569
+#: usr/local/bin/voidbr-wifi-setup:1599
 msgid "Atualizando pacotes adicionais em"
 msgstr "Aktualisieren zusätzlicher Pakete in"
 
-#: usr/local/bin/voidbr-wifi-setup:1570
+#: usr/local/bin/voidbr-wifi-setup:1600
 msgid "Visualizar partições do disco"
 msgstr "Festplattenpartitionen anzeigen"
 
-#: usr/local/bin/voidbr-wifi-setup:1571
+#: usr/local/bin/voidbr-wifi-setup:1601
 msgid "=== ARMAZENAMENTO ==="
 msgstr "=== LAGERUNG ==="
 
-#: usr/local/bin/voidbr-wifi-setup:1572
+#: usr/local/bin/voidbr-wifi-setup:1602
 msgid "=== FILE SYSTEM ==="
 msgstr "=== DATEISYSTEM ==="
 
-#: usr/local/bin/voidbr-wifi-setup:1573
+#: usr/local/bin/voidbr-wifi-setup:1603
 msgid "Checando por partições montadas no disco"
 msgstr "Suche nach gemounteten Partitionen auf der Festplatte"
 
-#: usr/local/bin/voidbr-wifi-setup:1574
+#: usr/local/bin/voidbr-wifi-setup:1604
 msgid "O disco selecionado contém partições montadas"
 msgstr "Die ausgewählte Festplatte enthält gemountete Partitionen"
 
-#: usr/local/bin/voidbr-wifi-setup:1575
+#: usr/local/bin/voidbr-wifi-setup:1605
 msgid "Escolher outro layout de teclado"
 msgstr "Wählen Sie ein anderes Tastaturlayout"
 
-#: usr/local/bin/voidbr-wifi-setup:1576
+#: usr/local/bin/voidbr-wifi-setup:1606
 msgid "Layout atual"
 msgstr "Layout aktuell"
 
-#: usr/local/bin/voidbr-wifi-setup:1577
+#: usr/local/bin/voidbr-wifi-setup:1607
 msgid "Aguarde, Desmontando particao de trabalho"
 msgstr "Bitte warten, Arbeitspartition wird ausgehängt"
 
-#: usr/local/bin/voidbr-wifi-setup:1578
+#: usr/local/bin/voidbr-wifi-setup:1608
 msgid "Erro de leitura do disco"
 msgstr "Fehler beim Lesen der Festplatte"
 
-#: usr/local/bin/voidbr-wifi-setup:1579
+#: usr/local/bin/voidbr-wifi-setup:1609
 msgid "Sem rota para o servidor"
 msgstr "Keine Route zum Server"
 
-#: usr/local/bin/voidbr-wifi-setup:1580
+#: usr/local/bin/voidbr-wifi-setup:1610
 msgid "Check sua conexão com a internet!"
 msgstr "Überprüfen Sie Ihre Internetverbindung!"
 
-#: usr/local/bin/voidbr-wifi-setup:1581
+#: usr/local/bin/voidbr-wifi-setup:1611
 msgid "não encontrei o comando"
 msgstr "Ich habe den Befehl nicht gefunden"
 
-#: usr/local/bin/voidbr-wifi-setup:1582
+#: usr/local/bin/voidbr-wifi-setup:1612
 msgid "IMPOSSÍVEL CONTINUAR"
 msgstr "UNMÖGLICH, WEITERZUWEISEN"
 
-#: usr/local/bin/voidbr-wifi-setup:1583
+#: usr/local/bin/voidbr-wifi-setup:1613
 msgid "Esse script precisa dos comandos listados acima"
 msgstr "Dieses Skript benötigt die oben aufgeführten Befehle"
 
-#: usr/local/bin/voidbr-wifi-setup:1584
+#: usr/local/bin/voidbr-wifi-setup:1614
 msgid "Instale-os e/ou verifique se estão no seu"
 msgstr "Installieren Sie sie und/oder prüfen Sie, ob sie auf Ihrem Computer vorhanden sind"
 
-#: usr/local/bin/voidbr-wifi-setup:1585
+#: usr/local/bin/voidbr-wifi-setup:1615
 msgid "Instalar o(s) comando(s)"
 msgstr "Installieren Sie den/die Befehl(e)"
 
-#: usr/local/bin/voidbr-wifi-setup:1586
+#: usr/local/bin/voidbr-wifi-setup:1616
 msgid "INFO: Rode novamente o aplicativo"
 msgstr "INFO: Führen Sie die Anwendung erneut aus"
 
-#: usr/local/bin/voidbr-wifi-setup:1587
+#: usr/local/bin/voidbr-wifi-setup:1617
 msgid "ERRO na instalação dos comandos. Tente manualmente"
 msgstr "FEHLER beim Installieren der Befehle. Versuchen Sie es manuell"
 
-#: usr/local/bin/voidbr-wifi-setup:1588
+#: usr/local/bin/voidbr-wifi-setup:1618
 msgid "Criando inicialização padrão/reserva (roaming) para"
 msgstr "Erstellen eines Standard-/Ersatz-Boots (Roaming) für"
 
-#: usr/local/bin/voidbr-wifi-setup:1589
+#: usr/local/bin/voidbr-wifi-setup:1619
 msgid "Erro não fatal. Para mais detalhes veja o log"
 msgstr "Nicht schwerwiegender Fehler. Weitere Details finden Sie im Protokoll"
 
-#: usr/local/bin/voidbr-wifi-setup:1590
+#: usr/local/bin/voidbr-wifi-setup:1620
 msgid "gerenciador de janelas (wm)"
 msgstr "Fenstermanager (wm)"
 
-#: usr/local/bin/voidbr-wifi-setup:1591
+#: usr/local/bin/voidbr-wifi-setup:1621
 msgid "gerenciador de login (dm)"
 msgstr "Login-Manager (DM)"
 
-#: usr/local/bin/voidbr-wifi-setup:1592
+#: usr/local/bin/voidbr-wifi-setup:1622
 msgid "Tabela MBR (dos)"
 msgstr "MBR-Tabelle (dos)"
 
-#: usr/local/bin/voidbr-wifi-setup:1593
+#: usr/local/bin/voidbr-wifi-setup:1623
 msgid "✓ Detectado: sistema iniciado em modo EFI"
 msgstr "✓ Erkannt: System im EFI-Modus gestartet"
 
-#: usr/local/bin/voidbr-wifi-setup:1594
+#: usr/local/bin/voidbr-wifi-setup:1624
 msgid "✓ Recomendado: EFI"
 msgstr "✓ Empfohlen: EFI"
 
-#: usr/local/bin/voidbr-wifi-setup:1595
+#: usr/local/bin/voidbr-wifi-setup:1625
 msgid "✗ EFI não detectado: sistema iniciado em modo BIOS"
 msgstr "✗ EFI nicht erkannt: System im BIOS-Modus gestartet"
 
-#: usr/local/bin/voidbr-wifi-setup:1596
+#: usr/local/bin/voidbr-wifi-setup:1626
 msgid "✓ Recomendado: GPT_BIOS ou MBR_BIOS"
 msgstr "✓ Empfohlen: GPT_BIOS oder MBR_BIOS"
 
-#: usr/local/bin/voidbr-wifi-setup:1597
+#: usr/local/bin/voidbr-wifi-setup:1627
 msgid "Detectado boot via ISO ↓ é recomendável instalar ↓"
 msgstr "Booten über ISO erkannt ↓ es wird empfohlen, es zu installieren ↓"
 
-#: usr/local/bin/voidbr-wifi-setup:1598
+#: usr/local/bin/voidbr-wifi-setup:1628
 msgid "ISO não detectado ↓ é recomendável usar NETWORK ↓"
 msgstr "ISO nicht erkannt ↓ es wird empfohlen, NETWORK ↓ zu verwenden"
 
-#: usr/local/bin/voidbr-wifi-setup:1599
+#: usr/local/bin/voidbr-wifi-setup:1629
 msgid "Host VOID não detectado ↓ é recomendável usar NETWORK↓"
 msgstr "Host VOID nicht erkannt ↓ es wird empfohlen, NETWORK↓ zu verwenden"
 
-#: usr/local/bin/voidbr-wifi-setup:1601
+#: usr/local/bin/voidbr-wifi-setup:1631
 msgid "Escolha o idioma"
 msgstr "Sprache wählen"
 
-#: usr/local/bin/voidbr-wifi-setup:1603
+#: usr/local/bin/voidbr-wifi-setup:1633
 msgid "Usuário não pode ser root! Novamente?"
 msgstr "Der Benutzer darf kein Root sein! Wieder?"
 
-#: usr/local/bin/voidbr-wifi-setup:1604
+#: usr/local/bin/voidbr-wifi-setup:1634
 msgid "Usuário não pode estar vazio! Novamente?"
 msgstr "Der Benutzer darf nicht leer sein! Wieder?"
 
-#: usr/local/bin/voidbr-wifi-setup:1605
+#: usr/local/bin/voidbr-wifi-setup:1635
 msgid "Senha do usuário não pode ser vazia! Novamente?"
 msgstr "Benutzerpasswort darf nicht leer sein! Wieder?"
 
-#: usr/local/bin/voidbr-wifi-setup:1606
+#: usr/local/bin/voidbr-wifi-setup:1636
 msgid "Senha de root não pode ser vazia! Novamente?"
 msgstr "Root-Passwort darf nicht leer sein! Wieder?"
 
-#: usr/local/bin/voidbr-wifi-setup:1607
+#: usr/local/bin/voidbr-wifi-setup:1637
 msgid "Usuário não pode iniciar com números! Novamente?"
 msgstr "Der Benutzer kann nicht mit Zahlen beginnen! Wieder?"
 
-#: usr/local/bin/voidbr-wifi-setup:1608
+#: usr/local/bin/voidbr-wifi-setup:1638
 msgid "Usuário não pode iniciar com letras maiúsculas! Novamente?"
 msgstr "Der Benutzer kann nicht mit Großbuchstaben beginnen! Wieder?"
 
-#: usr/local/bin/voidbr-wifi-setup:1609
+#: usr/local/bin/voidbr-wifi-setup:1639
 msgid "Cadastro de usuário cancelado"
 msgstr "Benutzerregistrierung abgebrochen"
 
-#: usr/local/bin/voidbr-wifi-setup:1610
+#: usr/local/bin/voidbr-wifi-setup:1640
 msgid "Rede Wi-Fi"
 msgstr "Wi-Fi-Netzwerk"
 
-#: usr/local/bin/voidbr-wifi-setup:1611
+#: usr/local/bin/voidbr-wifi-setup:1641
 msgid "Senha Wi-Fi"
 msgstr "WLAN-Passwort"
 
-#: usr/local/bin/voidbr-wifi-setup:1612
+#: usr/local/bin/voidbr-wifi-setup:1642
 msgid "Interface Wi-Fi"
 msgstr "Schnittstelle Wi-Fi"
 
-#: usr/local/bin/voidbr-wifi-setup:1613
+#: usr/local/bin/voidbr-wifi-setup:1643
 msgid "↓ é recomendável ext4 ↓"
 msgstr "↓ ext4 wird empfohlen ↓"
 
-#: usr/local/bin/voidbr-wifi-setup:1614
+#: usr/local/bin/voidbr-wifi-setup:1644
 msgid "Utilitário void-services (opcional)"
 msgstr "Dienstprogramm „void-services“ (optional)"
 
-#: usr/local/bin/voidbr-wifi-setup:1615
+#: usr/local/bin/voidbr-wifi-setup:1645
 msgid "Serviços"
 msgstr "Dienstleistungen"
 
-#: usr/local/bin/voidbr-wifi-setup:1616
+#: usr/local/bin/voidbr-wifi-setup:1646
 msgid "Estilo"
 msgstr "Stil"
 
-#: usr/local/bin/voidbr-wifi-setup:1618
+#: usr/local/bin/voidbr-wifi-setup:1648
 msgid "Rodar chroot na partição instalada"
 msgstr "Führen Sie chroot auf der installierten Partition aus"
 
-#: usr/local/bin/voidbr-wifi-setup:1619
+#: usr/local/bin/voidbr-wifi-setup:1649
 msgid "Ativar modo gráfico"
 msgstr "Aktivieren Sie den Grafikmodus"
 
-#: usr/local/bin/voidbr-wifi-setup:1620
+#: usr/local/bin/voidbr-wifi-setup:1650
 msgid "Saída resumida"
 msgstr "Zusammenfassende Ausgabe"
 
-#: usr/local/bin/voidbr-wifi-setup:1621
+#: usr/local/bin/voidbr-wifi-setup:1651
 msgid "Mostrar versão do aplicativo"
 msgstr "App-Version anzeigen"
 
-#: usr/local/bin/voidbr-wifi-setup:1622
+#: usr/local/bin/voidbr-wifi-setup:1652
 msgid "Remove cores da saída"
 msgstr "Farben aus der Ausgabe entfernen"
 
-#: usr/local/bin/voidbr-wifi-setup:1623
+#: usr/local/bin/voidbr-wifi-setup:1653
 msgid "Este help"
 msgstr "Es ist Hilfe"
 
-#: usr/local/bin/voidbr-wifi-setup:1624
+#: usr/local/bin/voidbr-wifi-setup:1654
 msgid "Carregar arquivo de configuração"
 msgstr "Konfigurationsdatei laden"
 
-#: usr/local/bin/voidbr-wifi-setup:1625
+#: usr/local/bin/voidbr-wifi-setup:1655
 msgid "Nome Completo"
 msgstr "Vollständiger Name"
 
-#: usr/local/bin/voidbr-wifi-setup:1626
+#: usr/local/bin/voidbr-wifi-setup:1656
 msgid "Nome usuario"
 msgstr "Benutzername"
 
-#: usr/local/bin/voidbr-wifi-setup:1627
+#: usr/local/bin/voidbr-wifi-setup:1657
 msgid "Senha usuario"
 msgstr "Benutzerpasswort"
 
-#: usr/local/bin/voidbr-wifi-setup:1628
+#: usr/local/bin/voidbr-wifi-setup:1658
 msgid "Senha root"
 msgstr "Root-Passwort"
 
-#: usr/local/bin/voidbr-wifi-setup:1629
+#: usr/local/bin/voidbr-wifi-setup:1659
 msgid "Disco destino"
 msgstr "Zielfestplatte"
 
-#: usr/local/bin/voidbr-wifi-setup:1630
+#: usr/local/bin/voidbr-wifi-setup:1660
 msgid "Gerenciador Janelas"
 msgstr "Windows-Manager"
 
-#: usr/local/bin/voidbr-wifi-setup:1631
+#: usr/local/bin/voidbr-wifi-setup:1661
 msgid "EFI + GPT (recomendado) PCs modernos"
 msgstr "EFI + GPT (empfohlen) Moderne PCs"
 
-#: usr/local/bin/voidbr-wifi-setup:1632
+#: usr/local/bin/voidbr-wifi-setup:1662
 msgid "BIOS + GPT Compatibilide avançada"
 msgstr "Erweiterte BIOS- und GPT-Kompatibilität"
 
-#: usr/local/bin/voidbr-wifi-setup:1633
+#: usr/local/bin/voidbr-wifi-setup:1663
 msgid "BIOS + MBR Computadores antigos"
 msgstr "BIOS + MBR Alte Computer"
 
-#: usr/local/bin/voidbr-wifi-setup:1634
+#: usr/local/bin/voidbr-wifi-setup:1664
 msgid "Tabela GPT"
 msgstr "GPT-Tabelle"
 
-#: usr/local/bin/voidbr-wifi-setup:1635
+#: usr/local/bin/voidbr-wifi-setup:1665
 msgid "não foi configurado!"
 msgstr "wurde nicht konfiguriert!"
 
-#: usr/local/bin/voidbr-wifi-setup:1636
+#: usr/local/bin/voidbr-wifi-setup:1666
 msgid "Disco não foi configurado!"
 msgstr "Festplatte wurde nicht konfiguriert!"
 
-#: usr/local/bin/voidbr-wifi-setup:1637
+#: usr/local/bin/voidbr-wifi-setup:1667
 msgid "Filesystem não foi configurado!"
 msgstr "Dateisystem wurde nicht konfiguriert!"
 
-#: usr/local/bin/voidbr-wifi-setup:1638
+#: usr/local/bin/voidbr-wifi-setup:1668
 msgid "Bootloader não foi configurado!"
 msgstr "Bootloader wurde nicht konfiguriert!"
 
-#: usr/local/bin/voidbr-wifi-setup:1639
+#: usr/local/bin/voidbr-wifi-setup:1669
 msgid "Teclado não foi configurado!"
 msgstr "Tastatur wurde nicht konfiguriert!"
 
-#: usr/local/bin/voidbr-wifi-setup:1640
+#: usr/local/bin/voidbr-wifi-setup:1670
 msgid "Timezone não foi configurado!"
 msgstr "Zeitzone wurde nicht konfiguriert!"
 
-#: usr/local/bin/voidbr-wifi-setup:1641
+#: usr/local/bin/voidbr-wifi-setup:1671
 msgid "Gerenciador de Janelas não foi configurado!"
 msgstr "Der Fenstermanager wurde nicht konfiguriert!"
 
-#: usr/local/bin/voidbr-wifi-setup:1642
+#: usr/local/bin/voidbr-wifi-setup:1672
 msgid "Rede wifi não foi configurado!"
 msgstr "WLAN-Netzwerk wurde nicht konfiguriert!"
 
-#: usr/local/bin/voidbr-wifi-setup:1643
+#: usr/local/bin/voidbr-wifi-setup:1673
 msgid "Usuário não foi configurado!"
 msgstr "Benutzer wurde nicht konfiguriert!"
 
-#: usr/local/bin/voidbr-wifi-setup:1644
+#: usr/local/bin/voidbr-wifi-setup:1674
 msgid "Selecionar sistema de áudio"
 msgstr "Audiosystem auswählen"
 
-#: usr/local/bin/voidbr-wifi-setup:1652
+#: usr/local/bin/voidbr-wifi-setup:1682
 msgid "Network Management daemon (recommended)"
 msgstr "Netzwerkverwaltungs-Daemon (empfohlen)"
 
-#: usr/local/bin/voidbr-wifi-setup:1655
+#: usr/local/bin/voidbr-wifi-setup:1685
 msgid "Internet Wireless Daemon by Intel that aims to replace wpa_supplicant"
 msgstr "Internet Wireless Daemon von Intel, der wpa_supplicant ersetzen soll"
 
-#: usr/local/bin/voidbr-wifi-setup:1658
+#: usr/local/bin/voidbr-wifi-setup:1688
 msgid "WPA/WPA2/IEEE 802.1X Supplicant"
 msgstr "WPA/WPA2/IEEE 802.1X-Supplicant"
 
-#: usr/local/bin/voidbr-wifi-setup:1678
+#: usr/local/bin/voidbr-wifi-setup:1708
 msgid "Selecione o backend Wi-Fi:"
 msgstr "Wählen Sie das WLAN-Backend aus:"
 
-#: usr/local/bin/voidbr-wifi-setup:1769
+#: usr/local/bin/voidbr-wifi-setup:1811
 msgid "interface"
 msgstr "Schnittstelle"
 
-#: usr/local/bin/voidbr-wifi-setup:1772
+#: usr/local/bin/voidbr-wifi-setup:1814
 msgid "Selecione a interface Wi-Fi:"
 msgstr "Wählen Sie die WLAN-Schnittstelle:"
 
-#: usr/local/bin/voidbr-wifi-setup:2023
+#: usr/local/bin/voidbr-wifi-setup:2065
 msgid "Escaneando redes wifi..."
 msgstr "Wi-Fi-Netzwerke werden gescannt..."
 
-#: usr/local/bin/voidbr-wifi-setup:2034
+#: usr/local/bin/voidbr-wifi-setup:2076
 msgid "Nenhuma rede wifi encontrada."
 msgstr "Keine WLAN-Netzwerke gefunden."
 
-#: usr/local/bin/voidbr-wifi-setup:2063
+#: usr/local/bin/voidbr-wifi-setup:2105
 msgid "Escolha a rede que deseja conectar:"
 msgstr "Wählen Sie das Netzwerk aus, mit dem Sie eine Verbindung herstellen möchten:"
 
-#: usr/local/bin/voidbr-wifi-setup:2084
+#: usr/local/bin/voidbr-wifi-setup:2126
 msgid "Nenhuma interface de Wi-fi encontrada!"
 msgstr "Keine WLAN-Schnittstelle gefunden!"
 
-#: usr/local/bin/voidbr-wifi-setup:2086
+#: usr/local/bin/voidbr-wifi-setup:2128
 msgid "Para detectar e ativar a interface Wi-Fi:"
 msgstr "So erkennen und aktivieren Sie die Wi-Fi-Schnittstelle:"
 
-#: usr/local/bin/voidbr-wifi-setup:2087
+#: usr/local/bin/voidbr-wifi-setup:2129
 msgid "Identifique o dispositivo"
 msgstr "Identifizieren Sie das Gerät"
 
-#: usr/local/bin/voidbr-wifi-setup:2088
+#: usr/local/bin/voidbr-wifi-setup:2130
 msgid "ou"
 msgstr "oder"
 
-#: usr/local/bin/voidbr-wifi-setup:2089
+#: usr/local/bin/voidbr-wifi-setup:2131
 msgid "Carregue o driver necessário"
 msgstr "Laden Sie den erforderlichen Treiber"
 
-#: usr/local/bin/voidbr-wifi-setup:2090
+#: usr/local/bin/voidbr-wifi-setup:2132
 msgid "Ative o dispositivo"
 msgstr "Aktivieren Sie das Gerät"
 
-#: usr/local/bin/voidbr-wifi-setup:2091
+#: usr/local/bin/voidbr-wifi-setup:2133
 msgid "Verifique se há firmware faltando"
 msgstr "Suchen Sie nach fehlender Firmware"
 
-#: usr/local/bin/voidbr-wifi-setup:2092
+#: usr/local/bin/voidbr-wifi-setup:2134
 msgid "(Re)Instale os drivers"
 msgstr "(Neu)Installieren Sie die Treiber"
 
-#: usr/local/bin/voidbr-wifi-setup:2099
+#: usr/local/bin/voidbr-wifi-setup:2141
 msgid " - Diagnóstico de Rede"
 msgstr "- Netzwerkdiagnose"
 
-#: usr/local/bin/voidbr-wifi-setup:2172
+#: usr/local/bin/voidbr-wifi-setup:2214
 msgid "Testando internet"
 msgstr "Internet testen"
 
-#: usr/local/bin/voidbr-wifi-setup:2178
+#: usr/local/bin/voidbr-wifi-setup:2220
 msgid "Reiniciando"
 msgstr "Neustart"
 
-#: usr/local/bin/voidbr-wifi-setup:2216
+#: usr/local/bin/voidbr-wifi-setup:2262
 msgid "Trying to bring up wireless interface..."
 msgstr "Versuche, die drahtlose Schnittstelle aufzurufen ..."
 
-#: usr/local/bin/voidbr-wifi-setup:2222
+#: usr/local/bin/voidbr-wifi-setup:2268
 msgid "Wireless interface found:"
 msgstr "Drahtlose Schnittstelle gefunden:"
 
-#: usr/local/bin/voidbr-wifi-setup:2228 usr/local/bin/voidbr-wifi-setup:2288
+#: usr/local/bin/voidbr-wifi-setup:2274 usr/local/bin/voidbr-wifi-setup:2334
 msgid "Wireless interface is up."
 msgstr "Die drahtlose Schnittstelle ist aktiv."
 
-#: usr/local/bin/voidbr-wifi-setup:2232
+#: usr/local/bin/voidbr-wifi-setup:2278
 msgid "Failed to bring interface up. Reloading driver..."
 msgstr "Die Schnittstelle konnte nicht aufgerufen werden. Treiber wird neu geladen..."
 
-#: usr/local/bin/voidbr-wifi-setup:2251
+#: usr/local/bin/voidbr-wifi-setup:2297
 msgid "Unable to determine the wireless driver."
 msgstr "Der Wireless-Treiber kann nicht ermittelt werden."
 
-#: usr/local/bin/voidbr-wifi-setup:2255
+#: usr/local/bin/voidbr-wifi-setup:2301
 msgid "Wireless module:"
 msgstr "Funkmodul:"
 
-#: usr/local/bin/voidbr-wifi-setup:2260
+#: usr/local/bin/voidbr-wifi-setup:2306
 msgid "Removing dependent module:"
 msgstr "Abhängiges Modul entfernen:"
 
-#: usr/local/bin/voidbr-wifi-setup:2265
+#: usr/local/bin/voidbr-wifi-setup:2311
 msgid "Removing module:"
 msgstr "Modul entfernen:"
 
-#: usr/local/bin/voidbr-wifi-setup:2271
+#: usr/local/bin/voidbr-wifi-setup:2317
 msgid "Loading module:"
 msgstr "Lademodul:"
 
-#: usr/local/bin/voidbr-wifi-setup:2273
+#: usr/local/bin/voidbr-wifi-setup:2319
 msgid "Failed to load module:"
 msgstr "Modul konnte nicht geladen werden:"
 
-#: usr/local/bin/voidbr-wifi-setup:2282
+#: usr/local/bin/voidbr-wifi-setup:2328
 msgid "Wireless interface detected:"
 msgstr "Drahtlose Schnittstelle erkannt:"
 
-#: usr/local/bin/voidbr-wifi-setup:2296
+#: usr/local/bin/voidbr-wifi-setup:2342
 msgid "Failed to restore the wireless interface."
 msgstr "Die drahtlose Schnittstelle konnte nicht wiederhergestellt werden."
 
-#: usr/local/bin/voidbr-wifi-setup:2304
+#: usr/local/bin/voidbr-wifi-setup:2350
 msgid "não está rodando, iniciando rotina para iniciar"
 msgstr "Läuft nicht, Startroutine startet"
 
-#: usr/local/bin/voidbr-wifi-setup:2310
+#: usr/local/bin/voidbr-wifi-setup:2356
 msgid "Erro: Não foi possivel iniciar"
 msgstr "Fehler: Start nicht möglich"
 
-#: usr/local/bin/voidbr-wifi-setup:2319 usr/local/bin/voidbr-wifi-setup:2348
-#: usr/local/bin/voidbr-wifi-setup:2359
+#: usr/local/bin/voidbr-wifi-setup:2365 usr/local/bin/voidbr-wifi-setup:2394
+#: usr/local/bin/voidbr-wifi-setup:2405
 msgid "rodando, iniciando rotina de reset"
 msgstr "läuft, startet die Reset-Routine"
 
-#: usr/local/bin/voidbr-wifi-setup:2333
+#: usr/local/bin/voidbr-wifi-setup:2379
 msgid "Reiniciando módulo)"
 msgstr "Modul neu starten)"
 
-#: usr/local/bin/voidbr-wifi-setup:2339
+#: usr/local/bin/voidbr-wifi-setup:2385
 #, sh-format
 msgid "Erro: Nenhum módulo dependente encontrado para $driver_name"
 msgstr "Fehler: Für $driver_name wurden keine abhängigen Module gefunden"
 
-#: usr/local/bin/voidbr-wifi-setup:2394
+#: usr/local/bin/voidbr-wifi-setup:2489
 msgid "A Interface selecionada já tem acesso à internet!"
 msgstr "Die ausgewählte Schnittstelle verfügt bereits über einen Internetzugang!"
 
-#: usr/local/bin/voidbr-wifi-setup:2395
+#: usr/local/bin/voidbr-wifi-setup:2493
 msgid "Ainda deseja prosseguir ?"
 msgstr "Möchten Sie trotzdem fortfahren?"
 
-#: usr/local/bin/voidbr-wifi-setup:2404
+#: usr/local/bin/voidbr-wifi-setup:2502
 msgid "Nenhum backend Wi-Fi encontrado."
 msgstr "Kein WLAN-Backend gefunden."
 
-#: usr/local/bin/voidbr-wifi-setup:2405
+#: usr/local/bin/voidbr-wifi-setup:2503
 msgid "Instale o NetworkManager, ou iwd, ou wpa_supplicant."
 msgstr "Installieren Sie NetworkManager, iwd oder wpa_supplicant."
 
-#: usr/local/bin/voidbr-wifi-setup:2415 usr/local/bin/voidbr-wifi-setup:2416
+#: usr/local/bin/voidbr-wifi-setup:2513 usr/local/bin/voidbr-wifi-setup:2514
 msgid "Reiniciando serviços/interface e desbloquendo rfkill"
 msgstr "Dienste/Schnittstelle neu starten und rfkill entsperren"
 
-#: usr/local/bin/voidbr-wifi-setup:2426
+#: usr/local/bin/voidbr-wifi-setup:2524
 msgid "Entregando interface ao NM"
 msgstr "Bereitstellung einer Schnittstelle zu NM"
 
-#: usr/local/bin/voidbr-wifi-setup:2432
+#: usr/local/bin/voidbr-wifi-setup:2530
 msgid "Deixe em branco o campo Interface Wi-Fi para listar interfaces"
 msgstr "Lassen Sie das Feld „Wi-Fi-Schnittstelle“ leer, um Schnittstellen aufzulisten"
 
-#: usr/local/bin/voidbr-wifi-setup:2433
+#: usr/local/bin/voidbr-wifi-setup:2531
 msgid "Deixe em branco o campo Rede Wi-Fi para escanear redes"
 msgstr "Lassen Sie das Feld „Wi-Fi-Netzwerk“ leer, um Netzwerke zu scannen"
 
-#: usr/local/bin/voidbr-wifi-setup:2442
+#: usr/local/bin/voidbr-wifi-setup:2540
 msgid "=== WIFI ==="
 msgstr "=== WLAN ==="
 
-#: usr/local/bin/voidbr-wifi-setup:2507 usr/local/bin/voidbr-wifi-setup:2523
-msgid "Já existe um perfil para essa rede.\\nDeseja utilizar ?"
+#: usr/local/bin/voidbr-wifi-setup:2605 usr/local/bin/voidbr-wifi-setup:2619
+#: usr/local/bin/voidbr-wifi-setup:2634
+msgid "Já existe um profile para essa rede.\\nDeseja utilizar ?"
 msgstr "Für dieses Netzwerk existiert bereits ein Profil.\nMöchten Sie es verwenden?"
 
-#: usr/local/bin/voidbr-wifi-setup:2540
+#: usr/local/bin/voidbr-wifi-setup:2651
 msgid "Isso é deliberado ?"
 msgstr "Ist das Absicht?"
 
-#: usr/local/bin/voidbr-wifi-setup:2550
+#: usr/local/bin/voidbr-wifi-setup:2661
 msgid "Deseja configurar IP fixo?"
 msgstr "Möchten Sie eine feste IP konfigurieren?"
 
-#: usr/local/bin/voidbr-wifi-setup:2556
+#: usr/local/bin/voidbr-wifi-setup:2667
 msgid "Prosseguir com a configuração e conexão ?"
 msgstr "Mit der Konfiguration und Verbindung fortfahren?"
 
-#: usr/local/bin/voidbr-wifi-setup:2562
+#: usr/local/bin/voidbr-wifi-setup:2673
 msgid "Removendo conexão antiga"
 msgstr "Alte Verbindung entfernen"
 
-#: usr/local/bin/voidbr-wifi-setup:2567
+#: usr/local/bin/voidbr-wifi-setup:2678
 msgid "Configurando conexão"
 msgstr "Verbindung konfigurieren"
 
-#: usr/local/bin/voidbr-wifi-setup:2575
+#: usr/local/bin/voidbr-wifi-setup:2686
 msgid "Configurando autoconexão"
 msgstr "Automatische Verbindung konfigurieren"
 
-#: usr/local/bin/voidbr-wifi-setup:2580
+#: usr/local/bin/voidbr-wifi-setup:2691
 msgid "Configurando ip fixo"
 msgstr "Feste IP konfigurieren"
 
-#: usr/local/bin/voidbr-wifi-setup:2589
+#: usr/local/bin/voidbr-wifi-setup:2700
 msgid "Configurando dns"
 msgstr "DNS konfigurieren"
 
-#: usr/local/bin/voidbr-wifi-setup:2599
+#: usr/local/bin/voidbr-wifi-setup:2710
 msgid "Preparando ambiente DHCP"
 msgstr "Vorbereiten der DHCP-Umgebung"
 
-#: usr/local/bin/voidbr-wifi-setup:2609
+#: usr/local/bin/voidbr-wifi-setup:2715
+msgid "Criando profile"
+msgstr "Profil erstellen"
+
+#: usr/local/bin/voidbr-wifi-setup:2720
+msgid "Iniciando conexão"
+msgstr "Verbindung wird gestartet"
+
+#: usr/local/bin/voidbr-wifi-setup:2725
 msgid "solicita configuração IP"
 msgstr "fordert IP-Konfiguration an"
 
-#: usr/local/bin/voidbr-wifi-setup:2646
+#: usr/local/bin/voidbr-wifi-setup:2762
 msgid "Deseja escanear por redes wifi?"
 msgstr "Möchten Sie über WLAN-Netzwerke scannen?"

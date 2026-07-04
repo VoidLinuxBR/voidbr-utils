@@ -2,4 +2,4 @@
 # script wrapper para /usr/bin/chili-vpm vsv
 # Copyright (c) Vilmar Catafesta, 2019-2025 <vcatafesta@gmail.com>
 
-sudo chili-vpm vsv "$@"
+sudo voidbr-vpm vsv "$@"
