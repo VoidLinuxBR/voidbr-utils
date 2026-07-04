@@ -4,7 +4,7 @@
 #
 #  voidbr-wifi-setup
 #  Created: qua 17 jun 2026 00:46:30 -04
-#  Updated: sex 03 jul 2026 12:23:24 -04
+#  Updated: sex 03 jul 2026 21:58:12 -04
 #
 #  Copyright (c) 2019-2026, Vilmar Catafesta <vcatafesta@gmail.com>
 #  All rights reserved.
@@ -1347,6 +1347,36 @@ static domain_name_servers=${AsDhcp[DNS1]} ${AsDhcp[DNS2]}
 EOF
 }
 
+sh_save_dhcpcd_default() {
+  local conf="/etc/dhcpcd.conf"
+  local BACKUP_FILE="${conf}.$(sh_diahora)"
+
+	sh_info_msg "%(gettext 'Aplicando configuração do dhcpd')"
+	# backup somente se existir
+	if [[ -f "$conf" ]]; then
+		mv -f "$conf" "$BACKUP_FILE"
+	fi
+
+	cat >>"$conf" <<EOF
+# A sample configuration for dhcpcd.
+# See dhcpcd.conf(5) for details.
+
+controlgroup wheel
+duid
+persistent
+vendorclassid
+option domain_name_servers, domain_name, domain_search
+option static_routes, classless_static_routes
+option interface_mtu
+option host_name
+require dhcp_server_identifier
+slaac private
+
+# END dhcpcd.conf
+
+EOF
+}
+
 pcount() {
 	local -i nargs="$#"
 
@@ -1717,18 +1747,30 @@ sh_get_wifi_ssid() {
 		nmcli -g GENERAL.CONNECTION device show "$iface" 2>/dev/null
 		;;
 	iwd)
-		iwctl station "$iface" show 2>/dev/null | awk -F': ' '/Connected network/ {print $2}'
+    LC_ALL=C iwctl station "$iface" show 2>/dev/null \
+      | grep 'Connected network' \
+      | awk '{print $3}'
 		;;
 	wpa_supplicant)
-		wpa_cli -i "$iface" status 2>/dev/null | awk -F= '/^ssid=/{print $2}'
+		wpa_cli -i "$iface" status 2>/dev/null \
+		  | awk -F= '/^ssid=/{print $2}'
 		;;
 	esac
 	return 0
 }
 
 sh_get_ip_iface() {
-	local iface="${1:-$(get_wifi_interface)}"
-	ip -4 -o addr show dev "$iface" | awk '{print $4}' | head -1
+  local iface="${1:-$(get_wifi_interface)}"
+  ip -4 -o addr show dev "$iface" | awk '{print $4}' | head -1
+}
+
+sh_get_router_iface() {
+  local iface="${1:-$(get_wifi_interface)}"
+  ip route show dev "$iface" | awk '/^default/ {print $3; exit}'
+}
+
+sh_get_dns_iface() {
+  awk '/^nameserver/ {print $2}' /etc/resolv.conf
 }
 
 sh_get_iface() {
@@ -2190,7 +2232,11 @@ sh_get_net_info() {
 
 sh_prepare_dhcpcd() {
 	sh_remove_dhcpcd_conf_iface
-	$USE_STATIC_IP && sh_save_dhcpcd_static_ip
+	if $USE_STATIC_IP; then
+	  sh_save_dhcpcd_static_ip
+  else
+	  sh_save_dhcpcd_default
+	fi
 	dhcpcd -k "$iface"
 	#libera outra conexao se existir
 	sh_nm_release_iface "$iface"
@@ -2441,6 +2487,9 @@ sh_confWifi() {
 		if has_internet "${iface}"; then
 			if ! conf "=== ${iface} => INTERNET ===" \
 				"\n${BOLD}${GREEN}✓ ${CYAN}$(gettext "A Interface selecionada já tem acesso à internet!")" \
+				"\n${BOLD}${GREEN}✓ ${YELLOW}IP    : $(sh_get_ip_iface $iface)" \
+				"\n${BOLD}${GREEN}✓ ${YELLOW}Router: $(sh_get_router_iface $iface)" \
+				"\n${BOLD}${GREEN}✓ ${YELLOW}Dns   : $(sh_get_dns_iface)" \
 				"\n\n${BOLD}${RED}$(gettext "Ainda deseja prosseguir ?")\n\n"; then
 				return 1
 			fi
@@ -2553,7 +2602,7 @@ sh_confWifi() {
 			NetworkManager)
 				if test -e /etc/NetworkManager/system-connections/"${_WIFI_NETWORK}".nmconnection; then
 					if conf "=== ${_WIFI_NETWORK} ===" \
-						"\n\n${BOLD}${RED}$(gettext "Já existe um perfil para essa rede.\nDeseja utilizar ?")\n\n"; then
+						"\n\n${BOLD}${RED}$(gettext "Já existe um profile para essa rede.\nDeseja utilizar ?")\n\n"; then
 						sh_cmd_job_progressbox "${backend}: Reativando conexão ${_WIFI_NETWORK}" '
   	    			sh_nm_disable_autoconnect_others "$iface" "$_WIFI_NETWORK"
               nmcli connection modify "${_WIFI_NETWORK}" connection.autoconnect yes
@@ -2567,7 +2616,7 @@ sh_confWifi() {
 			iwd)
 				if sh_iwd_profile_exists "$_WIFI_NETWORK"; then
 					if conf "=== ${_WIFI_NETWORK} ===" \
-						"\n\n${BOLD}${RED}$(gettext "Já existe um perfil para essa rede.\nDeseja utilizar ?")\n\n"; then
+						"\n\n${BOLD}${RED}$(gettext "Já existe um profile para essa rede.\nDeseja utilizar ?")\n\n"; then
 
 						sh_cmd_job_progressbox "${backend}: Reativando conexão ${_WIFI_NETWORK}" '
                     sh_iwd_disable_autoconnect_others "$_WIFI_NETWORK"
@@ -2582,7 +2631,7 @@ sh_confWifi() {
 			wpa_supplicant)
 				if test -e /etc/wpa_supplicant/wpa_supplicant-${iface}.conf; then
 					if conf "=== ${_WIFI_NETWORK} ===" \
-						"\n\n${BOLD}${RED}$(gettext "Já existe um perfil para essa rede.\nDeseja utilizar ?")\n\n"; then
+						"\n\n${BOLD}${RED}$(gettext "Já existe um profile para essa rede.\nDeseja utilizar ?")\n\n"; then
 						sh_cmd_job_progressbox "${backend}: Reativando conexão ${_WIFI_NETWORK}" '
   	    			sh_nm_disable_autoconnect_others "$iface" "$_WIFI_NETWORK"
   	    			sh_nm_release_iface "$iface"
@@ -2663,7 +2712,7 @@ sh_confWifi() {
         '
 
 				# conecta!
-				sh_cmd_job_progressbox "${backend}: $(gettext 'Criando perfil')" '
+				sh_cmd_job_progressbox "${backend}: $(gettext 'Criando profile')" '
         	sh_iwd_disable_autoconnect_others "$_WIFI_NETWORK"
         	sh_iwd_create_profile "$_WIFI_NETWORK" "$_WIFI_PASSWORD"
         ' $err_fatal
