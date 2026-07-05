@@ -1,35 +1,56 @@
 # bash completion for vservice
 
+_vservice_enabled_services() {
+    local s
+
+    for s in /var/service/*; do
+        [[ -e "$s" ]] || continue
+        basename "$s"
+    done
+}
+
+_vservice_available_services() {
+    local s
+
+    for s in /etc/sv/*; do
+        [[ -e "$s" ]] || continue
+
+        # Não lista serviços já habilitados
+        [[ -e "/var/service/$(basename "$s")" ]] && continue
+
+        basename "$s"
+    done
+}
+
 _vservice_completion() {
     local cur prev opts services
+
     COMPREPLY=()
+
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
 
-    # Lista de comandos disponíveis no vservice
     opts="add enable install disable remove rm start st up stop down restart reload status list once pause exit"
 
-    # Se estivermos no primeiro argumento após o comando 'vservice'
-    if [[ ${COMP_CWORD} -eq 1 ]]; then
-        COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+    # Primeiro argumento: comandos
+    if [[ $COMP_CWORD -eq 1 ]]; then
+        COMPREPLY=( $(compgen -W "$opts" -- "$cur") )
         return 0
     fi
 
-    # Se o comando anterior for um dos que manipulam serviços
-    case "${prev}" in
+    case "$prev" in
         add|enable|install)
-            # Lista serviços disponíveis em /etc/sv que AINDA NÃO estão em /var/service
-            services=$(ls /etc/sv)
-            COMPREPLY=( $(compgen -W "${services}" -- "${cur}") )
+            services="$(_vservice_available_services)"
             ;;
-        remove|rm|start|st|up|stop|down|restart|reload|status|once|pause|exit)
-            # Lista apenas serviços que já estão habilitados em /var/service
-            services=$(ls /var/service)
-            COMPREPLY=( $(compgen -W "${services}" -- "${cur}") )
+        disable|remove|rm|start|st|up|stop|down|restart|reload|status|once|pause|exit)
+            services="$(_vservice_enabled_services)"
             ;;
         *)
+            return 0
             ;;
     esac
+
+    COMPREPLY=( $(compgen -W "$services" -- "$cur") )
 }
 
 complete -F _vservice_completion vservice
