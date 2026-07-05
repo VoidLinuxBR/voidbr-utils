@@ -119,6 +119,50 @@ colorize() {
     next
 }
 
+    # Nginx / Apache access log
+    /^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+ .*HTTP\/[0-9.]+"/ {
+
+        esc    = sprintf("%c",27)
+        gray   = esc "[90m"
+        cyan   = esc "[36m"
+        green  = esc "[32m"
+        yellow = esc "[33m"
+        red    = esc "[31m"
+        blue   = esc "[34m"
+        mag    = esc "[35m"
+        reset  = esc "[0m"
+
+        # IP
+        if (match($0, /^[0-9.]+/)) {
+            ip = substr($0, RSTART, RLENGTH)
+            $0 = cyan ip reset substr($0, RLENGTH + 1)
+        }
+
+        # Timestamp
+        gsub(/\[[^]]+\]/, gray "&" reset)
+
+        # Método
+        gsub(/GET/,    cyan "&" reset)
+        gsub(/POST/,   cyan "&" reset)
+        gsub(/PUT/,    cyan "&" reset)
+        gsub(/DELETE/, cyan "&" reset)
+
+        # Status
+        gsub(/ 200 /," " green "200" reset " ")
+        gsub(/ 301 /," " blue  "301" reset " ")
+        gsub(/ 302 /," " blue  "302" reset " ")
+        gsub(/ 304 /," " blue  "304" reset " ")
+        gsub(/ 403 /," " yellow "403" reset " ")
+        gsub(/ 404 /," " yellow "404" reset " ")
+        gsub(/ 500 /," " red "500" reset " ")
+
+        gsub(/GPTBot/, mag "&" reset)
+        gsub(/Go-http-client/, cyan "&" reset)
+
+        print
+        next
+    }
+
     # Default
     { print "\033[37m" $0 "\033[0m" }
   '
