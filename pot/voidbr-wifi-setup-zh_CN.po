@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: chili-tradutor-go 2.1.20-20260201\n"
-"POT-Creation-Date: 2026-07-03 22:12-0400\n"
-"PO-Revision-Date: 2026-07-03 22:12-0400\n"
+"POT-Creation-Date: 2026-07-03 22:26-0400\n"
+"PO-Revision-Date: 2026-07-03 22:26-0400\n"
 "Last-Translator: Vilmar Catafesta <vcatafesta@gmail.com>\n"
 "Language-Team: Portuguese <https://github.com/chililinux/chili-tradutor-go>\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr "在继续之前，请调整终端的大小"
 
 #: usr/local/bin/voidbr-wifi-setup:454
 msgid "para que ele meça pelo menos 80 x 24 caracteres."
-msgstr "以便其长度至少为 80 x 24 个字符。"
+msgstr "因此它的长度至少为 80 x 24 个字符。"
 
 #: usr/local/bin/voidbr-wifi-setup:455
 msgid "Caso contrário, "
@@ -465,7 +465,7 @@ msgstr "选择目标磁盘："
 
 #: usr/local/bin/voidbr-wifi-setup:1575
 msgid "Sim"
-msgstr "西姆"
+msgstr "辛"
 
 #: usr/local/bin/voidbr-wifi-setup:1576
 msgid "Não"
@@ -867,229 +867,229 @@ msgstr "WPA/WPA2/IEEE 802.1X 请求方"
 msgid "Selecione o backend Wi-Fi:"
 msgstr "选择 Wi-Fi 后端："
 
-#: usr/local/bin/voidbr-wifi-setup:1802
+#: usr/local/bin/voidbr-wifi-setup:1811
 msgid "interface"
 msgstr "界面"
 
-#: usr/local/bin/voidbr-wifi-setup:1805
+#: usr/local/bin/voidbr-wifi-setup:1814
 msgid "Selecione a interface Wi-Fi:"
 msgstr "选择Wi-Fi接口："
 
-#: usr/local/bin/voidbr-wifi-setup:2056
+#: usr/local/bin/voidbr-wifi-setup:2065
 msgid "Escaneando redes wifi..."
 msgstr "正在扫描 Wi-Fi 网络..."
 
-#: usr/local/bin/voidbr-wifi-setup:2067
+#: usr/local/bin/voidbr-wifi-setup:2076
 msgid "Nenhuma rede wifi encontrada."
 msgstr "未找到 wifi 网络。"
 
-#: usr/local/bin/voidbr-wifi-setup:2096
+#: usr/local/bin/voidbr-wifi-setup:2105
 msgid "Escolha a rede que deseja conectar:"
 msgstr "选择您要连接的网络："
 
-#: usr/local/bin/voidbr-wifi-setup:2117
+#: usr/local/bin/voidbr-wifi-setup:2126
 msgid "Nenhuma interface de Wi-fi encontrada!"
 msgstr "找不到 Wi-Fi 接口！"
 
-#: usr/local/bin/voidbr-wifi-setup:2119
+#: usr/local/bin/voidbr-wifi-setup:2128
 msgid "Para detectar e ativar a interface Wi-Fi:"
 msgstr "要检测并激活 Wi-Fi 接口："
 
-#: usr/local/bin/voidbr-wifi-setup:2120
+#: usr/local/bin/voidbr-wifi-setup:2129
 msgid "Identifique o dispositivo"
 msgstr "识别设备"
 
-#: usr/local/bin/voidbr-wifi-setup:2121
+#: usr/local/bin/voidbr-wifi-setup:2130
 msgid "ou"
 msgstr "或者"
 
-#: usr/local/bin/voidbr-wifi-setup:2122
+#: usr/local/bin/voidbr-wifi-setup:2131
 msgid "Carregue o driver necessário"
 msgstr "加载所需的驱动程序"
 
-#: usr/local/bin/voidbr-wifi-setup:2123
+#: usr/local/bin/voidbr-wifi-setup:2132
 msgid "Ative o dispositivo"
 msgstr "激活设备"
 
-#: usr/local/bin/voidbr-wifi-setup:2124
+#: usr/local/bin/voidbr-wifi-setup:2133
 msgid "Verifique se há firmware faltando"
 msgstr "检查是否缺少固件"
 
-#: usr/local/bin/voidbr-wifi-setup:2125
+#: usr/local/bin/voidbr-wifi-setup:2134
 msgid "(Re)Instale os drivers"
 msgstr "（重新）安装驱动程序"
 
-#: usr/local/bin/voidbr-wifi-setup:2132
+#: usr/local/bin/voidbr-wifi-setup:2141
 msgid " - Diagnóstico de Rede"
 msgstr "- 网络诊断"
 
-#: usr/local/bin/voidbr-wifi-setup:2205
+#: usr/local/bin/voidbr-wifi-setup:2214
 msgid "Testando internet"
 msgstr "测试互联网"
 
-#: usr/local/bin/voidbr-wifi-setup:2211
+#: usr/local/bin/voidbr-wifi-setup:2220
 msgid "Reiniciando"
 msgstr "正在重启"
 
-#: usr/local/bin/voidbr-wifi-setup:2253
+#: usr/local/bin/voidbr-wifi-setup:2262
 msgid "Trying to bring up wireless interface..."
 msgstr "正在尝试调出无线接口..."
 
-#: usr/local/bin/voidbr-wifi-setup:2259
+#: usr/local/bin/voidbr-wifi-setup:2268
 msgid "Wireless interface found:"
 msgstr "发现无线接口："
 
-#: usr/local/bin/voidbr-wifi-setup:2265 usr/local/bin/voidbr-wifi-setup:2325
+#: usr/local/bin/voidbr-wifi-setup:2274 usr/local/bin/voidbr-wifi-setup:2334
 msgid "Wireless interface is up."
 msgstr "无线接口已打开。"
 
-#: usr/local/bin/voidbr-wifi-setup:2269
+#: usr/local/bin/voidbr-wifi-setup:2278
 msgid "Failed to bring interface up. Reloading driver..."
 msgstr "无法调出界面。正在重新加载驱动程序..."
 
-#: usr/local/bin/voidbr-wifi-setup:2288
+#: usr/local/bin/voidbr-wifi-setup:2297
 msgid "Unable to determine the wireless driver."
 msgstr "无法确定无线驱动程序。"
 
-#: usr/local/bin/voidbr-wifi-setup:2292
+#: usr/local/bin/voidbr-wifi-setup:2301
 msgid "Wireless module:"
 msgstr "无线模块："
 
-#: usr/local/bin/voidbr-wifi-setup:2297
+#: usr/local/bin/voidbr-wifi-setup:2306
 msgid "Removing dependent module:"
 msgstr "删除依赖模块："
 
-#: usr/local/bin/voidbr-wifi-setup:2302
+#: usr/local/bin/voidbr-wifi-setup:2311
 msgid "Removing module:"
 msgstr "删除模块："
 
-#: usr/local/bin/voidbr-wifi-setup:2308
+#: usr/local/bin/voidbr-wifi-setup:2317
 msgid "Loading module:"
 msgstr "加载模块："
 
-#: usr/local/bin/voidbr-wifi-setup:2310
+#: usr/local/bin/voidbr-wifi-setup:2319
 msgid "Failed to load module:"
 msgstr "无法加载模块："
 
-#: usr/local/bin/voidbr-wifi-setup:2319
+#: usr/local/bin/voidbr-wifi-setup:2328
 msgid "Wireless interface detected:"
 msgstr "检测到无线接口："
 
-#: usr/local/bin/voidbr-wifi-setup:2333
+#: usr/local/bin/voidbr-wifi-setup:2342
 msgid "Failed to restore the wireless interface."
 msgstr "无法恢复无线接口。"
 
-#: usr/local/bin/voidbr-wifi-setup:2341
+#: usr/local/bin/voidbr-wifi-setup:2350
 msgid "não está rodando, iniciando rotina para iniciar"
 msgstr "未运行，正在启动例程"
 
-#: usr/local/bin/voidbr-wifi-setup:2347
+#: usr/local/bin/voidbr-wifi-setup:2356
 msgid "Erro: Não foi possivel iniciar"
 msgstr "错误：无法启动"
 
-#: usr/local/bin/voidbr-wifi-setup:2356 usr/local/bin/voidbr-wifi-setup:2385
-#: usr/local/bin/voidbr-wifi-setup:2396
+#: usr/local/bin/voidbr-wifi-setup:2365 usr/local/bin/voidbr-wifi-setup:2394
+#: usr/local/bin/voidbr-wifi-setup:2405
 msgid "rodando, iniciando rotina de reset"
 msgstr "运行，开始重置例程"
 
-#: usr/local/bin/voidbr-wifi-setup:2370
+#: usr/local/bin/voidbr-wifi-setup:2379
 msgid "Reiniciando módulo)"
 msgstr "重新启动模块）"
 
-#: usr/local/bin/voidbr-wifi-setup:2376
+#: usr/local/bin/voidbr-wifi-setup:2385
 #, sh-format
 msgid "Erro: Nenhum módulo dependente encontrado para $driver_name"
 msgstr "错误：找不到 $driver_name 的依赖模块"
 
-#: usr/local/bin/voidbr-wifi-setup:2480
+#: usr/local/bin/voidbr-wifi-setup:2489
 msgid "A Interface selecionada já tem acesso à internet!"
 msgstr "所选接口已经可以访问互联网！"
 
-#: usr/local/bin/voidbr-wifi-setup:2481
+#: usr/local/bin/voidbr-wifi-setup:2493
 msgid "Ainda deseja prosseguir ?"
 msgstr "您还想继续吗？"
 
-#: usr/local/bin/voidbr-wifi-setup:2490
+#: usr/local/bin/voidbr-wifi-setup:2502
 msgid "Nenhum backend Wi-Fi encontrado."
 msgstr "未找到 Wi-Fi 后端。"
 
-#: usr/local/bin/voidbr-wifi-setup:2491
+#: usr/local/bin/voidbr-wifi-setup:2503
 msgid "Instale o NetworkManager, ou iwd, ou wpa_supplicant."
 msgstr "安装 NetworkManager、iwd 或 wpa_supplicant。"
 
-#: usr/local/bin/voidbr-wifi-setup:2501 usr/local/bin/voidbr-wifi-setup:2502
+#: usr/local/bin/voidbr-wifi-setup:2513 usr/local/bin/voidbr-wifi-setup:2514
 msgid "Reiniciando serviços/interface e desbloquendo rfkill"
 msgstr "重新启动服务/界面并解锁 rfkill"
 
-#: usr/local/bin/voidbr-wifi-setup:2512
+#: usr/local/bin/voidbr-wifi-setup:2524
 msgid "Entregando interface ao NM"
 msgstr "向NM下发接口"
 
-#: usr/local/bin/voidbr-wifi-setup:2518
+#: usr/local/bin/voidbr-wifi-setup:2530
 msgid "Deixe em branco o campo Interface Wi-Fi para listar interfaces"
 msgstr "将 Wi-Fi 接口字段留空以列出接口"
 
-#: usr/local/bin/voidbr-wifi-setup:2519
+#: usr/local/bin/voidbr-wifi-setup:2531
 msgid "Deixe em branco o campo Rede Wi-Fi para escanear redes"
 msgstr "将 Wi-Fi 网络字段留空以扫描网络"
 
-#: usr/local/bin/voidbr-wifi-setup:2528
+#: usr/local/bin/voidbr-wifi-setup:2540
 msgid "=== WIFI ==="
 msgstr "===无线网络==="
 
-#: usr/local/bin/voidbr-wifi-setup:2593 usr/local/bin/voidbr-wifi-setup:2607
-#: usr/local/bin/voidbr-wifi-setup:2622
+#: usr/local/bin/voidbr-wifi-setup:2605 usr/local/bin/voidbr-wifi-setup:2619
+#: usr/local/bin/voidbr-wifi-setup:2634
 msgid "Já existe um profile para essa rede.\\nDeseja utilizar ?"
 msgstr "该网络的配置文件已存在。\n您想使用它吗?"
 
-#: usr/local/bin/voidbr-wifi-setup:2639
+#: usr/local/bin/voidbr-wifi-setup:2651
 msgid "Isso é deliberado ?"
 msgstr "这是故意的吗？"
 
-#: usr/local/bin/voidbr-wifi-setup:2649
+#: usr/local/bin/voidbr-wifi-setup:2661
 msgid "Deseja configurar IP fixo?"
 msgstr "您想配置固定IP吗？"
 
-#: usr/local/bin/voidbr-wifi-setup:2655
+#: usr/local/bin/voidbr-wifi-setup:2667
 msgid "Prosseguir com a configuração e conexão ?"
 msgstr "继续配置和连接吗？"
 
-#: usr/local/bin/voidbr-wifi-setup:2661
+#: usr/local/bin/voidbr-wifi-setup:2673
 msgid "Removendo conexão antiga"
 msgstr "删除旧连接"
 
-#: usr/local/bin/voidbr-wifi-setup:2666
+#: usr/local/bin/voidbr-wifi-setup:2678
 msgid "Configurando conexão"
 msgstr "配置连接"
 
-#: usr/local/bin/voidbr-wifi-setup:2674
+#: usr/local/bin/voidbr-wifi-setup:2686
 msgid "Configurando autoconexão"
 msgstr "配置自动连接"
 
-#: usr/local/bin/voidbr-wifi-setup:2679
+#: usr/local/bin/voidbr-wifi-setup:2691
 msgid "Configurando ip fixo"
 msgstr "配置固定IP"
 
-#: usr/local/bin/voidbr-wifi-setup:2688
+#: usr/local/bin/voidbr-wifi-setup:2700
 msgid "Configurando dns"
 msgstr "配置域名"
 
-#: usr/local/bin/voidbr-wifi-setup:2698
+#: usr/local/bin/voidbr-wifi-setup:2710
 msgid "Preparando ambiente DHCP"
 msgstr "准备DHCP环境"
 
-#: usr/local/bin/voidbr-wifi-setup:2703
+#: usr/local/bin/voidbr-wifi-setup:2715
 msgid "Criando profile"
 msgstr "创建个人资料"
 
-#: usr/local/bin/voidbr-wifi-setup:2708
+#: usr/local/bin/voidbr-wifi-setup:2720
 msgid "Iniciando conexão"
 msgstr "开始连接"
 
-#: usr/local/bin/voidbr-wifi-setup:2713
+#: usr/local/bin/voidbr-wifi-setup:2725
 msgid "solicita configuração IP"
 msgstr "请求IP配置"
 
-#: usr/local/bin/voidbr-wifi-setup:2750
+#: usr/local/bin/voidbr-wifi-setup:2762
 msgid "Deseja escanear por redes wifi?"
 msgstr "您想通过 WiFi 网络进行扫描吗？"

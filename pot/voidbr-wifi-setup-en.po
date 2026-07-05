@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: chili-tradutor-go 2.1.20-20260201\n"
-"POT-Creation-Date: 2026-07-03 22:12-0400\n"
-"PO-Revision-Date: 2026-07-03 22:12-0400\n"
+"POT-Creation-Date: 2026-07-03 22:26-0400\n"
+"PO-Revision-Date: 2026-07-03 22:26-0400\n"
 "Last-Translator: Vilmar Catafesta <vcatafesta@gmail.com>\n"
 "Language-Team: Portuguese <https://github.com/chililinux/chili-tradutor-go>\n"
 "MIME-Version: 1.0\n"
@@ -96,7 +96,7 @@ msgstr "Apply these settings?"
 
 #: usr/local/bin/voidbr-wifi-setup:1292
 msgid "Interface"
-msgstr "Interface"
+msgstr "interface"
 
 #: usr/local/bin/voidbr-wifi-setup:1293
 msgid "IP"
@@ -125,15 +125,15 @@ msgstr "THERE IS NO WARRANTY, TO THE FULLEST EXTENT PERMITTED BY LAW."
 
 #: usr/local/bin/voidbr-wifi-setup:1480
 msgid "Use as teclas"
-msgstr "Use the keys"
+msgstr "Use as teclas"
 
 #: usr/local/bin/voidbr-wifi-setup:1481
 msgid "PARA CIMA"
-msgstr "UP"
+msgstr "TO THE TOP"
 
 #: usr/local/bin/voidbr-wifi-setup:1482
 msgid "e"
-msgstr "and"
+msgstr "e"
 
 #: usr/local/bin/voidbr-wifi-setup:1483
 msgid "PARA BAIXO"
@@ -195,7 +195,7 @@ msgstr "Definitions"
 
 #: usr/local/bin/voidbr-wifi-setup:1503
 msgid "não definido"
-msgstr "not defined"
+msgstr "Not defined"
 
 #: usr/local/bin/voidbr-wifi-setup:1504
 msgid "Ajustando senha usuário"
@@ -259,7 +259,7 @@ msgstr "Configuring"
 
 #: usr/local/bin/voidbr-wifi-setup:1520
 msgid "ERRO"
-msgstr "Error"
+msgstr "ERROR"
 
 #: usr/local/bin/voidbr-wifi-setup:1521
 msgid "Aceitar"
@@ -275,7 +275,7 @@ msgstr "Configure"
 
 #: usr/local/bin/voidbr-wifi-setup:1524
 msgid "Não definido"
-msgstr "not defined"
+msgstr "Not defined"
 
 #: usr/local/bin/voidbr-wifi-setup:1525
 msgid "Mudar"
@@ -559,7 +559,7 @@ msgstr "Installing meta package"
 
 #: usr/local/bin/voidbr-wifi-setup:1598
 msgid "Atualizando pacotes base"
-msgstr "Updating Base Packages"
+msgstr "Updating base packages"
 
 #: usr/local/bin/voidbr-wifi-setup:1599
 msgid "Atualizando pacotes adicionais em"
@@ -775,7 +775,7 @@ msgstr "Load configuration file"
 
 #: usr/local/bin/voidbr-wifi-setup:1655
 msgid "Nome Completo"
-msgstr "Full Name"
+msgstr "Full name"
 
 #: usr/local/bin/voidbr-wifi-setup:1656
 msgid "Nome usuario"
@@ -869,229 +869,229 @@ msgstr "WPA/WPA2/IEEE 802.1X Supplicant"
 msgid "Selecione o backend Wi-Fi:"
 msgstr "Select the Wi-Fi backend:"
 
-#: usr/local/bin/voidbr-wifi-setup:1802
+#: usr/local/bin/voidbr-wifi-setup:1811
 msgid "interface"
-msgstr "Interface"
+msgstr "interface"
 
-#: usr/local/bin/voidbr-wifi-setup:1805
+#: usr/local/bin/voidbr-wifi-setup:1814
 msgid "Selecione a interface Wi-Fi:"
 msgstr "Select Wi-Fi interface:"
 
-#: usr/local/bin/voidbr-wifi-setup:2056
+#: usr/local/bin/voidbr-wifi-setup:2065
 msgid "Escaneando redes wifi..."
 msgstr "Scanning Wi-Fi networks..."
 
-#: usr/local/bin/voidbr-wifi-setup:2067
+#: usr/local/bin/voidbr-wifi-setup:2076
 msgid "Nenhuma rede wifi encontrada."
 msgstr "No wifi networks found."
 
-#: usr/local/bin/voidbr-wifi-setup:2096
+#: usr/local/bin/voidbr-wifi-setup:2105
 msgid "Escolha a rede que deseja conectar:"
 msgstr "Choose the network you want to connect:"
 
-#: usr/local/bin/voidbr-wifi-setup:2117
+#: usr/local/bin/voidbr-wifi-setup:2126
 msgid "Nenhuma interface de Wi-fi encontrada!"
 msgstr "No Wi-Fi interface found!"
 
-#: usr/local/bin/voidbr-wifi-setup:2119
+#: usr/local/bin/voidbr-wifi-setup:2128
 msgid "Para detectar e ativar a interface Wi-Fi:"
 msgstr "To detect and activate the Wi-Fi interface:"
 
-#: usr/local/bin/voidbr-wifi-setup:2120
+#: usr/local/bin/voidbr-wifi-setup:2129
 msgid "Identifique o dispositivo"
 msgstr "Identify the device"
 
-#: usr/local/bin/voidbr-wifi-setup:2121
+#: usr/local/bin/voidbr-wifi-setup:2130
 msgid "ou"
 msgstr "or"
 
-#: usr/local/bin/voidbr-wifi-setup:2122
+#: usr/local/bin/voidbr-wifi-setup:2131
 msgid "Carregue o driver necessário"
 msgstr "Load the required driver"
 
-#: usr/local/bin/voidbr-wifi-setup:2123
+#: usr/local/bin/voidbr-wifi-setup:2132
 msgid "Ative o dispositivo"
 msgstr "Activate the device"
 
-#: usr/local/bin/voidbr-wifi-setup:2124
+#: usr/local/bin/voidbr-wifi-setup:2133
 msgid "Verifique se há firmware faltando"
 msgstr "Check for missing firmware"
 
-#: usr/local/bin/voidbr-wifi-setup:2125
+#: usr/local/bin/voidbr-wifi-setup:2134
 msgid "(Re)Instale os drivers"
 msgstr "(Re)Install the drivers"
 
-#: usr/local/bin/voidbr-wifi-setup:2132
+#: usr/local/bin/voidbr-wifi-setup:2141
 msgid " - Diagnóstico de Rede"
 msgstr "- Network Diagnostics"
 
-#: usr/local/bin/voidbr-wifi-setup:2205
+#: usr/local/bin/voidbr-wifi-setup:2214
 msgid "Testando internet"
 msgstr "Testing internet"
 
-#: usr/local/bin/voidbr-wifi-setup:2211
+#: usr/local/bin/voidbr-wifi-setup:2220
 msgid "Reiniciando"
 msgstr "Restarting"
 
-#: usr/local/bin/voidbr-wifi-setup:2253
+#: usr/local/bin/voidbr-wifi-setup:2262
 msgid "Trying to bring up wireless interface..."
 msgstr "Trying to bring up wireless interface..."
 
-#: usr/local/bin/voidbr-wifi-setup:2259
+#: usr/local/bin/voidbr-wifi-setup:2268
 msgid "Wireless interface found:"
 msgstr "Wireless interface found:"
 
-#: usr/local/bin/voidbr-wifi-setup:2265 usr/local/bin/voidbr-wifi-setup:2325
+#: usr/local/bin/voidbr-wifi-setup:2274 usr/local/bin/voidbr-wifi-setup:2334
 msgid "Wireless interface is up."
 msgstr "Wireless interface is up."
 
-#: usr/local/bin/voidbr-wifi-setup:2269
+#: usr/local/bin/voidbr-wifi-setup:2278
 msgid "Failed to bring interface up. Reloading driver..."
 msgstr "Failed to bring interface up. Reloading driver..."
 
-#: usr/local/bin/voidbr-wifi-setup:2288
+#: usr/local/bin/voidbr-wifi-setup:2297
 msgid "Unable to determine the wireless driver."
 msgstr "Unable to determine the wireless driver."
 
-#: usr/local/bin/voidbr-wifi-setup:2292
+#: usr/local/bin/voidbr-wifi-setup:2301
 msgid "Wireless module:"
 msgstr "Wireless module:"
 
-#: usr/local/bin/voidbr-wifi-setup:2297
+#: usr/local/bin/voidbr-wifi-setup:2306
 msgid "Removing dependent module:"
 msgstr "Removing dependent module:"
 
-#: usr/local/bin/voidbr-wifi-setup:2302
+#: usr/local/bin/voidbr-wifi-setup:2311
 msgid "Removing module:"
 msgstr "Removing module:"
 
-#: usr/local/bin/voidbr-wifi-setup:2308
+#: usr/local/bin/voidbr-wifi-setup:2317
 msgid "Loading module:"
 msgstr "Loading module:"
 
-#: usr/local/bin/voidbr-wifi-setup:2310
+#: usr/local/bin/voidbr-wifi-setup:2319
 msgid "Failed to load module:"
 msgstr "Failed to load module:"
 
-#: usr/local/bin/voidbr-wifi-setup:2319
+#: usr/local/bin/voidbr-wifi-setup:2328
 msgid "Wireless interface detected:"
 msgstr "Wireless interface detected:"
 
-#: usr/local/bin/voidbr-wifi-setup:2333
+#: usr/local/bin/voidbr-wifi-setup:2342
 msgid "Failed to restore the wireless interface."
 msgstr "Failed to restore the wireless interface."
 
-#: usr/local/bin/voidbr-wifi-setup:2341
+#: usr/local/bin/voidbr-wifi-setup:2350
 msgid "não está rodando, iniciando rotina para iniciar"
 msgstr "not running, starting routine to start"
 
-#: usr/local/bin/voidbr-wifi-setup:2347
+#: usr/local/bin/voidbr-wifi-setup:2356
 msgid "Erro: Não foi possivel iniciar"
 msgstr "Error: Unable to start"
 
-#: usr/local/bin/voidbr-wifi-setup:2356 usr/local/bin/voidbr-wifi-setup:2385
-#: usr/local/bin/voidbr-wifi-setup:2396
+#: usr/local/bin/voidbr-wifi-setup:2365 usr/local/bin/voidbr-wifi-setup:2394
+#: usr/local/bin/voidbr-wifi-setup:2405
 msgid "rodando, iniciando rotina de reset"
 msgstr "running, starting reset routine"
 
-#: usr/local/bin/voidbr-wifi-setup:2370
+#: usr/local/bin/voidbr-wifi-setup:2379
 msgid "Reiniciando módulo)"
 msgstr "Restarting module)"
 
-#: usr/local/bin/voidbr-wifi-setup:2376
+#: usr/local/bin/voidbr-wifi-setup:2385
 #, sh-format
 msgid "Erro: Nenhum módulo dependente encontrado para $driver_name"
 msgstr "Error: No dependent modules found for $driver_name"
 
-#: usr/local/bin/voidbr-wifi-setup:2480
+#: usr/local/bin/voidbr-wifi-setup:2489
 msgid "A Interface selecionada já tem acesso à internet!"
 msgstr "The selected Interface already has internet access!"
 
-#: usr/local/bin/voidbr-wifi-setup:2481
+#: usr/local/bin/voidbr-wifi-setup:2493
 msgid "Ainda deseja prosseguir ?"
-msgstr "Do you still want to proceed?"
+msgstr "Do you still want to continue?"
 
-#: usr/local/bin/voidbr-wifi-setup:2490
+#: usr/local/bin/voidbr-wifi-setup:2502
 msgid "Nenhum backend Wi-Fi encontrado."
 msgstr "No Wi-Fi backend found."
 
-#: usr/local/bin/voidbr-wifi-setup:2491
+#: usr/local/bin/voidbr-wifi-setup:2503
 msgid "Instale o NetworkManager, ou iwd, ou wpa_supplicant."
 msgstr "Install NetworkManager, or iwd, or wpa_supplicant."
 
-#: usr/local/bin/voidbr-wifi-setup:2501 usr/local/bin/voidbr-wifi-setup:2502
+#: usr/local/bin/voidbr-wifi-setup:2513 usr/local/bin/voidbr-wifi-setup:2514
 msgid "Reiniciando serviços/interface e desbloquendo rfkill"
 msgstr "Restarting services/interface and unlocking rfkill"
 
-#: usr/local/bin/voidbr-wifi-setup:2512
+#: usr/local/bin/voidbr-wifi-setup:2524
 msgid "Entregando interface ao NM"
 msgstr "Delivering interface to NM"
 
-#: usr/local/bin/voidbr-wifi-setup:2518
+#: usr/local/bin/voidbr-wifi-setup:2530
 msgid "Deixe em branco o campo Interface Wi-Fi para listar interfaces"
 msgstr "Leave the Wi-Fi Interface field blank to list interfaces"
 
-#: usr/local/bin/voidbr-wifi-setup:2519
+#: usr/local/bin/voidbr-wifi-setup:2531
 msgid "Deixe em branco o campo Rede Wi-Fi para escanear redes"
 msgstr "Leave the Wi-Fi Network field blank to scan networks"
 
-#: usr/local/bin/voidbr-wifi-setup:2528
+#: usr/local/bin/voidbr-wifi-setup:2540
 msgid "=== WIFI ==="
 msgstr "=== WIFI ==="
 
-#: usr/local/bin/voidbr-wifi-setup:2593 usr/local/bin/voidbr-wifi-setup:2607
-#: usr/local/bin/voidbr-wifi-setup:2622
+#: usr/local/bin/voidbr-wifi-setup:2605 usr/local/bin/voidbr-wifi-setup:2619
+#: usr/local/bin/voidbr-wifi-setup:2634
 msgid "Já existe um profile para essa rede.\\nDeseja utilizar ?"
 msgstr "A profile already exists for this network.\nDo you want to use it?"
 
-#: usr/local/bin/voidbr-wifi-setup:2639
+#: usr/local/bin/voidbr-wifi-setup:2651
 msgid "Isso é deliberado ?"
 msgstr "Is this deliberate?"
 
-#: usr/local/bin/voidbr-wifi-setup:2649
+#: usr/local/bin/voidbr-wifi-setup:2661
 msgid "Deseja configurar IP fixo?"
 msgstr "Do you want to configure fixed IP?"
 
-#: usr/local/bin/voidbr-wifi-setup:2655
+#: usr/local/bin/voidbr-wifi-setup:2667
 msgid "Prosseguir com a configuração e conexão ?"
 msgstr "Proceed with configuration and connection?"
 
-#: usr/local/bin/voidbr-wifi-setup:2661
+#: usr/local/bin/voidbr-wifi-setup:2673
 msgid "Removendo conexão antiga"
 msgstr "Removing old connection"
 
-#: usr/local/bin/voidbr-wifi-setup:2666
+#: usr/local/bin/voidbr-wifi-setup:2678
 msgid "Configurando conexão"
 msgstr "Configuring connection"
 
-#: usr/local/bin/voidbr-wifi-setup:2674
+#: usr/local/bin/voidbr-wifi-setup:2686
 msgid "Configurando autoconexão"
 msgstr "Configuring autoconnect"
 
-#: usr/local/bin/voidbr-wifi-setup:2679
+#: usr/local/bin/voidbr-wifi-setup:2691
 msgid "Configurando ip fixo"
 msgstr "Configuring fixed IP"
 
-#: usr/local/bin/voidbr-wifi-setup:2688
+#: usr/local/bin/voidbr-wifi-setup:2700
 msgid "Configurando dns"
 msgstr "Configuring dns"
 
-#: usr/local/bin/voidbr-wifi-setup:2698
+#: usr/local/bin/voidbr-wifi-setup:2710
 msgid "Preparando ambiente DHCP"
 msgstr "Preparing DHCP environment"
 
-#: usr/local/bin/voidbr-wifi-setup:2703
+#: usr/local/bin/voidbr-wifi-setup:2715
 msgid "Criando profile"
 msgstr "Creating profile"
 
-#: usr/local/bin/voidbr-wifi-setup:2708
+#: usr/local/bin/voidbr-wifi-setup:2720
 msgid "Iniciando conexão"
 msgstr "Starting connection"
 
-#: usr/local/bin/voidbr-wifi-setup:2713
+#: usr/local/bin/voidbr-wifi-setup:2725
 msgid "solicita configuração IP"
 msgstr "requests IP configuration"
 
-#: usr/local/bin/voidbr-wifi-setup:2750
+#: usr/local/bin/voidbr-wifi-setup:2762
 msgid "Deseja escanear por redes wifi?"
 msgstr "Do you want to scan over WiFi networks?"
