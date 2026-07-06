@@ -1,0 +1,203 @@
+# Chili Tradutor Go - 2.1.20-20260201
+# Copyright (C) 2019-2026 Vilmar Catafesta <vcatafesta@gmail.com>
+# This file is distributed under the same license as the chili-tradutor-go package.
+msgid ""
+msgstr ""
+"Project-Id-Version: chili-tradutor-go 2.1.20-20260201\n"
+"POT-Creation-Date: 2026-07-06 12:52-0400\n"
+"PO-Revision-Date: 2026-07-06 12:52-0400\n"
+"Last-Translator: Vilmar Catafesta <vcatafesta@gmail.com>\n"
+"Language-Team: Portuguese <https://github.com/chililinux/chili-tradutor-go>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: usr/local/bin/voidbr-testmirror:52
+msgid "Interrompido! Saindo..."
+msgstr "Interrompu ! Sortie..."
+
+#: usr/local/bin/voidbr-testmirror:113
+msgid "Checando caminho"
+msgstr "Vérification du chemin"
+
+#: usr/local/bin/voidbr-testmirror:133
+msgid "Removendo arquivos temporários..."
+msgstr "Suppression des fichiers temporaires..."
+
+#: usr/local/bin/voidbr-testmirror:191
+msgid "Testando internet em"
+msgstr "Tester Internet sur"
+
+#: usr/local/bin/voidbr-testmirror:195
+msgid "Sem rota para o servidor"
+msgstr "Pas de route vers le serveur"
+
+#: usr/local/bin/voidbr-testmirror:195
+msgid "verifique sua internet"
+msgstr "vérifie ton internet"
+
+#: usr/local/bin/voidbr-testmirror:371
+msgid "O repositório recomendado"
+msgstr "Le référentiel recommandé"
+
+#: usr/local/bin/voidbr-testmirror:373 usr/local/bin/voidbr-testmirror:375
+msgid "Tempo médio"
+msgstr "Temps moyen"
+
+#: usr/local/bin/voidbr-testmirror:377
+msgid "Repositório"
+msgstr "Dépôt"
+
+#: usr/local/bin/voidbr-testmirror:378
+msgid "Região"
+msgstr "Région"
+
+#: usr/local/bin/voidbr-testmirror:379
+msgid "Localização"
+msgstr "Emplacement"
+
+#: usr/local/bin/voidbr-testmirror:428
+msgid "escrevendo o resultado para"
+msgstr "écrire le résultat dans"
+
+#: usr/local/bin/voidbr-testmirror:593
+msgid "Atualizar"
+msgstr "Pour mettre à jour"
+
+#: usr/local/bin/voidbr-testmirror:593
+msgid "da internet?"
+msgstr "Et Internet ?"
+
+#: usr/local/bin/voidbr-testmirror:609
+msgid "Clonando"
+msgstr "Clonage"
+
+#: usr/local/bin/voidbr-testmirror:615
+msgid "Configurando permissões e copiando arquivo"
+msgstr "Définition des autorisations et copie du fichier"
+
+#: usr/local/bin/voidbr-testmirror:619
+msgid "Copiando arquivo"
+msgstr "Copie du fichier"
+
+#: usr/local/bin/voidbr-testmirror:619
+msgid "para"
+msgstr "à"
+
+#: usr/local/bin/voidbr-testmirror:624
+msgid "Removendo arquivos temporários"
+msgstr "Suppression des fichiers temporaires"
+
+#: usr/local/bin/voidbr-testmirror:629
+msgid "atualizado com sucesso, aproveite!"
+msgstr "Mis à jour avec succès, profitez-en !"
+
+#: usr/local/bin/voidbr-testmirror:658
+msgid "Tentando usar a lista local em"
+msgstr "Essayer d'utiliser la liste locale dans"
+
+#: usr/local/bin/voidbr-testmirror:661
+msgid "Não é possível continuar. Lista de espelhos não encontrado no"
+msgstr "Je ne peux pas continuer. Liste des miroirs introuvables dans"
+
+#: usr/local/bin/voidbr-testmirror:679
+msgid "Buscando nova lista de espelhos em"
+msgstr "Recherche d'une nouvelle liste de miroirs dans"
+
+#: usr/local/bin/voidbr-testmirror:682
+msgid "Não foi possível buscar a nova lista de espelhos de"
+msgstr "Impossible de récupérer une nouvelle liste de miroirs"
+
+#: usr/local/bin/voidbr-testmirror:683
+msgid "Verifique sua internet!"
+msgstr "Vérifiez votre Internet !"
+
+#: usr/local/bin/voidbr-testmirror:707
+msgid "ERRO"
+msgstr "ERREUR"
+
+#: usr/local/bin/voidbr-testmirror:708
+msgid "não encontrei o comando"
+msgstr "je n'ai pas trouvé la commande"
+
+#: usr/local/bin/voidbr-testmirror:709
+msgid "IMPOSSÍVEL CONTINUAR"
+msgstr "IMPOSSIBLE DE CONTINUER"
+
+#: usr/local/bin/voidbr-testmirror:710
+msgid "Esse script precisa dos comandos listados acima"
+msgstr "Ce script nécessite les commandes répertoriées ci-dessus"
+
+#: usr/local/bin/voidbr-testmirror:711
+msgid "Instale-os e/ou verifique se estão no seu"
+msgstr "Installez-les et/ou vérifiez s'ils sont sur votre"
+
+#: usr/local/bin/voidbr-testmirror:712
+msgid "Instalar o(s) comando(s)"
+msgstr "Installez la ou les commandes"
+
+#: usr/local/bin/voidbr-testmirror:713
+msgid "Rode novamente o aplicativo"
+msgstr "Exécutez à nouveau l'application"
+
+#: usr/local/bin/voidbr-testmirror:714
+msgid "Erro na instalação dos comandos. Tente manualmente."
+msgstr "Erreur lors de l'installation des commandes. Essayez manuellement."
+
+#: usr/local/bin/voidbr-testmirror:715
+msgid "Erro: você não pode realizar esta operação a menos que seja root."
+msgstr "erreur : vous ne pouvez effectuer cette opération que si vous êtes root."
+
+#: usr/local/bin/voidbr-testmirror:730
+msgid "#usar ping para testar"
+msgstr "#utiliser ping pour tester"
+
+#: usr/local/bin/voidbr-testmirror:731
+msgid "#usar download do Curl para teste"
+msgstr "#utilisez le téléchargement Curl pour les tests"
+
+#: usr/local/bin/voidbr-testmirror:732
+msgid "#configurar automaticamente /etc/xbps.d/ com o resultado obtido"
+msgstr "#configurer automatiquement /etc/xbps.d/ avec le résultat obtenu"
+
+#: usr/local/bin/voidbr-testmirror:733
+msgid "#saída resumida"
+msgstr "#résultat résumé"
+
+#: usr/local/bin/voidbr-testmirror:734
+msgid "#atualiza este aplicativo no repositório online. Precisa de Internet"
+msgstr "#mettre à jour cette application dans le référentiel en ligne. Besoin d'Internet"
+
+#: usr/local/bin/voidbr-testmirror:735
+msgid "#exibe a versão do aplicativo"
+msgstr "#afficher la version de l'application"
+
+#: usr/local/bin/voidbr-testmirror:736
+msgid "#remove cores da saída"
+msgstr "#supprimer les couleurs de la sortie"
+
+#: usr/local/bin/voidbr-testmirror:737
+msgid "#esta ajuda"
+msgstr "#ça aide"
+
+#: usr/local/bin/voidbr-testmirror:781
+msgid "requer um argumento"
+msgstr "nécessite un argument"
+
+#: usr/local/bin/voidbr-testmirror:783
+msgid "operação não suportada"
+msgstr "opération non prise en charge"
+
+#: usr/local/bin/voidbr-testmirror:783
+msgid "usar -h para ajuda"
+msgstr "utilisez -h pour obtenir de l'aide"
+
+#: usr/local/bin/voidbr-testmirror:842
+msgid "nenhuma operação especificada (usar -h para ajuda)"
+msgstr "aucune opération spécifiée (utilisez -h pour l'aide)"
+
+#: usr/local/bin/voidbr-testmirror:843
+msgid "apenas uma operação pode ser usada por vez"
+msgstr "une seule opération peut être utilisée à la fois"

@@ -1,0 +1,203 @@
+# Chili Tradutor Go - 2.1.20-20260201
+# Copyright (C) 2019-2026 Vilmar Catafesta <vcatafesta@gmail.com>
+# This file is distributed under the same license as the chili-tradutor-go package.
+msgid ""
+msgstr ""
+"Project-Id-Version: chili-tradutor-go 2.1.20-20260201\n"
+"POT-Creation-Date: 2026-07-06 12:52-0400\n"
+"PO-Revision-Date: 2026-07-06 12:52-0400\n"
+"Last-Translator: Vilmar Catafesta <vcatafesta@gmail.com>\n"
+"Language-Team: Portuguese <https://github.com/chililinux/chili-tradutor-go>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: usr/local/bin/voidbr-testmirror:52
+msgid "Interrompido! Saindo..."
+msgstr "中斷！正在退出…"
+
+#: usr/local/bin/voidbr-testmirror:113
+msgid "Checando caminho"
+msgstr "檢查路徑"
+
+#: usr/local/bin/voidbr-testmirror:133
+msgid "Removendo arquivos temporários..."
+msgstr "正在刪除臨時檔案..."
+
+#: usr/local/bin/voidbr-testmirror:191
+msgid "Testando internet em"
+msgstr "測試互聯網"
+
+#: usr/local/bin/voidbr-testmirror:195
+msgid "Sem rota para o servidor"
+msgstr "沒有到伺服器的路由"
+
+#: usr/local/bin/voidbr-testmirror:195
+msgid "verifique sua internet"
+msgstr "檢查你的互聯網"
+
+#: usr/local/bin/voidbr-testmirror:371
+msgid "O repositório recomendado"
+msgstr "推薦的儲存庫"
+
+#: usr/local/bin/voidbr-testmirror:373 usr/local/bin/voidbr-testmirror:375
+msgid "Tempo médio"
+msgstr "平均時間"
+
+#: usr/local/bin/voidbr-testmirror:377
+msgid "Repositório"
+msgstr "儲存庫"
+
+#: usr/local/bin/voidbr-testmirror:378
+msgid "Região"
+msgstr "地區"
+
+#: usr/local/bin/voidbr-testmirror:379
+msgid "Localização"
+msgstr "地點"
+
+#: usr/local/bin/voidbr-testmirror:428
+msgid "escrevendo o resultado para"
+msgstr "將結果寫入"
+
+#: usr/local/bin/voidbr-testmirror:593
+msgid "Atualizar"
+msgstr "更新"
+
+#: usr/local/bin/voidbr-testmirror:593
+msgid "da internet?"
+msgstr "那麼互聯網呢？"
+
+#: usr/local/bin/voidbr-testmirror:609
+msgid "Clonando"
+msgstr "複製"
+
+#: usr/local/bin/voidbr-testmirror:615
+msgid "Configurando permissões e copiando arquivo"
+msgstr "設定權限和複製文件"
+
+#: usr/local/bin/voidbr-testmirror:619
+msgid "Copiando arquivo"
+msgstr "複製文件"
+
+#: usr/local/bin/voidbr-testmirror:619
+msgid "para"
+msgstr "到"
+
+#: usr/local/bin/voidbr-testmirror:624
+msgid "Removendo arquivos temporários"
+msgstr "正在刪除臨時檔案"
+
+#: usr/local/bin/voidbr-testmirror:629
+msgid "atualizado com sucesso, aproveite!"
+msgstr "更新成功，開心！"
+
+#: usr/local/bin/voidbr-testmirror:658
+msgid "Tentando usar a lista local em"
+msgstr "嘗試使用本地列表"
+
+#: usr/local/bin/voidbr-testmirror:661
+msgid "Não é possível continuar. Lista de espelhos não encontrado no"
+msgstr "無法繼續。未找到的鏡像列表"
+
+#: usr/local/bin/voidbr-testmirror:679
+msgid "Buscando nova lista de espelhos em"
+msgstr "正在搜尋新的鏡像列表"
+
+#: usr/local/bin/voidbr-testmirror:682
+msgid "Não foi possível buscar a nova lista de espelhos de"
+msgstr "無法取得新的鏡像列表"
+
+#: usr/local/bin/voidbr-testmirror:683
+msgid "Verifique sua internet!"
+msgstr "檢查你的網路！"
+
+#: usr/local/bin/voidbr-testmirror:707
+msgid "ERRO"
+msgstr "錯誤"
+
+#: usr/local/bin/voidbr-testmirror:708
+msgid "não encontrei o comando"
+msgstr "我沒找到命令"
+
+#: usr/local/bin/voidbr-testmirror:709
+msgid "IMPOSSÍVEL CONTINUAR"
+msgstr "無法繼續"
+
+#: usr/local/bin/voidbr-testmirror:710
+msgid "Esse script precisa dos comandos listados acima"
+msgstr "該腳本需要上面列出的命令"
+
+#: usr/local/bin/voidbr-testmirror:711
+msgid "Instale-os e/ou verifique se estão no seu"
+msgstr "安裝它們和/或檢查它們是否在您的"
+
+#: usr/local/bin/voidbr-testmirror:712
+msgid "Instalar o(s) comando(s)"
+msgstr "安裝命令"
+
+#: usr/local/bin/voidbr-testmirror:713
+msgid "Rode novamente o aplicativo"
+msgstr "再次運行應用程式"
+
+#: usr/local/bin/voidbr-testmirror:714
+msgid "Erro na instalação dos comandos. Tente manualmente."
+msgstr "安裝命令時發生錯誤。手動嘗試。"
+
+#: usr/local/bin/voidbr-testmirror:715
+msgid "Erro: você não pode realizar esta operação a menos que seja root."
+msgstr "錯誤：除非您是 root，否則無法執行此操作。"
+
+#: usr/local/bin/voidbr-testmirror:730
+msgid "#usar ping para testar"
+msgstr "#使用ping測試"
+
+#: usr/local/bin/voidbr-testmirror:731
+msgid "#usar download do Curl para teste"
+msgstr "#使用Curl下載進行測試"
+
+#: usr/local/bin/voidbr-testmirror:732
+msgid "#configurar automaticamente /etc/xbps.d/ com o resultado obtido"
+msgstr "#根據得到的結果自動配置/etc/xbps.d/"
+
+#: usr/local/bin/voidbr-testmirror:733
+msgid "#saída resumida"
+msgstr "#總結輸出"
+
+#: usr/local/bin/voidbr-testmirror:734
+msgid "#atualiza este aplicativo no repositório online. Precisa de Internet"
+msgstr "#更新在线存储库中的此应用程序。需要網路"
+
+#: usr/local/bin/voidbr-testmirror:735
+msgid "#exibe a versão do aplicativo"
+msgstr "#顯示應用程式版本"
+
+#: usr/local/bin/voidbr-testmirror:736
+msgid "#remove cores da saída"
+msgstr "#從輸出中刪除顏色"
+
+#: usr/local/bin/voidbr-testmirror:737
+msgid "#esta ajuda"
+msgstr "#這有幫助"
+
+#: usr/local/bin/voidbr-testmirror:781
+msgid "requer um argumento"
+msgstr "需要一個論據"
+
+#: usr/local/bin/voidbr-testmirror:783
+msgid "operação não suportada"
+msgstr "不支援操作"
+
+#: usr/local/bin/voidbr-testmirror:783
+msgid "usar -h para ajuda"
+msgstr "使用 -h 獲取幫助"
+
+#: usr/local/bin/voidbr-testmirror:842
+msgid "nenhuma operação especificada (usar -h para ajuda)"
+msgstr "未指定操作（使用 -h 取得協助）"
+
+#: usr/local/bin/voidbr-testmirror:843
+msgid "apenas uma operação pode ser usada por vez"
+msgstr "一次只能使用一項操作"
