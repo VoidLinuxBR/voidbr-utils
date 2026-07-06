@@ -31,7 +31,7 @@
 #  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ##############################################################################
 #export LANGUAGE=pt_BR
-export TEXTDOMAINDIR=/usr/share/locale
+export TEXTDOMAINDIR=usr/share/locale
 export TEXTDOMAIN=voidbr-utils-selector
 
 # Definir a variável de controle para restaurar a formatação original

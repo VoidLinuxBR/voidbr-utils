@@ -1,0 +1,83 @@
+# Chili Tradutor Go - 2.1.20-20260201
+# Copyright (C) 2019-2026 Vilmar Catafesta <vcatafesta@gmail.com>
+# This file is distributed under the same license as the chili-tradutor-go package.
+msgid ""
+msgstr ""
+"Project-Id-Version: chili-tradutor-go 2.1.20-20260201\n"
+"POT-Creation-Date: 2026-07-06 19:31-0400\n"
+"PO-Revision-Date: 2026-07-06 19:31-0400\n"
+"Last-Translator: Vilmar Catafesta <vcatafesta@gmail.com>\n"
+"Language-Team: Portuguese <https://github.com/chililinux/chili-tradutor-go>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: it\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: usr/local/bin/voidbr-lvm-thin-manager:289
+msgid "This script must be run as root. Elevating privileges..."
+msgstr "Questo script deve essere eseguito come root. Elevare i privilegi..."
+
+#: usr/local/bin/voidbr-lvm-thin-manager:369
+msgid "Este é um software livre: você é livre para alterá-lo e redistribuí-lo."
+msgstr "Questo è software gratuito: sei libero di modificarlo e ridistribuirlo."
+
+#: usr/local/bin/voidbr-lvm-thin-manager:371
+msgid "inclui software de código aberto sob uma variedade de outras licenças."
+msgstr "include software open source sotto una varietà di altre licenze."
+
+#: usr/local/bin/voidbr-lvm-thin-manager:372
+msgid "Você pode ler instruções sobre como baixar e criar para você mesmo"
+msgstr "Puoi leggere le istruzioni su come scaricare e creare tu stesso"
+
+#: usr/local/bin/voidbr-lvm-thin-manager:373
+msgid "o código fonte específico usado para criar esta cópia."
+msgstr "il codice sorgente specifico utilizzato per creare questa copia."
+
+#: usr/local/bin/voidbr-lvm-thin-manager:374
+msgid "Este programa vem com absolutamente NENHUMA garantia."
+msgstr "Questo programma non prevede assolutamente alcuna garanzia."
+
+#: usr/local/bin/voidbr-lvm-thin-manager:416
+msgid "Não foi possível encontrar o comando"
+msgstr "Impossibile trovare il comando"
+
+#: usr/local/bin/voidbr-lvm-thin-manager:417
+msgid "instalar pacote"
+msgstr "installare il pacchetto"
+
+#: usr/local/bin/voidbr-lvm-thin-manager:433
+msgid "IMPOSSÍVEL CONTINUAR"
+msgstr "IMPOSSIBILE CONTINUARE"
+
+#: usr/local/bin/voidbr-lvm-thin-manager:434
+msgid "Este script precisa dos comandos listados acima"
+msgstr "Questo script necessita dei comandi elencati sopra"
+
+#: usr/local/bin/voidbr-lvm-thin-manager:435
+msgid "Instale-os e/ou verifique se eles estão em seu"
+msgstr "Installali e/o assicurati che siano sul tuo"
+
+#: usr/local/bin/voidbr-lvm-thin-manager:443
+msgid "Instalar dependências base agora?"
+msgstr "Installare le dipendenze di base adesso?"
+
+#: usr/local/bin/voidbr-lvm-thin-manager:444
+msgid "Preparando ambiente para"
+msgstr "Preparazione dell'ambiente per"
+
+#: usr/local/bin/voidbr-lvm-thin-manager:448
+msgid "Erro Crítico:"
+msgstr "Errore critico:"
+
+#: usr/local/bin/voidbr-lvm-thin-manager:448
+msgid "A instalação dos pacotes básicos falhou."
+msgstr "L'installazione dei pacchetti base non è riuscita."
+
+#: usr/local/bin/voidbr-lvm-thin-manager:451
+msgid "Sucesso:"
+msgstr "Successo:"
+
+#: usr/local/bin/voidbr-lvm-thin-manager:451
+msgid "Dependências instaladas."
+msgstr "Dipendenze installate."

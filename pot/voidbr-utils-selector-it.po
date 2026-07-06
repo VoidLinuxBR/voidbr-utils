@@ -1,0 +1,128 @@
+# Chili Tradutor Go - 2.1.20-20260201
+# Copyright (C) 2019-2026 Vilmar Catafesta <vcatafesta@gmail.com>
+# This file is distributed under the same license as the chili-tradutor-go package.
+msgid ""
+msgstr ""
+"Project-Id-Version: chili-tradutor-go 2.1.20-20260201\n"
+"POT-Creation-Date: 2026-07-06 19:05-0400\n"
+"PO-Revision-Date: 2026-07-06 19:05-0400\n"
+"Last-Translator: Vilmar Catafesta <vcatafesta@gmail.com>\n"
+"Language-Team: Portuguese <https://github.com/chililinux/chili-tradutor-go>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: it\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: usr/local/bin/voidbr-utils-selector:94
+msgid "Menu Principal"
+msgstr "Menù Principale"
+
+#: usr/local/bin/voidbr-utils-selector:103
+msgid "Utilitário para configurar redes wi-fi"
+msgstr "Utilità per la configurazione delle reti Wi-Fi"
+
+#: usr/local/bin/voidbr-utils-selector:104
+msgid "Utilitário para configurar pulseaudio"
+msgstr "Utilità per configurare PulseAudio"
+
+#: usr/local/bin/voidbr-utils-selector:105
+msgid "Utilitário para configurar pipewire"
+msgstr "Utilità per configurare pipewire"
+
+#: usr/local/bin/voidbr-utils-selector:106
+msgid "Utilitário para executar chroot"
+msgstr "Utilità per eseguire chroot"
+
+#: usr/local/bin/voidbr-utils-selector:107
+msgid "Utilitário para clonar discos"
+msgstr "Utilità per clonare i dischi"
+
+#: usr/local/bin/voidbr-utils-selector:108
+msgid "Utilitário para selecionar temas para o dialog"
+msgstr "Utilità per selezionare temi per la finestra di dialogo"
+
+#: usr/local/bin/voidbr-utils-selector:109
+msgid "Utilitário para configurar repositórios do Void"
+msgstr "Utilità per la configurazione dei repository Void"
+
+#: usr/local/bin/voidbr-utils-selector:110
+msgid "Utilitário para criar backups com tar"
+msgstr "Utilità per creare backup con tar"
+
+#: usr/local/bin/voidbr-utils-selector:111
+msgid "Utilitário para particionar disco"
+msgstr "Utilità per partizionare il disco"
+
+#: usr/local/bin/voidbr-utils-selector:112
+msgid "Utilitário para listar e remover VG (Grupo de Volumes)"
+msgstr "Utilità per elencare e rimuovere VG (gruppo di volumi)"
+
+#: usr/local/bin/voidbr-utils-selector:113
+msgid "Utilitário para gerenciar serviços do Void"
+msgstr "Utilità per gestire i servizi Void"
+
+#: usr/local/bin/voidbr-utils-selector:114
+msgid "Utilitário para configurar fonte no tty"
+msgstr "Utilità per configurare il carattere in tty"
+
+#: usr/local/bin/voidbr-utils-selector:115
+msgid "Utilitário para testar latência dos mirrors do Void"
+msgstr "Utilità per testare la latenza dei mirror del Vuoto"
+
+#: usr/local/bin/voidbr-utils-selector:116
+msgid "Utilitário para configurar resolucao de video"
+msgstr "Utilità per configurare la risoluzione video"
+
+#: usr/local/bin/voidbr-utils-selector:117
+msgid "Utilitário para clonar repositórios"
+msgstr "Utilità per clonare repository"
+
+#: usr/local/bin/voidbr-utils-selector:118
+msgid "Utilitário para listar variáveis UEFI"
+msgstr "Utilità per elencare le variabili UEFI"
+
+#: usr/local/bin/voidbr-utils-selector:119
+msgid "Utilitário para rodar dispositivos de bloco - like VirtManager"
+msgstr "Utilità per eseguire dispositivi a blocchi, come VirtManager"
+
+#: usr/local/bin/voidbr-utils-selector:120
+msgid "Utilitário para otimização automática de máquinas com pouca RAM"
+msgstr "Utilità per l'ottimizzazione automatica di macchine con poca RAM"
+
+#: usr/local/bin/voidbr-utils-selector:121
+msgid "Utilitário para criação de pacotes xbps via receita like Arch PKGBUILD"
+msgstr "Utilità per creare pacchetti xbps tramite ricette come Arch PKGBUILD"
+
+#: usr/local/bin/voidbr-utils-selector:122
+msgid "Utilitário para internacionalização de scripts"
+msgstr "Utilità per internazionalizzare gli script"
+
+#: usr/local/bin/voidbr-utils-selector:123
+msgid "Utilitário para gerenciar volumes LVM"
+msgstr "Utilità per gestire i volumi LVM"
+
+#: usr/local/bin/voidbr-utils-selector:124
+msgid "Utilitário para gerenciamento de pacotes xbps"
+msgstr "Utilità di gestione dei pacchetti xbps"
+
+#: usr/local/bin/voidbr-utils-selector:125
+msgid "Utilitário para gerenciamento de serviços"
+msgstr "Utilità di gestione del servizio"
+
+#: usr/local/bin/voidbr-utils-selector:126
+msgid "Utilitário para listar serviços"
+msgstr "Utilità per elencare i servizi"
+
+#: usr/local/bin/voidbr-utils-selector:143
+msgid "Escolha o utilitário desejado:"
+msgstr "Scegli l'utilità desiderata:"
+
+#: usr/local/bin/voidbr-utils-selector:155
+#, sh-format
+msgid "utilitário não foi encontrado no \\$PATH!"
+msgstr "l'utilità non è stata trovata in \$PATH!"
+
+#: usr/local/bin/voidbr-utils-selector:162
+msgid "Nenhum utilitário foi escolhido!"
+msgstr "Nessuna utilità è stata scelta!"

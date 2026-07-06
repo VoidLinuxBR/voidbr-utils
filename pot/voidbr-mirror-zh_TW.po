@@ -1,0 +1,172 @@
+# Chili Tradutor Go - 2.1.20-20260201
+# Copyright (C) 2019-2026 Vilmar Catafesta <vcatafesta@gmail.com>
+# This file is distributed under the same license as the chili-tradutor-go package.
+msgid ""
+msgstr ""
+"Project-Id-Version: chili-tradutor-go 2.1.20-20260201\n"
+"POT-Creation-Date: 2026-07-06 19:04-0400\n"
+"PO-Revision-Date: 2026-07-06 19:04-0400\n"
+"Last-Translator: Vilmar Catafesta <vcatafesta@gmail.com>\n"
+"Language-Team: Portuguese <https://github.com/chililinux/chili-tradutor-go>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: usr/local/bin/voidbr-mirror:54
+msgid "Interrompido! Saindo..."
+msgstr "中斷！正在退出…"
+
+#: usr/local/bin/voidbr-mirror:97
+msgid "Removendo arquivos temporários..."
+msgstr "正在刪除臨時檔案..."
+
+#: usr/local/bin/voidbr-mirror:323
+msgid "verificando caminho"
+msgstr "檢查路徑"
+
+#: usr/local/bin/voidbr-mirror:674
+msgid "LISTA DE ESPELHOS"
+msgstr "鏡子列表"
+
+#: usr/local/bin/voidbr-mirror:674
+msgid "Não é possível continuar!"
+msgstr "無法繼續！"
+
+#: usr/local/bin/voidbr-mirror:675
+msgid "Arquivo de lista de espelhos não encontrado no caminho"
+msgstr "在路徑中找不到鏡像清單文件"
+
+#: usr/local/bin/voidbr-mirror:748 usr/local/bin/voidbr-mirror:752
+#: usr/local/bin/voidbr-mirror:756 usr/local/bin/voidbr-mirror:885
+msgid "=== ESPELHO ==="
+msgstr "===鏡子==="
+
+#: usr/local/bin/voidbr-mirror:748 usr/local/bin/voidbr-mirror:754
+msgid "Aguarde..."
+msgstr "請稍候..."
+
+#: usr/local/bin/voidbr-mirror:748 usr/local/bin/voidbr-mirror:754
+msgid "testando com"
+msgstr "測試用"
+
+#: usr/local/bin/voidbr-mirror:751
+msgid "não retornou resultado"
+msgstr "沒有回傳結果"
+
+#: usr/local/bin/voidbr-mirror:756
+msgid "não foi localizado no"
+msgstr "不位於"
+
+#: usr/local/bin/voidbr-mirror:757
+msgid "não foi localizado em"
+msgstr "不位於"
+
+#: usr/local/bin/voidbr-mirror:772
+msgid "Deseja definir/alterar o espelho deste host para o(s) escolhido(s) ?"
+msgstr "您要將此主機的鏡像設定/變更為所選主機嗎？"
+
+#: usr/local/bin/voidbr-mirror:818 usr/local/bin/voidbr-mirror:820
+msgid "BAIXAR LISTA DE ESPELHOS"
+msgstr "下載鏡子列表"
+
+#: usr/local/bin/voidbr-mirror:818
+msgid "Buscando nova lista de espelhos em"
+msgstr "正在搜尋新的鏡像列表"
+
+#: usr/local/bin/voidbr-mirror:821
+msgid "Verifique sua conexão com a internet"
+msgstr "檢查您的網路連接"
+
+#: usr/local/bin/voidbr-mirror:822
+msgid "Incapaz de buscar uma nova lista de espelhos de"
+msgstr "無法取得新的鏡像列表"
+
+#: usr/local/bin/voidbr-mirror:823
+msgid "Tentando usar a lista local"
+msgstr "嘗試使用本地列表"
+
+#: usr/local/bin/voidbr-mirror:863
+msgid "erro: você não pode realizar esta operação a menos que seja root."
+msgstr "錯誤：除非您是 root，否則無法執行此操作。"
+
+#: usr/local/bin/voidbr-mirror:864
+msgid "ERRO"
+msgstr "錯誤"
+
+#: usr/local/bin/voidbr-mirror:865
+msgid "não encontrei o comando"
+msgstr "我沒找到命令"
+
+#: usr/local/bin/voidbr-mirror:866
+msgid "IMPOSSÍVEL CONTINUAR"
+msgstr "無法繼續"
+
+#: usr/local/bin/voidbr-mirror:867
+msgid "Esse script precisa dos comandos listados acima"
+msgstr "該腳本需要上面列出的命令"
+
+#: usr/local/bin/voidbr-mirror:868
+msgid "Instale-os e/ou verifique se estão no seu"
+msgstr "安裝它們和/或檢查它們是否在您的"
+
+#: usr/local/bin/voidbr-mirror:869
+msgid "Instalar o(s) comando(s)"
+msgstr "安裝命令"
+
+#: usr/local/bin/voidbr-mirror:870
+msgid "INFO: Rode novamente o aplicativo"
+msgstr "訊息：再次運行應用程式"
+
+#: usr/local/bin/voidbr-mirror:871
+msgid "ERRO na instalação dos comandos. Tente manualmente."
+msgstr "安裝命令時發生錯誤。手動嘗試。"
+
+#: usr/local/bin/voidbr-mirror:872
+msgid "Instalação abortada"
+msgstr "安裝已中止"
+
+#: usr/local/bin/voidbr-mirror:873
+msgid "Ok"
+msgstr "好的"
+
+#: usr/local/bin/voidbr-mirror:874
+msgid "Aceitar"
+msgstr "接受"
+
+#: usr/local/bin/voidbr-mirror:875
+msgid "Sair"
+msgstr "出去"
+
+#: usr/local/bin/voidbr-mirror:876
+msgid "Sim"
+msgstr "辛"
+
+#: usr/local/bin/voidbr-mirror:877
+msgid "Não"
+msgstr "不"
+
+#: usr/local/bin/voidbr-mirror:878
+msgid "Gerando"
+msgstr "產生"
+
+#: usr/local/bin/voidbr-mirror:879
+msgid "Atualizando espelhos..."
+msgstr "正在更新鏡像..."
+
+#: usr/local/bin/voidbr-mirror:880
+msgid "Usar as setas ↑ e ↓ para navegar."
+msgstr "使用 ↑ 和 ↓ 鍵進行導航。"
+
+#: usr/local/bin/voidbr-mirror:881
+msgid "Usar TAB para alternar entre os botões."
+msgstr "使用 TAB 鍵在按鈕之間切換。"
+
+#: usr/local/bin/voidbr-mirror:882
+msgid "Usar ENTER ou BARRA DE ESPAÇO para selecionar e aceitar."
+msgstr "使用 ENTER 或 空格鍵 來選擇並確認。"
+
+#: usr/local/bin/voidbr-mirror:884
+msgid "Configurando espelho em"
+msgstr "配置鏡像開啟"

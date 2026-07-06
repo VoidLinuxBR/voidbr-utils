@@ -1,0 +1,151 @@
+# Chili Tradutor Go - 2.1.20-20260201
+# Copyright (C) 2019-2026 Vilmar Catafesta <vcatafesta@gmail.com>
+# This file is distributed under the same license as the chili-tradutor-go package.
+msgid ""
+msgstr ""
+"Project-Id-Version: chili-tradutor-go 2.1.20-20260201\n"
+"POT-Creation-Date: 2026-07-06 19:16-0400\n"
+"PO-Revision-Date: 2026-07-06 19:16-0400\n"
+"Last-Translator: Vilmar Catafesta <vcatafesta@gmail.com>\n"
+"Language-Team: Portuguese <https://github.com/chililinux/chili-tradutor-go>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ko\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: usr/local/bin/voidbr-services:44
+msgid "dialog"
+msgstr "대화"
+
+#: usr/local/bin/voidbr-services:49
+msgid "Interrompido! Saindo..."
+msgstr "중단된! 퇴거..."
+
+#: usr/local/bin/voidbr-services:53
+msgid "Removindo arquivos temporários"
+msgstr "임시 파일 제거"
+
+#: usr/local/bin/voidbr-services:569
+msgid "Usar as setas ↑ e ↓ para navegar"
+msgstr "탐색하려면 ↑ 및 ↓ 화살표를 사용하세요."
+
+#: usr/local/bin/voidbr-services:570
+msgid "Usar TAB para alternar entre os botões"
+msgstr "TAB을 사용하여 버튼 간 전환"
+
+#: usr/local/bin/voidbr-services:571
+msgid "Usar BARRA DE ESPAÇO para selecionar/marcar"
+msgstr "선택/표시하려면 스페이스바를 사용하세요."
+
+#: usr/local/bin/voidbr-services:572
+msgid "Usar ENTER para aceitar/executar"
+msgstr "ENTER를 사용하여 수락/실행"
+
+#: usr/local/bin/voidbr-services:574
+msgid "ERRO"
+msgstr "오류"
+
+#: usr/local/bin/voidbr-services:575
+msgid "erro: você não pode realizar esta operação a menos que seja root."
+msgstr "오류: 루트가 아니면 이 작업을 수행할 수 없습니다."
+
+#: usr/local/bin/voidbr-services:576
+msgid "IMPOSSÍVEL CONTINUAR"
+msgstr "계속할 수 없습니다"
+
+#: usr/local/bin/voidbr-services:577
+msgid "Esse script precisa dos comandos listados acima"
+msgstr "이 스크립트에는 위에 나열된 명령이 필요합니다."
+
+#: usr/local/bin/voidbr-services:578
+msgid "Instale-os e/ou verifique se estão no seu"
+msgstr "이를 설치하거나 귀하의 컴퓨터에 있는지 확인하십시오."
+
+#: usr/local/bin/voidbr-services:579
+msgid "Instalar o(s) comando(s)"
+msgstr "명령 설치"
+
+#: usr/local/bin/voidbr-services:580
+msgid "INFO: Rode novamente o aplicativo"
+msgstr "정보: 애플리케이션을 다시 실행하세요."
+
+#: usr/local/bin/voidbr-services:581
+msgid "ERRO na instalação dos comandos. Tente manualmente."
+msgstr "명령을 설치하는 중에 오류가 발생했습니다. 수동으로 시도해 보세요."
+
+#: usr/local/bin/voidbr-services:582
+msgid "Instalação abortada"
+msgstr "설치가 중단되었습니다."
+
+#: usr/local/bin/voidbr-services:583
+msgid "Ok"
+msgstr "좋아요"
+
+#: usr/local/bin/voidbr-services:584
+msgid "Sim"
+msgstr "심"
+
+#: usr/local/bin/voidbr-services:585
+msgid "Não"
+msgstr "아니요"
+
+#: usr/local/bin/voidbr-services:586
+msgid "Escolher espelho"
+msgstr "거울을 선택하세요"
+
+#: usr/local/bin/voidbr-services:587
+msgid "Aceitar"
+msgstr "수락하려면"
+
+#: usr/local/bin/voidbr-services:588
+msgid "Sair"
+msgstr "외출하다"
+
+#: usr/local/bin/voidbr-services:589
+msgid "gerenciador de serviços"
+msgstr "서비스 관리자"
+
+#: usr/local/bin/voidbr-services:590
+msgid "Aguarde... Verificando serviços instalados"
+msgstr "잠시만 기다려주세요... 설치된 서비스를 확인하는 중입니다."
+
+#: usr/local/bin/voidbr-services:591
+msgid "Aguarde... Verificando serviços ativos"
+msgstr "잠시만 기다려 주십시오... 활성 서비스를 확인하는 중입니다."
+
+#: usr/local/bin/voidbr-services:592
+msgid "Nenhum serviço foi encontrado em"
+msgstr "다음에서 서비스를 찾을 수 없습니다."
+
+#: usr/local/bin/voidbr-services:594
+msgid "Escolha idioma"
+msgstr "언어를 선택하세요"
+
+#: usr/local/bin/voidbr-services:595
+msgid "Desativar"
+msgstr "장애를 입히다"
+
+#: usr/local/bin/voidbr-services:596
+msgid "Ativar"
+msgstr "활성화"
+
+#: usr/local/bin/voidbr-services:597
+msgid "Parando serviço"
+msgstr "서비스 중지"
+
+#: usr/local/bin/voidbr-services:598
+msgid "Ativando serviço"
+msgstr "서비스 활성화"
+
+#: usr/local/bin/voidbr-services:599
+msgid "Iniciando serviço"
+msgstr "서비스 시작"
+
+#: usr/local/bin/voidbr-services:600
+msgid "Desativando serviço"
+msgstr "서비스 비활성화 중"
+
+#: usr/local/bin/voidbr-services:756
+msgid "Use barra de espaço para marcar/escolher."
+msgstr "선택/선택하려면 스페이스바를 사용하세요."
