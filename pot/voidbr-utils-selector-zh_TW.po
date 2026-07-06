@@ -1,0 +1,128 @@
+# Chili Tradutor Go - 2.1.20-20260201
+# Copyright (C) 2019-2026 Vilmar Catafesta <vcatafesta@gmail.com>
+# This file is distributed under the same license as the chili-tradutor-go package.
+msgid ""
+msgstr ""
+"Project-Id-Version: chili-tradutor-go 2.1.20-20260201\n"
+"POT-Creation-Date: 2026-07-06 19:05-0400\n"
+"PO-Revision-Date: 2026-07-06 19:05-0400\n"
+"Last-Translator: Vilmar Catafesta <vcatafesta@gmail.com>\n"
+"Language-Team: Portuguese <https://github.com/chililinux/chili-tradutor-go>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: usr/local/bin/voidbr-utils-selector:94
+msgid "Menu Principal"
+msgstr "菜單校長"
+
+#: usr/local/bin/voidbr-utils-selector:103
+msgid "Utilitário para configurar redes wi-fi"
+msgstr "用於配置 Wi-Fi 網路的實用程序"
+
+#: usr/local/bin/voidbr-utils-selector:104
+msgid "Utilitário para configurar pulseaudio"
+msgstr "配置pulseaudio的實用程式"
+
+#: usr/local/bin/voidbr-utils-selector:105
+msgid "Utilitário para configurar pipewire"
+msgstr "配置管道線的實用程式"
+
+#: usr/local/bin/voidbr-utils-selector:106
+msgid "Utilitário para executar chroot"
+msgstr "運行 chroot 的實用程序"
+
+#: usr/local/bin/voidbr-utils-selector:107
+msgid "Utilitário para clonar discos"
+msgstr "克隆磁碟的實用程式"
+
+#: usr/local/bin/voidbr-utils-selector:108
+msgid "Utilitário para selecionar temas para o dialog"
+msgstr "用於選擇對話框主題的實用程序"
+
+#: usr/local/bin/voidbr-utils-selector:109
+msgid "Utilitário para configurar repositórios do Void"
+msgstr "用於配置 Void 儲存庫的實用程序"
+
+#: usr/local/bin/voidbr-utils-selector:110
+msgid "Utilitário para criar backups com tar"
+msgstr "使用 tar 建立備份的實用程式"
+
+#: usr/local/bin/voidbr-utils-selector:111
+msgid "Utilitário para particionar disco"
+msgstr "磁碟分割區實用程式"
+
+#: usr/local/bin/voidbr-utils-selector:112
+msgid "Utilitário para listar e remover VG (Grupo de Volumes)"
+msgstr "用於列出和刪除 VG（卷組）的實用程序"
+
+#: usr/local/bin/voidbr-utils-selector:113
+msgid "Utilitário para gerenciar serviços do Void"
+msgstr "管理 Void 服務的實用程序"
+
+#: usr/local/bin/voidbr-utils-selector:114
+msgid "Utilitário para configurar fonte no tty"
+msgstr "在 tty 中配置字體的實用程式"
+
+#: usr/local/bin/voidbr-utils-selector:115
+msgid "Utilitário para testar latência dos mirrors do Void"
+msgstr "測試 Void 鏡像延遲的實用程序"
+
+#: usr/local/bin/voidbr-utils-selector:116
+msgid "Utilitário para configurar resolucao de video"
+msgstr "配置視訊解析度的實用程式"
+
+#: usr/local/bin/voidbr-utils-selector:117
+msgid "Utilitário para clonar repositórios"
+msgstr "克隆存儲庫的實用程式"
+
+#: usr/local/bin/voidbr-utils-selector:118
+msgid "Utilitário para listar variáveis UEFI"
+msgstr "列出 UEFI 變數的實用程序"
+
+#: usr/local/bin/voidbr-utils-selector:119
+msgid "Utilitário para rodar dispositivos de bloco - like VirtManager"
+msgstr "用於運行區塊設備的實用程式 - 例如 VirtManager"
+
+#: usr/local/bin/voidbr-utils-selector:120
+msgid "Utilitário para otimização automática de máquinas com pouca RAM"
+msgstr "用於自動優化低 RAM 機器的實用程序"
+
+#: usr/local/bin/voidbr-utils-selector:121
+msgid "Utilitário para criação de pacotes xbps via receita like Arch PKGBUILD"
+msgstr "用於透過 Arch PKGBUILD 等配方創建 xbps 包的實用程序"
+
+#: usr/local/bin/voidbr-utils-selector:122
+msgid "Utilitário para internacionalização de scripts"
+msgstr "國際化腳本的實用程式"
+
+#: usr/local/bin/voidbr-utils-selector:123
+msgid "Utilitário para gerenciar volumes LVM"
+msgstr "管理 LVM 磁碟區的實用程式"
+
+#: usr/local/bin/voidbr-utils-selector:124
+msgid "Utilitário para gerenciamento de pacotes xbps"
+msgstr "xbps 套件管理實用程式"
+
+#: usr/local/bin/voidbr-utils-selector:125
+msgid "Utilitário para gerenciamento de serviços"
+msgstr "服務管理實用程式"
+
+#: usr/local/bin/voidbr-utils-selector:126
+msgid "Utilitário para listar serviços"
+msgstr "列出服務的實用程序"
+
+#: usr/local/bin/voidbr-utils-selector:143
+msgid "Escolha o utilitário desejado:"
+msgstr "選擇所需的實用程式："
+
+#: usr/local/bin/voidbr-utils-selector:155
+#, sh-format
+msgid "utilitário não foi encontrado no \\$PATH!"
+msgstr "在 \$PATH 中找不到實用程式！"
+
+#: usr/local/bin/voidbr-utils-selector:162
+msgid "Nenhum utilitário foi escolhido!"
+msgstr "沒有選擇公用事業！"

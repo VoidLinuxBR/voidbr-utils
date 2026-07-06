@@ -1,0 +1,172 @@
+# Chili Tradutor Go - 2.1.20-20260201
+# Copyright (C) 2019-2026 Vilmar Catafesta <vcatafesta@gmail.com>
+# This file is distributed under the same license as the chili-tradutor-go package.
+msgid ""
+msgstr ""
+"Project-Id-Version: chili-tradutor-go 2.1.20-20260201\n"
+"POT-Creation-Date: 2026-07-06 19:04-0400\n"
+"PO-Revision-Date: 2026-07-06 19:04-0400\n"
+"Last-Translator: Vilmar Catafesta <vcatafesta@gmail.com>\n"
+"Language-Team: Portuguese <https://github.com/chililinux/chili-tradutor-go>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: usr/local/bin/voidbr-mirror:54
+msgid "Interrompido! Saindo..."
+msgstr "Interrompido! Saindo..."
+
+#: usr/local/bin/voidbr-mirror:97
+msgid "Removendo arquivos temporários..."
+msgstr "Removendo arquivos temporários..."
+
+#: usr/local/bin/voidbr-mirror:323
+msgid "verificando caminho"
+msgstr "verificando caminho"
+
+#: usr/local/bin/voidbr-mirror:674
+msgid "LISTA DE ESPELHOS"
+msgstr "LISTA DE ESPELHOS"
+
+#: usr/local/bin/voidbr-mirror:674
+msgid "Não é possível continuar!"
+msgstr "Não é possível continuar!"
+
+#: usr/local/bin/voidbr-mirror:675
+msgid "Arquivo de lista de espelhos não encontrado no caminho"
+msgstr "Arquivo de lista de espelhos não encontrado no caminho"
+
+#: usr/local/bin/voidbr-mirror:748 usr/local/bin/voidbr-mirror:752
+#: usr/local/bin/voidbr-mirror:756 usr/local/bin/voidbr-mirror:885
+msgid "=== ESPELHO ==="
+msgstr "=== ESPELHO ==="
+
+#: usr/local/bin/voidbr-mirror:748 usr/local/bin/voidbr-mirror:754
+msgid "Aguarde..."
+msgstr "Aguarde..."
+
+#: usr/local/bin/voidbr-mirror:748 usr/local/bin/voidbr-mirror:754
+msgid "testando com"
+msgstr "testando com"
+
+#: usr/local/bin/voidbr-mirror:751
+msgid "não retornou resultado"
+msgstr "não retornou resultado"
+
+#: usr/local/bin/voidbr-mirror:756
+msgid "não foi localizado no"
+msgstr "não foi localizado no"
+
+#: usr/local/bin/voidbr-mirror:757
+msgid "não foi localizado em"
+msgstr "não foi localizado em"
+
+#: usr/local/bin/voidbr-mirror:772
+msgid "Deseja definir/alterar o espelho deste host para o(s) escolhido(s) ?"
+msgstr "Deseja definir/alterar o espelho deste host para o(s) escolhido(s) ?"
+
+#: usr/local/bin/voidbr-mirror:818 usr/local/bin/voidbr-mirror:820
+msgid "BAIXAR LISTA DE ESPELHOS"
+msgstr "BAIXAR LISTA DE ESPELHOS"
+
+#: usr/local/bin/voidbr-mirror:818
+msgid "Buscando nova lista de espelhos em"
+msgstr "Buscando nova lista de espelhos em"
+
+#: usr/local/bin/voidbr-mirror:821
+msgid "Verifique sua conexão com a internet"
+msgstr "Verifique sua conexão com a internet"
+
+#: usr/local/bin/voidbr-mirror:822
+msgid "Incapaz de buscar uma nova lista de espelhos de"
+msgstr "Incapaz de buscar uma nova lista de espelhos de"
+
+#: usr/local/bin/voidbr-mirror:823
+msgid "Tentando usar a lista local"
+msgstr "Tentando usar a lista local"
+
+#: usr/local/bin/voidbr-mirror:863
+msgid "erro: você não pode realizar esta operação a menos que seja root."
+msgstr "erro: você não pode realizar esta operação a menos que seja root."
+
+#: usr/local/bin/voidbr-mirror:864
+msgid "ERRO"
+msgstr "ERRO"
+
+#: usr/local/bin/voidbr-mirror:865
+msgid "não encontrei o comando"
+msgstr "não encontrei o comando"
+
+#: usr/local/bin/voidbr-mirror:866
+msgid "IMPOSSÍVEL CONTINUAR"
+msgstr "IMPOSSÍVEL CONTINUAR"
+
+#: usr/local/bin/voidbr-mirror:867
+msgid "Esse script precisa dos comandos listados acima"
+msgstr "Esse script precisa dos comandos listados acima"
+
+#: usr/local/bin/voidbr-mirror:868
+msgid "Instale-os e/ou verifique se estão no seu"
+msgstr "Instale-os e/ou verifique se estão no seu"
+
+#: usr/local/bin/voidbr-mirror:869
+msgid "Instalar o(s) comando(s)"
+msgstr "Instalar o(s) comando(s)"
+
+#: usr/local/bin/voidbr-mirror:870
+msgid "INFO: Rode novamente o aplicativo"
+msgstr "INFO: Rode novamente o aplicativo"
+
+#: usr/local/bin/voidbr-mirror:871
+msgid "ERRO na instalação dos comandos. Tente manualmente."
+msgstr "Erro na instalação dos comandos. Tente manualmente."
+
+#: usr/local/bin/voidbr-mirror:872
+msgid "Instalação abortada"
+msgstr "Instalação abortada"
+
+#: usr/local/bin/voidbr-mirror:873
+msgid "Ok"
+msgstr "OK"
+
+#: usr/local/bin/voidbr-mirror:874
+msgid "Aceitar"
+msgstr "Aceitar"
+
+#: usr/local/bin/voidbr-mirror:875
+msgid "Sair"
+msgstr "Sair"
+
+#: usr/local/bin/voidbr-mirror:876
+msgid "Sim"
+msgstr "Sim"
+
+#: usr/local/bin/voidbr-mirror:877
+msgid "Não"
+msgstr "Não"
+
+#: usr/local/bin/voidbr-mirror:878
+msgid "Gerando"
+msgstr "Gerando"
+
+#: usr/local/bin/voidbr-mirror:879
+msgid "Atualizando espelhos..."
+msgstr "Atualizando espelhos..."
+
+#: usr/local/bin/voidbr-mirror:880
+msgid "Usar as setas ↑ e ↓ para navegar."
+msgstr "Use as setas ↑ e ↓ para navegar."
+
+#: usr/local/bin/voidbr-mirror:881
+msgid "Usar TAB para alternar entre os botões."
+msgstr "Use TAB para alternar entre os botões."
+
+#: usr/local/bin/voidbr-mirror:882
+msgid "Usar ENTER ou BARRA DE ESPAÇO para selecionar e aceitar."
+msgstr "Usar ENTER ou BARRA DE ESPAÇO para selecionar e confirmar."
+
+#: usr/local/bin/voidbr-mirror:884
+msgid "Configurando espelho em"
+msgstr "Configurando espelho em"

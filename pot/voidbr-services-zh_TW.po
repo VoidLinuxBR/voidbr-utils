@@ -1,0 +1,151 @@
+# Chili Tradutor Go - 2.1.20-20260201
+# Copyright (C) 2019-2026 Vilmar Catafesta <vcatafesta@gmail.com>
+# This file is distributed under the same license as the chili-tradutor-go package.
+msgid ""
+msgstr ""
+"Project-Id-Version: chili-tradutor-go 2.1.20-20260201\n"
+"POT-Creation-Date: 2026-07-06 19:16-0400\n"
+"PO-Revision-Date: 2026-07-06 19:16-0400\n"
+"Last-Translator: Vilmar Catafesta <vcatafesta@gmail.com>\n"
+"Language-Team: Portuguese <https://github.com/chililinux/chili-tradutor-go>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: usr/local/bin/voidbr-services:44
+msgid "dialog"
+msgstr "對話"
+
+#: usr/local/bin/voidbr-services:49
+msgid "Interrompido! Saindo..."
+msgstr "中斷！正在退出…"
+
+#: usr/local/bin/voidbr-services:53
+msgid "Removindo arquivos temporários"
+msgstr "刪除臨時文件"
+
+#: usr/local/bin/voidbr-services:569
+msgid "Usar as setas ↑ e ↓ para navegar"
+msgstr "使用 ↑ 和 ↓ 箭頭進行導航"
+
+#: usr/local/bin/voidbr-services:570
+msgid "Usar TAB para alternar entre os botões"
+msgstr "使用TAB在按鈕之間切換"
+
+#: usr/local/bin/voidbr-services:571
+msgid "Usar BARRA DE ESPAÇO para selecionar/marcar"
+msgstr "使用空白鍵選擇/標記"
+
+#: usr/local/bin/voidbr-services:572
+msgid "Usar ENTER para aceitar/executar"
+msgstr "使用 ENTER 接受/執行"
+
+#: usr/local/bin/voidbr-services:574
+msgid "ERRO"
+msgstr "錯誤"
+
+#: usr/local/bin/voidbr-services:575
+msgid "erro: você não pode realizar esta operação a menos que seja root."
+msgstr "錯誤：除非您是 root，否則無法執行此操作。"
+
+#: usr/local/bin/voidbr-services:576
+msgid "IMPOSSÍVEL CONTINUAR"
+msgstr "無法繼續"
+
+#: usr/local/bin/voidbr-services:577
+msgid "Esse script precisa dos comandos listados acima"
+msgstr "該腳本需要上面列出的命令"
+
+#: usr/local/bin/voidbr-services:578
+msgid "Instale-os e/ou verifique se estão no seu"
+msgstr "安裝它們和/或檢查它們是否在您的"
+
+#: usr/local/bin/voidbr-services:579
+msgid "Instalar o(s) comando(s)"
+msgstr "安裝命令"
+
+#: usr/local/bin/voidbr-services:580
+msgid "INFO: Rode novamente o aplicativo"
+msgstr "訊息：再次運行應用程式"
+
+#: usr/local/bin/voidbr-services:581
+msgid "ERRO na instalação dos comandos. Tente manualmente."
+msgstr "安裝命令時發生錯誤。手動嘗試。"
+
+#: usr/local/bin/voidbr-services:582
+msgid "Instalação abortada"
+msgstr "安裝已中止"
+
+#: usr/local/bin/voidbr-services:583
+msgid "Ok"
+msgstr "好的"
+
+#: usr/local/bin/voidbr-services:584
+msgid "Sim"
+msgstr "辛"
+
+#: usr/local/bin/voidbr-services:585
+msgid "Não"
+msgstr "不"
+
+#: usr/local/bin/voidbr-services:586
+msgid "Escolher espelho"
+msgstr "選擇鏡子"
+
+#: usr/local/bin/voidbr-services:587
+msgid "Aceitar"
+msgstr "接受"
+
+#: usr/local/bin/voidbr-services:588
+msgid "Sair"
+msgstr "出去"
+
+#: usr/local/bin/voidbr-services:589
+msgid "gerenciador de serviços"
+msgstr "服務經理"
+
+#: usr/local/bin/voidbr-services:590
+msgid "Aguarde... Verificando serviços instalados"
+msgstr "請稍候...正在檢查已安裝的服務"
+
+#: usr/local/bin/voidbr-services:591
+msgid "Aguarde... Verificando serviços ativos"
+msgstr "請稍候...正在檢查活動服務"
+
+#: usr/local/bin/voidbr-services:592
+msgid "Nenhum serviço foi encontrado em"
+msgstr "沒有找到任何服務"
+
+#: usr/local/bin/voidbr-services:594
+msgid "Escolha idioma"
+msgstr "選擇語言"
+
+#: usr/local/bin/voidbr-services:595
+msgid "Desativar"
+msgstr "停用"
+
+#: usr/local/bin/voidbr-services:596
+msgid "Ativar"
+msgstr "啟用設定"
+
+#: usr/local/bin/voidbr-services:597
+msgid "Parando serviço"
+msgstr "停止服務"
+
+#: usr/local/bin/voidbr-services:598
+msgid "Ativando serviço"
+msgstr "啟動服務"
+
+#: usr/local/bin/voidbr-services:599
+msgid "Iniciando serviço"
+msgstr "開始服務"
+
+#: usr/local/bin/voidbr-services:600
+msgid "Desativando serviço"
+msgstr "禁用服務"
+
+#: usr/local/bin/voidbr-services:756
+msgid "Use barra de espaço para marcar/escolher."
+msgstr "使用空白鍵進行選擇/選擇。"

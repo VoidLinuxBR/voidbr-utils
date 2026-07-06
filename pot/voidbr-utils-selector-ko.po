@@ -1,0 +1,128 @@
+# Chili Tradutor Go - 2.1.20-20260201
+# Copyright (C) 2019-2026 Vilmar Catafesta <vcatafesta@gmail.com>
+# This file is distributed under the same license as the chili-tradutor-go package.
+msgid ""
+msgstr ""
+"Project-Id-Version: chili-tradutor-go 2.1.20-20260201\n"
+"POT-Creation-Date: 2026-07-06 19:05-0400\n"
+"PO-Revision-Date: 2026-07-06 19:05-0400\n"
+"Last-Translator: Vilmar Catafesta <vcatafesta@gmail.com>\n"
+"Language-Team: Portuguese <https://github.com/chililinux/chili-tradutor-go>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ko\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: usr/local/bin/voidbr-utils-selector:94
+msgid "Menu Principal"
+msgstr "메뉴주체"
+
+#: usr/local/bin/voidbr-utils-selector:103
+msgid "Utilitário para configurar redes wi-fi"
+msgstr "Wi-Fi 네트워크 구성 유틸리티"
+
+#: usr/local/bin/voidbr-utils-selector:104
+msgid "Utilitário para configurar pulseaudio"
+msgstr "펄스오디오를 구성하는 유틸리티"
+
+#: usr/local/bin/voidbr-utils-selector:105
+msgid "Utilitário para configurar pipewire"
+msgstr "파이프와이어를 구성하는 유틸리티"
+
+#: usr/local/bin/voidbr-utils-selector:106
+msgid "Utilitário para executar chroot"
+msgstr "chroot를 실행하는 유틸리티"
+
+#: usr/local/bin/voidbr-utils-selector:107
+msgid "Utilitário para clonar discos"
+msgstr "디스크 복제 유틸리티"
+
+#: usr/local/bin/voidbr-utils-selector:108
+msgid "Utilitário para selecionar temas para o dialog"
+msgstr "대화 상자의 테마를 선택하는 유틸리티"
+
+#: usr/local/bin/voidbr-utils-selector:109
+msgid "Utilitário para configurar repositórios do Void"
+msgstr "Void 저장소 구성 유틸리티"
+
+#: usr/local/bin/voidbr-utils-selector:110
+msgid "Utilitário para criar backups com tar"
+msgstr "tar를 사용하여 백업을 생성하는 유틸리티"
+
+#: usr/local/bin/voidbr-utils-selector:111
+msgid "Utilitário para particionar disco"
+msgstr "디스크 파티션 유틸리티"
+
+#: usr/local/bin/voidbr-utils-selector:112
+msgid "Utilitário para listar e remover VG (Grupo de Volumes)"
+msgstr "VG(볼륨 그룹)를 나열하고 제거하는 유틸리티"
+
+#: usr/local/bin/voidbr-utils-selector:113
+msgid "Utilitário para gerenciar serviços do Void"
+msgstr "Void 서비스를 관리하는 유틸리티"
+
+#: usr/local/bin/voidbr-utils-selector:114
+msgid "Utilitário para configurar fonte no tty"
+msgstr "tty에서 글꼴을 구성하는 유틸리티"
+
+#: usr/local/bin/voidbr-utils-selector:115
+msgid "Utilitário para testar latência dos mirrors do Void"
+msgstr "Void 미러 대기 시간을 테스트하는 유틸리티"
+
+#: usr/local/bin/voidbr-utils-selector:116
+msgid "Utilitário para configurar resolucao de video"
+msgstr "비디오 해상도를 구성하는 유틸리티"
+
+#: usr/local/bin/voidbr-utils-selector:117
+msgid "Utilitário para clonar repositórios"
+msgstr "저장소 복제 유틸리티"
+
+#: usr/local/bin/voidbr-utils-selector:118
+msgid "Utilitário para listar variáveis UEFI"
+msgstr "UEFI 변수를 나열하는 유틸리티"
+
+#: usr/local/bin/voidbr-utils-selector:119
+msgid "Utilitário para rodar dispositivos de bloco - like VirtManager"
+msgstr "VirtManager와 같은 블록 장치 실행을 위한 유틸리티"
+
+#: usr/local/bin/voidbr-utils-selector:120
+msgid "Utilitário para otimização automática de máquinas com pouca RAM"
+msgstr "RAM이 부족한 기계의 자동 최적화를 위한 유틸리티"
+
+#: usr/local/bin/voidbr-utils-selector:121
+msgid "Utilitário para criação de pacotes xbps via receita like Arch PKGBUILD"
+msgstr "Arch PKGBUILD와 같은 레시피를 통해 xbps 패키지를 생성하는 유틸리티"
+
+#: usr/local/bin/voidbr-utils-selector:122
+msgid "Utilitário para internacionalização de scripts"
+msgstr "스크립트 국제화 유틸리티"
+
+#: usr/local/bin/voidbr-utils-selector:123
+msgid "Utilitário para gerenciar volumes LVM"
+msgstr "LVM 볼륨을 관리하는 유틸리티"
+
+#: usr/local/bin/voidbr-utils-selector:124
+msgid "Utilitário para gerenciamento de pacotes xbps"
+msgstr "xbps 패키지 관리 유틸리티"
+
+#: usr/local/bin/voidbr-utils-selector:125
+msgid "Utilitário para gerenciamento de serviços"
+msgstr "서비스 관리 유틸리티"
+
+#: usr/local/bin/voidbr-utils-selector:126
+msgid "Utilitário para listar serviços"
+msgstr "서비스를 나열하는 유틸리티"
+
+#: usr/local/bin/voidbr-utils-selector:143
+msgid "Escolha o utilitário desejado:"
+msgstr "원하는 유틸리티를 선택하세요:"
+
+#: usr/local/bin/voidbr-utils-selector:155
+#, sh-format
+msgid "utilitário não foi encontrado no \\$PATH!"
+msgstr "\$PATH에서 유틸리티를 찾을 수 없습니다!"
+
+#: usr/local/bin/voidbr-utils-selector:162
+msgid "Nenhum utilitário foi escolhido!"
+msgstr "유틸리티를 선택하지 않았습니다!"

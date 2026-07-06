@@ -1,0 +1,128 @@
+# Chili Tradutor Go - 2.1.20-20260201
+# Copyright (C) 2019-2026 Vilmar Catafesta <vcatafesta@gmail.com>
+# This file is distributed under the same license as the chili-tradutor-go package.
+msgid ""
+msgstr ""
+"Project-Id-Version: chili-tradutor-go 2.1.20-20260201\n"
+"POT-Creation-Date: 2026-07-06 19:05-0400\n"
+"PO-Revision-Date: 2026-07-06 19:05-0400\n"
+"Last-Translator: Vilmar Catafesta <vcatafesta@gmail.com>\n"
+"Language-Team: Portuguese <https://github.com/chililinux/chili-tradutor-go>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: usr/local/bin/voidbr-utils-selector:94
+msgid "Menu Principal"
+msgstr "Главное меню"
+
+#: usr/local/bin/voidbr-utils-selector:103
+msgid "Utilitário para configurar redes wi-fi"
+msgstr "Утилита для настройки Wi-Fi сетей"
+
+#: usr/local/bin/voidbr-utils-selector:104
+msgid "Utilitário para configurar pulseaudio"
+msgstr "Утилита для настройки PulseAudio."
+
+#: usr/local/bin/voidbr-utils-selector:105
+msgid "Utilitário para configurar pipewire"
+msgstr "Утилита для настройки Pipewire"
+
+#: usr/local/bin/voidbr-utils-selector:106
+msgid "Utilitário para executar chroot"
+msgstr "Утилита для запуска chroot"
+
+#: usr/local/bin/voidbr-utils-selector:107
+msgid "Utilitário para clonar discos"
+msgstr "Утилита для клонирования дисков"
+
+#: usr/local/bin/voidbr-utils-selector:108
+msgid "Utilitário para selecionar temas para o dialog"
+msgstr "Утилита для выбора тем для диалога"
+
+#: usr/local/bin/voidbr-utils-selector:109
+msgid "Utilitário para configurar repositórios do Void"
+msgstr "Утилита для настройки репозиториев Void"
+
+#: usr/local/bin/voidbr-utils-selector:110
+msgid "Utilitário para criar backups com tar"
+msgstr "Утилита для создания резервных копий с помощью tar"
+
+#: usr/local/bin/voidbr-utils-selector:111
+msgid "Utilitário para particionar disco"
+msgstr "Утилита для разметки диска"
+
+#: usr/local/bin/voidbr-utils-selector:112
+msgid "Utilitário para listar e remover VG (Grupo de Volumes)"
+msgstr "Утилита для просмотра и удаления VG (группы томов)"
+
+#: usr/local/bin/voidbr-utils-selector:113
+msgid "Utilitário para gerenciar serviços do Void"
+msgstr "Утилита для управления сервисами Void"
+
+#: usr/local/bin/voidbr-utils-selector:114
+msgid "Utilitário para configurar fonte no tty"
+msgstr "Утилита для настройки шрифта в tty"
+
+#: usr/local/bin/voidbr-utils-selector:115
+msgid "Utilitário para testar latência dos mirrors do Void"
+msgstr "Утилита для проверки задержки зеркал Void"
+
+#: usr/local/bin/voidbr-utils-selector:116
+msgid "Utilitário para configurar resolucao de video"
+msgstr "Утилита для настройки разрешения видео"
+
+#: usr/local/bin/voidbr-utils-selector:117
+msgid "Utilitário para clonar repositórios"
+msgstr "Утилита для клонирования репозиториев"
+
+#: usr/local/bin/voidbr-utils-selector:118
+msgid "Utilitário para listar variáveis UEFI"
+msgstr "Утилита для вывода списка переменных UEFI"
+
+#: usr/local/bin/voidbr-utils-selector:119
+msgid "Utilitário para rodar dispositivos de bloco - like VirtManager"
+msgstr "Утилита для запуска блочных устройств - типа VirtManager"
+
+#: usr/local/bin/voidbr-utils-selector:120
+msgid "Utilitário para otimização automática de máquinas com pouca RAM"
+msgstr "Утилита для автоматической оптимизации машин с малым объемом оперативной памяти"
+
+#: usr/local/bin/voidbr-utils-selector:121
+msgid "Utilitário para criação de pacotes xbps via receita like Arch PKGBUILD"
+msgstr "Утилита для создания пакетов xbps по рецепту типа Arch PKGBUILD"
+
+#: usr/local/bin/voidbr-utils-selector:122
+msgid "Utilitário para internacionalização de scripts"
+msgstr "Утилита для интернационализации скриптов"
+
+#: usr/local/bin/voidbr-utils-selector:123
+msgid "Utilitário para gerenciar volumes LVM"
+msgstr "Утилита для управления томами LVM"
+
+#: usr/local/bin/voidbr-utils-selector:124
+msgid "Utilitário para gerenciamento de pacotes xbps"
+msgstr "утилита управления пакетами xbps"
+
+#: usr/local/bin/voidbr-utils-selector:125
+msgid "Utilitário para gerenciamento de serviços"
+msgstr "Утилита управления услугами"
+
+#: usr/local/bin/voidbr-utils-selector:126
+msgid "Utilitário para listar serviços"
+msgstr "Утилита для вывода списка сервисов"
+
+#: usr/local/bin/voidbr-utils-selector:143
+msgid "Escolha o utilitário desejado:"
+msgstr "Выберите нужную утилиту:"
+
+#: usr/local/bin/voidbr-utils-selector:155
+#, sh-format
+msgid "utilitário não foi encontrado no \\$PATH!"
+msgstr "утилита не найдена в \$PATH!"
+
+#: usr/local/bin/voidbr-utils-selector:162
+msgid "Nenhum utilitário foi escolhido!"
+msgstr "Коммунальные услуги не выбраны!"

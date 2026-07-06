@@ -1,0 +1,91 @@
+# Chili Tradutor Go - 2.1.20-20260201
+# Copyright (C) 2019-2026 Vilmar Catafesta <vcatafesta@gmail.com>
+# This file is distributed under the same license as the chili-tradutor-go package.
+msgid ""
+msgstr ""
+"Project-Id-Version: chili-tradutor-go 2.1.20-20260201\n"
+"POT-Creation-Date: 2026-07-06 19:08-0400\n"
+"PO-Revision-Date: 2026-07-06 19:08-0400\n"
+"Last-Translator: Vilmar Catafesta <vcatafesta@gmail.com>\n"
+"Language-Team: Portuguese <https://github.com/chililinux/chili-tradutor-go>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ja\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: usr/local/bin/voidbr-gitclone:45
+msgid "Interrompido! Saindo..."
+msgstr "中断されました！出発中..."
+
+#: usr/local/bin/voidbr-gitclone:61
+msgid "Removendo arquivos temporários"
+msgstr "一時ファイルの削除"
+
+#: usr/local/bin/voidbr-gitclone:75
+msgid "você não pode executar esta operação a menos que seja root."
+msgstr "root でない限り、この操作は実行できません。"
+
+#: usr/local/bin/voidbr-gitclone:90 usr/local/bin/voidbr-gitclone:93
+msgid "IMPOSSÍVEL CONTINUAR"
+msgstr "続行不可能"
+
+#: usr/local/bin/voidbr-gitclone:91
+msgid "Este script precisa dos comandos listados acima"
+msgstr "このスクリプトには上記のコマンドが必要です"
+
+#: usr/local/bin/voidbr-gitclone:92
+msgid "Instale-os e/ou verifique se eles estão em seu"
+msgstr "それらをインストールするか、それらがあなたのコンピュータにあることを確認してください。"
+
+#: usr/local/bin/voidbr-gitclone:94
+msgid "abortado..."
+msgstr "中止されました..."
+
+#: usr/local/bin/voidbr-gitclone:156
+msgid "Exiba esta mensagem de ajuda"
+msgstr "このヘルプ メッセージを表示する"
+
+#: usr/local/bin/voidbr-gitclone:157
+msgid "Exibir informações da versão"
+msgstr "バージョン情報を表示する"
+
+#: usr/local/bin/voidbr-gitclone:158
+msgid "Habilitar saída detalhada"
+msgstr "詳細出力を有効にする"
+
+#: usr/local/bin/voidbr-gitclone:159
+msgid "Suprimir saída colorida"
+msgstr "カラー出力を抑制する"
+
+#: usr/local/bin/voidbr-gitclone:160
+msgid "Usar FILE como lista de entradas de repositório"
+msgstr "リポジトリ エントリのリストとして FILE を使用する"
+
+#: usr/local/bin/voidbr-gitclone:172
+msgid "Clonando repositório"
+msgstr "リポジトリのクローン作成"
+
+#: usr/local/bin/voidbr-gitclone:178 usr/local/bin/voidbr-gitclone:192
+msgid "algo deu errado - para maiores informações, veja:"
+msgstr "問題が発生しました - 詳細については、以下を参照してください。"
+
+#: usr/local/bin/voidbr-gitclone:179 usr/local/bin/voidbr-gitclone:193
+msgid "repositório clonado com sucesso - para maiores informações, veja"
+msgstr "リポジトリのクローンが正常に作成されました - 詳細については、を参照してください。"
+
+#: usr/local/bin/voidbr-gitclone:195
+msgid "Entre um repositório git, digite enter para sair"
+msgstr "git リポジトリに入り、Enter を入力して終了します"
+
+#: usr/local/bin/voidbr-gitclone:218
+msgid "Falha ao analisar argumentos"
+msgstr "引数の解析に失敗しました"
+
+#: usr/local/bin/voidbr-gitclone:257
+msgid "requer um argumento"
+msgstr "引数が必要です"
+
+#: usr/local/bin/voidbr-gitclone:271
+msgid "Arquivo de repositórios não encontrado"
+msgstr "リポジトリ ファイルが見つかりません"

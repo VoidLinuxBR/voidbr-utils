@@ -1,0 +1,151 @@
+# Chili Tradutor Go - 2.1.20-20260201
+# Copyright (C) 2019-2026 Vilmar Catafesta <vcatafesta@gmail.com>
+# This file is distributed under the same license as the chili-tradutor-go package.
+msgid ""
+msgstr ""
+"Project-Id-Version: chili-tradutor-go 2.1.20-20260201\n"
+"POT-Creation-Date: 2026-07-06 19:16-0400\n"
+"PO-Revision-Date: 2026-07-06 19:16-0400\n"
+"Last-Translator: Vilmar Catafesta <vcatafesta@gmail.com>\n"
+"Language-Team: Portuguese <https://github.com/chililinux/chili-tradutor-go>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: it\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: usr/local/bin/voidbr-services:44
+msgid "dialog"
+msgstr "dialogo"
+
+#: usr/local/bin/voidbr-services:49
+msgid "Interrompido! Saindo..."
+msgstr "Interrotto! In partenza..."
+
+#: usr/local/bin/voidbr-services:53
+msgid "Removindo arquivos temporários"
+msgstr "Rimozione di file temporanei"
+
+#: usr/local/bin/voidbr-services:569
+msgid "Usar as setas ↑ e ↓ para navegar"
+msgstr "Utilizza le frecce ↑ e ↓ per navigare"
+
+#: usr/local/bin/voidbr-services:570
+msgid "Usar TAB para alternar entre os botões"
+msgstr "Usa TAB per passare da un pulsante all'altro"
+
+#: usr/local/bin/voidbr-services:571
+msgid "Usar BARRA DE ESPAÇO para selecionar/marcar"
+msgstr "Utilizzare la BARRA SPAZIATRICE per selezionare/contrassegnare"
+
+#: usr/local/bin/voidbr-services:572
+msgid "Usar ENTER para aceitar/executar"
+msgstr "Utilizzare INVIO per accettare/eseguire"
+
+#: usr/local/bin/voidbr-services:574
+msgid "ERRO"
+msgstr "ERRORE"
+
+#: usr/local/bin/voidbr-services:575
+msgid "erro: você não pode realizar esta operação a menos que seja root."
+msgstr "errore: non puoi eseguire questa operazione se non sei root."
+
+#: usr/local/bin/voidbr-services:576
+msgid "IMPOSSÍVEL CONTINUAR"
+msgstr "IMPOSSIBILE CONTINUARE"
+
+#: usr/local/bin/voidbr-services:577
+msgid "Esse script precisa dos comandos listados acima"
+msgstr "Questo script necessita dei comandi elencati sopra"
+
+#: usr/local/bin/voidbr-services:578
+msgid "Instale-os e/ou verifique se estão no seu"
+msgstr "Installali e/o controlla se sono sul tuo"
+
+#: usr/local/bin/voidbr-services:579
+msgid "Instalar o(s) comando(s)"
+msgstr "Installa i comandi"
+
+#: usr/local/bin/voidbr-services:580
+msgid "INFO: Rode novamente o aplicativo"
+msgstr "INFORMAZIONI: eseguire nuovamente l'applicazione"
+
+#: usr/local/bin/voidbr-services:581
+msgid "ERRO na instalação dos comandos. Tente manualmente."
+msgstr "Errore durante l'installazione dei comandi. Prova manualmente."
+
+#: usr/local/bin/voidbr-services:582
+msgid "Instalação abortada"
+msgstr "Installazione interrotta"
+
+#: usr/local/bin/voidbr-services:583
+msgid "Ok"
+msgstr "OK"
+
+#: usr/local/bin/voidbr-services:584
+msgid "Sim"
+msgstr "Sim"
+
+#: usr/local/bin/voidbr-services:585
+msgid "Não"
+msgstr "NO"
+
+#: usr/local/bin/voidbr-services:586
+msgid "Escolher espelho"
+msgstr "Scegli lo specchio"
+
+#: usr/local/bin/voidbr-services:587
+msgid "Aceitar"
+msgstr "Accettare"
+
+#: usr/local/bin/voidbr-services:588
+msgid "Sair"
+msgstr "Uscire"
+
+#: usr/local/bin/voidbr-services:589
+msgid "gerenciador de serviços"
+msgstr "responsabile del servizio"
+
+#: usr/local/bin/voidbr-services:590
+msgid "Aguarde... Verificando serviços instalados"
+msgstr "Attendere prego... Controllo dei servizi installati"
+
+#: usr/local/bin/voidbr-services:591
+msgid "Aguarde... Verificando serviços ativos"
+msgstr "Attendi prego... Controllo dei servizi attivi"
+
+#: usr/local/bin/voidbr-services:592
+msgid "Nenhum serviço foi encontrado em"
+msgstr "Non sono stati trovati servizi in"
+
+#: usr/local/bin/voidbr-services:594
+msgid "Escolha idioma"
+msgstr "Scegli la lingua"
+
+#: usr/local/bin/voidbr-services:595
+msgid "Desativar"
+msgstr "Disabilita"
+
+#: usr/local/bin/voidbr-services:596
+msgid "Ativar"
+msgstr "Attivare"
+
+#: usr/local/bin/voidbr-services:597
+msgid "Parando serviço"
+msgstr "Interruzione del servizio"
+
+#: usr/local/bin/voidbr-services:598
+msgid "Ativando serviço"
+msgstr "Attivazione servizio"
+
+#: usr/local/bin/voidbr-services:599
+msgid "Iniciando serviço"
+msgstr "Inizio servizio"
+
+#: usr/local/bin/voidbr-services:600
+msgid "Desativando serviço"
+msgstr "Servizio disabilitante"
+
+#: usr/local/bin/voidbr-services:756
+msgid "Use barra de espaço para marcar/escolher."
+msgstr "Utilizzare la barra spaziatrice per selezionare/scegliere."

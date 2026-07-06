@@ -1,0 +1,91 @@
+# Chili Tradutor Go - 2.1.20-20260201
+# Copyright (C) 2019-2026 Vilmar Catafesta <vcatafesta@gmail.com>
+# This file is distributed under the same license as the chili-tradutor-go package.
+msgid ""
+msgstr ""
+"Project-Id-Version: chili-tradutor-go 2.1.20-20260201\n"
+"POT-Creation-Date: 2026-07-06 19:09-0400\n"
+"PO-Revision-Date: 2026-07-06 19:09-0400\n"
+"Last-Translator: Vilmar Catafesta <vcatafesta@gmail.com>\n"
+"Language-Team: Portuguese <https://github.com/chililinux/chili-tradutor-go>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: usr/local/bin/voidbr-gitclone:45
+msgid "Interrompido! Saindo..."
+msgstr "Прервано! Уход..."
+
+#: usr/local/bin/voidbr-gitclone:61
+msgid "Removendo arquivos temporários"
+msgstr "Удаление временных файлов"
+
+#: usr/local/bin/voidbr-gitclone:75
+msgid "você não pode executar esta operação a menos que seja root."
+msgstr "вы не сможете выполнить эту операцию, если вы не являетесь пользователем root."
+
+#: usr/local/bin/voidbr-gitclone:90 usr/local/bin/voidbr-gitclone:93
+msgid "IMPOSSÍVEL CONTINUAR"
+msgstr "НЕВОЗМОЖНО ПРОДОЛЖАТЬ"
+
+#: usr/local/bin/voidbr-gitclone:91
+msgid "Este script precisa dos comandos listados acima"
+msgstr "Этот скрипт нуждается в командах, перечисленных выше."
+
+#: usr/local/bin/voidbr-gitclone:92
+msgid "Instale-os e/ou verifique se eles estão em seu"
+msgstr "Установите их и/или убедитесь, что они есть на вашем компьютере."
+
+#: usr/local/bin/voidbr-gitclone:94
+msgid "abortado..."
+msgstr "прервано..."
+
+#: usr/local/bin/voidbr-gitclone:156
+msgid "Exiba esta mensagem de ajuda"
+msgstr "Посмотреть это справочное сообщение"
+
+#: usr/local/bin/voidbr-gitclone:157
+msgid "Exibir informações da versão"
+msgstr "Просмотр информации о версии"
+
+#: usr/local/bin/voidbr-gitclone:158
+msgid "Habilitar saída detalhada"
+msgstr "Включить подробный вывод"
+
+#: usr/local/bin/voidbr-gitclone:159
+msgid "Suprimir saída colorida"
+msgstr "Подавить цветной вывод"
+
+#: usr/local/bin/voidbr-gitclone:160
+msgid "Usar FILE como lista de entradas de repositório"
+msgstr "Используйте ФАЙЛ в качестве списка записей репозитория."
+
+#: usr/local/bin/voidbr-gitclone:172
+msgid "Clonando repositório"
+msgstr "Клонирование репозитория"
+
+#: usr/local/bin/voidbr-gitclone:178 usr/local/bin/voidbr-gitclone:192
+msgid "algo deu errado - para maiores informações, veja:"
+msgstr "что-то пошло не так. Дополнительную информацию см.:"
+
+#: usr/local/bin/voidbr-gitclone:179 usr/local/bin/voidbr-gitclone:193
+msgid "repositório clonado com sucesso - para maiores informações, veja"
+msgstr "репозиторий успешно клонирован — дополнительную информацию см."
+
+#: usr/local/bin/voidbr-gitclone:195
+msgid "Entre um repositório git, digite enter para sair"
+msgstr "Войдите в репозиторий git, введите Enter, чтобы выйти."
+
+#: usr/local/bin/voidbr-gitclone:218
+msgid "Falha ao analisar argumentos"
+msgstr "Не удалось проанализировать аргументы"
+
+#: usr/local/bin/voidbr-gitclone:257
+msgid "requer um argumento"
+msgstr "требует аргумента"
+
+#: usr/local/bin/voidbr-gitclone:271
+msgid "Arquivo de repositórios não encontrado"
+msgstr "Файл репозитория не найден"

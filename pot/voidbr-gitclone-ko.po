@@ -1,0 +1,91 @@
+# Chili Tradutor Go - 2.1.20-20260201
+# Copyright (C) 2019-2026 Vilmar Catafesta <vcatafesta@gmail.com>
+# This file is distributed under the same license as the chili-tradutor-go package.
+msgid ""
+msgstr ""
+"Project-Id-Version: chili-tradutor-go 2.1.20-20260201\n"
+"POT-Creation-Date: 2026-07-06 19:08-0400\n"
+"PO-Revision-Date: 2026-07-06 19:08-0400\n"
+"Last-Translator: Vilmar Catafesta <vcatafesta@gmail.com>\n"
+"Language-Team: Portuguese <https://github.com/chililinux/chili-tradutor-go>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ko\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: usr/local/bin/voidbr-gitclone:45
+msgid "Interrompido! Saindo..."
+msgstr "중단된! 퇴거..."
+
+#: usr/local/bin/voidbr-gitclone:61
+msgid "Removendo arquivos temporários"
+msgstr "임시 파일 제거"
+
+#: usr/local/bin/voidbr-gitclone:75
+msgid "você não pode executar esta operação a menos que seja root."
+msgstr "루트가 아니면 이 작업을 수행할 수 없습니다."
+
+#: usr/local/bin/voidbr-gitclone:90 usr/local/bin/voidbr-gitclone:93
+msgid "IMPOSSÍVEL CONTINUAR"
+msgstr "계속할 수 없습니다"
+
+#: usr/local/bin/voidbr-gitclone:91
+msgid "Este script precisa dos comandos listados acima"
+msgstr "이 스크립트에는 위에 나열된 명령이 필요합니다."
+
+#: usr/local/bin/voidbr-gitclone:92
+msgid "Instale-os e/ou verifique se eles estão em seu"
+msgstr "이를 설치하거나 귀하의 컴퓨터에 있는지 확인하십시오."
+
+#: usr/local/bin/voidbr-gitclone:94
+msgid "abortado..."
+msgstr "중단되었습니다..."
+
+#: usr/local/bin/voidbr-gitclone:156
+msgid "Exiba esta mensagem de ajuda"
+msgstr "이 도움말 메시지 보기"
+
+#: usr/local/bin/voidbr-gitclone:157
+msgid "Exibir informações da versão"
+msgstr "버전 정보 보기"
+
+#: usr/local/bin/voidbr-gitclone:158
+msgid "Habilitar saída detalhada"
+msgstr "자세한 출력 활성화"
+
+#: usr/local/bin/voidbr-gitclone:159
+msgid "Suprimir saída colorida"
+msgstr "컬러 출력 억제"
+
+#: usr/local/bin/voidbr-gitclone:160
+msgid "Usar FILE como lista de entradas de repositório"
+msgstr "FILE을 저장소 항목 목록으로 사용"
+
+#: usr/local/bin/voidbr-gitclone:172
+msgid "Clonando repositório"
+msgstr "복제 저장소"
+
+#: usr/local/bin/voidbr-gitclone:178 usr/local/bin/voidbr-gitclone:192
+msgid "algo deu errado - para maiores informações, veja:"
+msgstr "문제가 발생했습니다. 자세한 내용은 다음을 참조하세요."
+
+#: usr/local/bin/voidbr-gitclone:179 usr/local/bin/voidbr-gitclone:193
+msgid "repositório clonado com sucesso - para maiores informações, veja"
+msgstr "저장소가 성공적으로 복제되었습니다. 자세한 내용은 다음을 참조하세요."
+
+#: usr/local/bin/voidbr-gitclone:195
+msgid "Entre um repositório git, digite enter para sair"
+msgstr "Git 저장소를 입력하고 Enter를 입력하여 종료하세요."
+
+#: usr/local/bin/voidbr-gitclone:218
+msgid "Falha ao analisar argumentos"
+msgstr "인수를 구문 분석하지 못했습니다."
+
+#: usr/local/bin/voidbr-gitclone:257
+msgid "requer um argumento"
+msgstr "논증이 필요하다"
+
+#: usr/local/bin/voidbr-gitclone:271
+msgid "Arquivo de repositórios não encontrado"
+msgstr "저장소 파일을 찾을 수 없습니다"

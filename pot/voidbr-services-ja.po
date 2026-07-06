@@ -1,0 +1,151 @@
+# Chili Tradutor Go - 2.1.20-20260201
+# Copyright (C) 2019-2026 Vilmar Catafesta <vcatafesta@gmail.com>
+# This file is distributed under the same license as the chili-tradutor-go package.
+msgid ""
+msgstr ""
+"Project-Id-Version: chili-tradutor-go 2.1.20-20260201\n"
+"POT-Creation-Date: 2026-07-06 19:16-0400\n"
+"PO-Revision-Date: 2026-07-06 19:16-0400\n"
+"Last-Translator: Vilmar Catafesta <vcatafesta@gmail.com>\n"
+"Language-Team: Portuguese <https://github.com/chililinux/chili-tradutor-go>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ja\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: usr/local/bin/voidbr-services:44
+msgid "dialog"
+msgstr "ダイアログ"
+
+#: usr/local/bin/voidbr-services:49
+msgid "Interrompido! Saindo..."
+msgstr "中断されました！出発中..."
+
+#: usr/local/bin/voidbr-services:53
+msgid "Removindo arquivos temporários"
+msgstr "一時ファイルの削除"
+
+#: usr/local/bin/voidbr-services:569
+msgid "Usar as setas ↑ e ↓ para navegar"
+msgstr "↑ と ↓ の矢印を使用して移動します"
+
+#: usr/local/bin/voidbr-services:570
+msgid "Usar TAB para alternar entre os botões"
+msgstr "TAB を使用してボタンを切り替えます"
+
+#: usr/local/bin/voidbr-services:571
+msgid "Usar BARRA DE ESPAÇO para selecionar/marcar"
+msgstr "スペースバーを使用して選択/マークします"
+
+#: usr/local/bin/voidbr-services:572
+msgid "Usar ENTER para aceitar/executar"
+msgstr "ENTER を使用して受け入れ/実行します"
+
+#: usr/local/bin/voidbr-services:574
+msgid "ERRO"
+msgstr "エラー"
+
+#: usr/local/bin/voidbr-services:575
+msgid "erro: você não pode realizar esta operação a menos que seja root."
+msgstr "エラー: root でない限り、この操作は実行できません。"
+
+#: usr/local/bin/voidbr-services:576
+msgid "IMPOSSÍVEL CONTINUAR"
+msgstr "続行不可能"
+
+#: usr/local/bin/voidbr-services:577
+msgid "Esse script precisa dos comandos listados acima"
+msgstr "このスクリプトには上記のコマンドが必要です"
+
+#: usr/local/bin/voidbr-services:578
+msgid "Instale-os e/ou verifique se estão no seu"
+msgstr "それらをインストールするか、それらがあなたのコンピュータにインストールされているかどうかを確認してください。"
+
+#: usr/local/bin/voidbr-services:579
+msgid "Instalar o(s) comando(s)"
+msgstr "コマンドをインストールする"
+
+#: usr/local/bin/voidbr-services:580
+msgid "INFO: Rode novamente o aplicativo"
+msgstr "情報: アプリケーションを再度実行してください"
+
+#: usr/local/bin/voidbr-services:581
+msgid "ERRO na instalação dos comandos. Tente manualmente."
+msgstr "コマンドのインストール中にエラーが発生しました。手動で試してください。"
+
+#: usr/local/bin/voidbr-services:582
+msgid "Instalação abortada"
+msgstr "インストールが中止されました"
+
+#: usr/local/bin/voidbr-services:583
+msgid "Ok"
+msgstr "わかりました"
+
+#: usr/local/bin/voidbr-services:584
+msgid "Sim"
+msgstr "シム"
+
+#: usr/local/bin/voidbr-services:585
+msgid "Não"
+msgstr "いいえ"
+
+#: usr/local/bin/voidbr-services:586
+msgid "Escolher espelho"
+msgstr "ミラーを選択してください"
+
+#: usr/local/bin/voidbr-services:587
+msgid "Aceitar"
+msgstr "受け入れるには"
+
+#: usr/local/bin/voidbr-services:588
+msgid "Sair"
+msgstr "外出する"
+
+#: usr/local/bin/voidbr-services:589
+msgid "gerenciador de serviços"
+msgstr "サービスマネージャー"
+
+#: usr/local/bin/voidbr-services:590
+msgid "Aguarde... Verificando serviços instalados"
+msgstr "お待ちください...インストールされているサービスを確認しています"
+
+#: usr/local/bin/voidbr-services:591
+msgid "Aguarde... Verificando serviços ativos"
+msgstr "お待ちください...アクティブなサービスを確認しています"
+
+#: usr/local/bin/voidbr-services:592
+msgid "Nenhum serviço foi encontrado em"
+msgstr "サービスが見つかりませんでした"
+
+#: usr/local/bin/voidbr-services:594
+msgid "Escolha idioma"
+msgstr "言語を選択してください"
+
+#: usr/local/bin/voidbr-services:595
+msgid "Desativar"
+msgstr "無効にする"
+
+#: usr/local/bin/voidbr-services:596
+msgid "Ativar"
+msgstr "活性化"
+
+#: usr/local/bin/voidbr-services:597
+msgid "Parando serviço"
+msgstr "サービスの停止"
+
+#: usr/local/bin/voidbr-services:598
+msgid "Ativando serviço"
+msgstr "サービスの有効化"
+
+#: usr/local/bin/voidbr-services:599
+msgid "Iniciando serviço"
+msgstr "サービス開始"
+
+#: usr/local/bin/voidbr-services:600
+msgid "Desativando serviço"
+msgstr "サービスの無効化"
+
+#: usr/local/bin/voidbr-services:756
+msgid "Use barra de espaço para marcar/escolher."
+msgstr "スペースバーを使用して選択/選択します。"

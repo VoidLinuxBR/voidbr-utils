@@ -1,0 +1,91 @@
+# Chili Tradutor Go - 2.1.20-20260201
+# Copyright (C) 2019-2026 Vilmar Catafesta <vcatafesta@gmail.com>
+# This file is distributed under the same license as the chili-tradutor-go package.
+msgid ""
+msgstr ""
+"Project-Id-Version: chili-tradutor-go 2.1.20-20260201\n"
+"POT-Creation-Date: 2026-07-06 19:08-0400\n"
+"PO-Revision-Date: 2026-07-06 19:08-0400\n"
+"Last-Translator: Vilmar Catafesta <vcatafesta@gmail.com>\n"
+"Language-Team: Portuguese <https://github.com/chililinux/chili-tradutor-go>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: usr/local/bin/voidbr-gitclone:45
+msgid "Interrompido! Saindo..."
+msgstr "Unterbrochen! Verlassen..."
+
+#: usr/local/bin/voidbr-gitclone:61
+msgid "Removendo arquivos temporários"
+msgstr "Temporäre Dateien entfernen"
+
+#: usr/local/bin/voidbr-gitclone:75
+msgid "você não pode executar esta operação a menos que seja root."
+msgstr "Sie können diesen Vorgang nur ausführen, wenn Sie Root sind."
+
+#: usr/local/bin/voidbr-gitclone:90 usr/local/bin/voidbr-gitclone:93
+msgid "IMPOSSÍVEL CONTINUAR"
+msgstr "UNMÖGLICH, WEITERZUWEISEN"
+
+#: usr/local/bin/voidbr-gitclone:91
+msgid "Este script precisa dos comandos listados acima"
+msgstr "Dieses Skript benötigt die oben aufgeführten Befehle"
+
+#: usr/local/bin/voidbr-gitclone:92
+msgid "Instale-os e/ou verifique se eles estão em seu"
+msgstr "Installieren Sie sie und/oder stellen Sie sicher, dass sie auf Ihrem Computer vorhanden sind"
+
+#: usr/local/bin/voidbr-gitclone:94
+msgid "abortado..."
+msgstr "abgebrochen..."
+
+#: usr/local/bin/voidbr-gitclone:156
+msgid "Exiba esta mensagem de ajuda"
+msgstr "Sehen Sie sich diese Hilfemeldung an"
+
+#: usr/local/bin/voidbr-gitclone:157
+msgid "Exibir informações da versão"
+msgstr "Versionsinformationen anzeigen"
+
+#: usr/local/bin/voidbr-gitclone:158
+msgid "Habilitar saída detalhada"
+msgstr "Aktivieren Sie die ausführliche Ausgabe"
+
+#: usr/local/bin/voidbr-gitclone:159
+msgid "Suprimir saída colorida"
+msgstr "Farbige Ausgabe unterdrücken"
+
+#: usr/local/bin/voidbr-gitclone:160
+msgid "Usar FILE como lista de entradas de repositório"
+msgstr "Verwenden Sie FILE als Liste von Repository-Einträgen"
+
+#: usr/local/bin/voidbr-gitclone:172
+msgid "Clonando repositório"
+msgstr "Repository klonen"
+
+#: usr/local/bin/voidbr-gitclone:178 usr/local/bin/voidbr-gitclone:192
+msgid "algo deu errado - para maiores informações, veja:"
+msgstr "Es ist ein Fehler aufgetreten. Weitere Informationen finden Sie unter:"
+
+#: usr/local/bin/voidbr-gitclone:179 usr/local/bin/voidbr-gitclone:193
+msgid "repositório clonado com sucesso - para maiores informações, veja"
+msgstr "Repository erfolgreich geklont – weitere Informationen finden Sie unter"
+
+#: usr/local/bin/voidbr-gitclone:195
+msgid "Entre um repositório git, digite enter para sair"
+msgstr "Geben Sie ein Git-Repository ein und geben Sie Enter ein, um es zu beenden"
+
+#: usr/local/bin/voidbr-gitclone:218
+msgid "Falha ao analisar argumentos"
+msgstr "Argumente konnten nicht analysiert werden"
+
+#: usr/local/bin/voidbr-gitclone:257
+msgid "requer um argumento"
+msgstr "erfordert ein Argument"
+
+#: usr/local/bin/voidbr-gitclone:271
+msgid "Arquivo de repositórios não encontrado"
+msgstr "Repository-Datei nicht gefunden"
