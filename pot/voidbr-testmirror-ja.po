@@ -1,0 +1,203 @@
+# Chili Tradutor Go - 2.1.20-20260201
+# Copyright (C) 2019-2026 Vilmar Catafesta <vcatafesta@gmail.com>
+# This file is distributed under the same license as the chili-tradutor-go package.
+msgid ""
+msgstr ""
+"Project-Id-Version: chili-tradutor-go 2.1.20-20260201\n"
+"POT-Creation-Date: 2026-07-06 12:52-0400\n"
+"PO-Revision-Date: 2026-07-06 12:52-0400\n"
+"Last-Translator: Vilmar Catafesta <vcatafesta@gmail.com>\n"
+"Language-Team: Portuguese <https://github.com/chililinux/chili-tradutor-go>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ja\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: usr/local/bin/voidbr-testmirror:52
+msgid "Interrompido! Saindo..."
+msgstr "中断されました！出発中..."
+
+#: usr/local/bin/voidbr-testmirror:113
+msgid "Checando caminho"
+msgstr "パスの確認"
+
+#: usr/local/bin/voidbr-testmirror:133
+msgid "Removendo arquivos temporários..."
+msgstr "一時ファイルを削除しています..."
+
+#: usr/local/bin/voidbr-testmirror:191
+msgid "Testando internet em"
+msgstr "インターネットをテスト中"
+
+#: usr/local/bin/voidbr-testmirror:195
+msgid "Sem rota para o servidor"
+msgstr "サーバーへのルートがありません"
+
+#: usr/local/bin/voidbr-testmirror:195
+msgid "verifique sua internet"
+msgstr "インターネットをチェックしてください"
+
+#: usr/local/bin/voidbr-testmirror:371
+msgid "O repositório recomendado"
+msgstr "推奨されるリポジトリ"
+
+#: usr/local/bin/voidbr-testmirror:373 usr/local/bin/voidbr-testmirror:375
+msgid "Tempo médio"
+msgstr "平均時間"
+
+#: usr/local/bin/voidbr-testmirror:377
+msgid "Repositório"
+msgstr "リポジトリ"
+
+#: usr/local/bin/voidbr-testmirror:378
+msgid "Região"
+msgstr "地域"
+
+#: usr/local/bin/voidbr-testmirror:379
+msgid "Localização"
+msgstr "位置"
+
+#: usr/local/bin/voidbr-testmirror:428
+msgid "escrevendo o resultado para"
+msgstr "結果を書き込む"
+
+#: usr/local/bin/voidbr-testmirror:593
+msgid "Atualizar"
+msgstr "更新するには"
+
+#: usr/local/bin/voidbr-testmirror:593
+msgid "da internet?"
+msgstr "そしてインターネットは？"
+
+#: usr/local/bin/voidbr-testmirror:609
+msgid "Clonando"
+msgstr "クローン作成"
+
+#: usr/local/bin/voidbr-testmirror:615
+msgid "Configurando permissões e copiando arquivo"
+msgstr "権限の設定とファイルのコピー"
+
+#: usr/local/bin/voidbr-testmirror:619
+msgid "Copiando arquivo"
+msgstr "ファイルをコピーしています"
+
+#: usr/local/bin/voidbr-testmirror:619
+msgid "para"
+msgstr "に"
+
+#: usr/local/bin/voidbr-testmirror:624
+msgid "Removendo arquivos temporários"
+msgstr "一時ファイルの削除"
+
+#: usr/local/bin/voidbr-testmirror:629
+msgid "atualizado com sucesso, aproveite!"
+msgstr "無事に更新されました、お楽しみください!"
+
+#: usr/local/bin/voidbr-testmirror:658
+msgid "Tentando usar a lista local em"
+msgstr "でローカルリストを使用しようとしています"
+
+#: usr/local/bin/voidbr-testmirror:661
+msgid "Não é possível continuar. Lista de espelhos não encontrado no"
+msgstr "続行できません。で見つからないミラーのリスト"
+
+#: usr/local/bin/voidbr-testmirror:679
+msgid "Buscando nova lista de espelhos em"
+msgstr "ミラーの新しいリストを検索しています"
+
+#: usr/local/bin/voidbr-testmirror:682
+msgid "Não foi possível buscar a nova lista de espelhos de"
+msgstr "新しいミラーリストを取得できません"
+
+#: usr/local/bin/voidbr-testmirror:683
+msgid "Verifique sua internet!"
+msgstr "インターネットをチェックしてください!"
+
+#: usr/local/bin/voidbr-testmirror:707
+msgid "ERRO"
+msgstr "エラー"
+
+#: usr/local/bin/voidbr-testmirror:708
+msgid "não encontrei o comando"
+msgstr "コマンドが見つかりませんでした"
+
+#: usr/local/bin/voidbr-testmirror:709
+msgid "IMPOSSÍVEL CONTINUAR"
+msgstr "続行不可能"
+
+#: usr/local/bin/voidbr-testmirror:710
+msgid "Esse script precisa dos comandos listados acima"
+msgstr "このスクリプトには上記のコマンドが必要です"
+
+#: usr/local/bin/voidbr-testmirror:711
+msgid "Instale-os e/ou verifique se estão no seu"
+msgstr "それらをインストールするか、それらがあなたのコンピュータにインストールされているかどうかを確認してください。"
+
+#: usr/local/bin/voidbr-testmirror:712
+msgid "Instalar o(s) comando(s)"
+msgstr "コマンドをインストールする"
+
+#: usr/local/bin/voidbr-testmirror:713
+msgid "Rode novamente o aplicativo"
+msgstr "アプリケーションを再度実行します"
+
+#: usr/local/bin/voidbr-testmirror:714
+msgid "Erro na instalação dos comandos. Tente manualmente."
+msgstr "コマンドのインストール中にエラーが発生しました。手動で試してください。"
+
+#: usr/local/bin/voidbr-testmirror:715
+msgid "Erro: você não pode realizar esta operação a menos que seja root."
+msgstr "エラー: root でない限り、この操作は実行できません。"
+
+#: usr/local/bin/voidbr-testmirror:730
+msgid "#usar ping para testar"
+msgstr "#ping を使用してテストする"
+
+#: usr/local/bin/voidbr-testmirror:731
+msgid "#usar download do Curl para teste"
+msgstr "#Curl のダウンロードをテストに使用する"
+
+#: usr/local/bin/voidbr-testmirror:732
+msgid "#configurar automaticamente /etc/xbps.d/ com o resultado obtido"
+msgstr "#取得した結果を使用して /etc/xbps.d/ を自動的に設定します"
+
+#: usr/local/bin/voidbr-testmirror:733
+msgid "#saída resumida"
+msgstr "#要約された出力"
+
+#: usr/local/bin/voidbr-testmirror:734
+msgid "#atualiza este aplicativo no repositório online. Precisa de Internet"
+msgstr "#オンライン リポジトリでこのアプリケーションを更新します。インターネットが必要です"
+
+#: usr/local/bin/voidbr-testmirror:735
+msgid "#exibe a versão do aplicativo"
+msgstr "#アプリケーションのバージョンを表示"
+
+#: usr/local/bin/voidbr-testmirror:736
+msgid "#remove cores da saída"
+msgstr "#出力から色を削除する"
+
+#: usr/local/bin/voidbr-testmirror:737
+msgid "#esta ajuda"
+msgstr "#これは役に立ちます"
+
+#: usr/local/bin/voidbr-testmirror:781
+msgid "requer um argumento"
+msgstr "引数が必要です"
+
+#: usr/local/bin/voidbr-testmirror:783
+msgid "operação não suportada"
+msgstr "操作はサポートされていません"
+
+#: usr/local/bin/voidbr-testmirror:783
+msgid "usar -h para ajuda"
+msgstr "ヘルプには -h を使用してください"
+
+#: usr/local/bin/voidbr-testmirror:842
+msgid "nenhuma operação especificada (usar -h para ajuda)"
+msgstr "操作が指定されていません (ヘルプを表示するには -h を使用してください)"
+
+#: usr/local/bin/voidbr-testmirror:843
+msgid "apenas uma operação pode ser usada por vez"
+msgstr "一度に使用できる操作は 1 つだけです"

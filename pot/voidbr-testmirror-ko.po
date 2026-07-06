@@ -1,0 +1,203 @@
+# Chili Tradutor Go - 2.1.20-20260201
+# Copyright (C) 2019-2026 Vilmar Catafesta <vcatafesta@gmail.com>
+# This file is distributed under the same license as the chili-tradutor-go package.
+msgid ""
+msgstr ""
+"Project-Id-Version: chili-tradutor-go 2.1.20-20260201\n"
+"POT-Creation-Date: 2026-07-06 12:52-0400\n"
+"PO-Revision-Date: 2026-07-06 12:52-0400\n"
+"Last-Translator: Vilmar Catafesta <vcatafesta@gmail.com>\n"
+"Language-Team: Portuguese <https://github.com/chililinux/chili-tradutor-go>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ko\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: usr/local/bin/voidbr-testmirror:52
+msgid "Interrompido! Saindo..."
+msgstr "중단된! 퇴거..."
+
+#: usr/local/bin/voidbr-testmirror:113
+msgid "Checando caminho"
+msgstr "경로 확인 중"
+
+#: usr/local/bin/voidbr-testmirror:133
+msgid "Removendo arquivos temporários..."
+msgstr "임시 파일을 제거하는 중..."
+
+#: usr/local/bin/voidbr-testmirror:191
+msgid "Testando internet em"
+msgstr "인터넷 테스트 중"
+
+#: usr/local/bin/voidbr-testmirror:195
+msgid "Sem rota para o servidor"
+msgstr "서버로 가는 경로가 없습니다"
+
+#: usr/local/bin/voidbr-testmirror:195
+msgid "verifique sua internet"
+msgstr "인터넷을 확인해 보세요"
+
+#: usr/local/bin/voidbr-testmirror:371
+msgid "O repositório recomendado"
+msgstr "권장 저장소"
+
+#: usr/local/bin/voidbr-testmirror:373 usr/local/bin/voidbr-testmirror:375
+msgid "Tempo médio"
+msgstr "평균 시간"
+
+#: usr/local/bin/voidbr-testmirror:377
+msgid "Repositório"
+msgstr "저장소"
+
+#: usr/local/bin/voidbr-testmirror:378
+msgid "Região"
+msgstr "지역"
+
+#: usr/local/bin/voidbr-testmirror:379
+msgid "Localização"
+msgstr "위치"
+
+#: usr/local/bin/voidbr-testmirror:428
+msgid "escrevendo o resultado para"
+msgstr "결과를 에 기록"
+
+#: usr/local/bin/voidbr-testmirror:593
+msgid "Atualizar"
+msgstr "업데이트하려면"
+
+#: usr/local/bin/voidbr-testmirror:593
+msgid "da internet?"
+msgstr "그리고 인터넷?"
+
+#: usr/local/bin/voidbr-testmirror:609
+msgid "Clonando"
+msgstr "복제"
+
+#: usr/local/bin/voidbr-testmirror:615
+msgid "Configurando permissões e copiando arquivo"
+msgstr "권한 설정 및 파일 복사"
+
+#: usr/local/bin/voidbr-testmirror:619
+msgid "Copiando arquivo"
+msgstr "파일 복사 중"
+
+#: usr/local/bin/voidbr-testmirror:619
+msgid "para"
+msgstr "에게"
+
+#: usr/local/bin/voidbr-testmirror:624
+msgid "Removendo arquivos temporários"
+msgstr "임시 파일 제거"
+
+#: usr/local/bin/voidbr-testmirror:629
+msgid "atualizado com sucesso, aproveite!"
+msgstr "성공적으로 업데이트되었습니다. 즐기세요!"
+
+#: usr/local/bin/voidbr-testmirror:658
+msgid "Tentando usar a lista local em"
+msgstr "로컬 목록을 사용하려고 합니다."
+
+#: usr/local/bin/voidbr-testmirror:661
+msgid "Não é possível continuar. Lista de espelhos não encontrado no"
+msgstr "계속할 수 없습니다. 찾을 수 없는 미러 목록"
+
+#: usr/local/bin/voidbr-testmirror:679
+msgid "Buscando nova lista de espelhos em"
+msgstr "에서 새 미러 목록을 검색하는 중입니다."
+
+#: usr/local/bin/voidbr-testmirror:682
+msgid "Não foi possível buscar a nova lista de espelhos de"
+msgstr "새 미러 목록을 가져올 수 없습니다."
+
+#: usr/local/bin/voidbr-testmirror:683
+msgid "Verifique sua internet!"
+msgstr "인터넷을 확인해보세요!"
+
+#: usr/local/bin/voidbr-testmirror:707
+msgid "ERRO"
+msgstr "오류"
+
+#: usr/local/bin/voidbr-testmirror:708
+msgid "não encontrei o comando"
+msgstr "명령어를 못 찾았어요"
+
+#: usr/local/bin/voidbr-testmirror:709
+msgid "IMPOSSÍVEL CONTINUAR"
+msgstr "계속할 수 없습니다"
+
+#: usr/local/bin/voidbr-testmirror:710
+msgid "Esse script precisa dos comandos listados acima"
+msgstr "이 스크립트에는 위에 나열된 명령이 필요합니다."
+
+#: usr/local/bin/voidbr-testmirror:711
+msgid "Instale-os e/ou verifique se estão no seu"
+msgstr "이를 설치하거나 귀하의 컴퓨터에 있는지 확인하십시오."
+
+#: usr/local/bin/voidbr-testmirror:712
+msgid "Instalar o(s) comando(s)"
+msgstr "명령 설치"
+
+#: usr/local/bin/voidbr-testmirror:713
+msgid "Rode novamente o aplicativo"
+msgstr "응용 프로그램을 다시 실행하십시오."
+
+#: usr/local/bin/voidbr-testmirror:714
+msgid "Erro na instalação dos comandos. Tente manualmente."
+msgstr "명령을 설치하는 중에 오류가 발생했습니다. 수동으로 시도해 보세요."
+
+#: usr/local/bin/voidbr-testmirror:715
+msgid "Erro: você não pode realizar esta operação a menos que seja root."
+msgstr "오류: 루트가 아니면 이 작업을 수행할 수 없습니다."
+
+#: usr/local/bin/voidbr-testmirror:730
+msgid "#usar ping para testar"
+msgstr "#핑을 사용하여 테스트"
+
+#: usr/local/bin/voidbr-testmirror:731
+msgid "#usar download do Curl para teste"
+msgstr "#테스트를 위해 Curl 다운로드 사용"
+
+#: usr/local/bin/voidbr-testmirror:732
+msgid "#configurar automaticamente /etc/xbps.d/ com o resultado obtido"
+msgstr "# 얻은 결과로 /etc/xbps.d/를 자동으로 구성합니다."
+
+#: usr/local/bin/voidbr-testmirror:733
+msgid "#saída resumida"
+msgstr "#요약된 출력"
+
+#: usr/local/bin/voidbr-testmirror:734
+msgid "#atualiza este aplicativo no repositório online. Precisa de Internet"
+msgstr "#온라인 저장소에서 이 애플리케이션을 업데이트합니다. 인터넷이 필요합니다"
+
+#: usr/local/bin/voidbr-testmirror:735
+msgid "#exibe a versão do aplicativo"
+msgstr "#애플리케이션 버전 표시"
+
+#: usr/local/bin/voidbr-testmirror:736
+msgid "#remove cores da saída"
+msgstr "#출력에서 색상 제거"
+
+#: usr/local/bin/voidbr-testmirror:737
+msgid "#esta ajuda"
+msgstr "#이것이도움이된다"
+
+#: usr/local/bin/voidbr-testmirror:781
+msgid "requer um argumento"
+msgstr "논증이 필요하다"
+
+#: usr/local/bin/voidbr-testmirror:783
+msgid "operação não suportada"
+msgstr "지원되지 않는 작업"
+
+#: usr/local/bin/voidbr-testmirror:783
+msgid "usar -h para ajuda"
+msgstr "도움을 받으려면 -h를 사용하세요."
+
+#: usr/local/bin/voidbr-testmirror:842
+msgid "nenhuma operação especificada (usar -h para ajuda)"
+msgstr "작업이 지정되지 않았습니다(도움말을 보려면 -h 사용)."
+
+#: usr/local/bin/voidbr-testmirror:843
+msgid "apenas uma operação pode ser usada por vez"
+msgstr "한 번에 하나의 작업만 사용할 수 있습니다."

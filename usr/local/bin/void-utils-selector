@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # shellcheck shell=bash disable=SC1091,SC2039,SC2166
 #
-#  void-utils-selector - Seletor de utilitários para o Void
+#  void-utils-selector - Seletor de utilitários para o VoidBR
 #  Created: 2025/02/03 - 00:54
 #  Altered: 2025/02/03 - 00:54
 #  Updated: sáb 08 fev 2025 20:04:45 -04
@@ -65,6 +65,20 @@ light_magenta=$(tput setaf 13)
 light_cyan=$(tput setaf 14)
 bright_white=$(tput setaf 15)
 
+# dialog colors
+REVERSE="\Zr"
+UNDERLINE="\Zu"
+BOLD="\Zb"
+RESET="\Zn"
+BLACK="\Z0"
+YELLOW="\Z3"
+WHITE="\Z7"
+BLUE="\Z4"
+CYAN="\Z6"
+RED="\Z1"
+GREEN="\Z2"
+MAGENTA="\Z5"
+
 #debug
 export PS4='${red}${0##*/}${green}[$FUNCNAME]${pink}[$LINENO]${reset}'
 #set -x
@@ -76,7 +90,8 @@ declare APP="${0##*/}"
 declare _VERSION_="1.2.08-20250208"
 declare distro="$(uname -n)"
 declare DEPENDENCIES=(tput dialog)
-declare ccabec="$APP - Seletor de utilitários para o Void"
+declare ccabec="$APP - Seletor de utilitários para o VoidBR"
+declare ccabec="${BOLD}${WHITE}${REVERSE}${APP} ${YELLOW}v$_VERSION_ ${BLUE}https://github.com/voidlinuxbr/voidbr-utils"
 declare ctitle="Menu Principal"
 declare -A Autils=()
 declare -a theme_list=()
@@ -85,38 +100,53 @@ MostraErro() { echo "erro: ${red}$1${reset} => comando: ${cyan}'$2'${reset} => r
 #trap 'MostraErro "$APP[$FUNCNAME][$LINENO]" "$BASH_COMMAND" "$?"; exit 1' ERR
 
 # Exibir o menu com números e nomes de temas
-Autils+=(['void-chroot']='Utilitário para executar chroot')
-Autils+=(['void-clonedisk']='Utilitário para clonar discos')
-Autils+=(['void-dialog-theme-selector']='Utilitário para selecionar temas para o dialog')
-Autils+=(['void-mirror']='Utilitário para configurar repositórios do Void')
-Autils+=(['void-maketar']='Utilitário para criar backups com tar')
-Autils+=(['void-parted']='Utilitário para particionar disco')
-Autils+=(['void-remove-vg']='Utilitário para listar e remover VG (Grupo de Volumes)')
-Autils+=(['void-services']='Utilitário para gerenciar serviços do Void')
-Autils+=(['void-setfont']='Utilitário para configurar fonte no tty')
-Autils+=(['void-testmirror']='Utilitário para testar latência dos mirrors do Void')
-Autils+=(['void-wifi']='Utilitário para configurar rede wifi (wpa_supplicant)')
-Autils+=(['void-wifi-config']='Utilitário para configurar rede wifi (NetworkManager)')
-Autils+=(['void-xrandr']='Utilitário para configurar resolucao de video')
-Autils+=(['void-gitclone']='Utilitário para clonar repositórios')
-Autils+=(['void-efivar']='Utilitário para listar variáveis UEFI')
-Autils+=(['void-runimage']='Utilitário para rodar dispositivos de bloco - like VirtManager')
+Autils+=(['voidbr-wifi-setup']='Utilitário para configurar redes wi-fi')
+Autils+=(['voidbr-configure-pulseaudio']='Utilitário para configurar pulseaudio')
+Autils+=(['voidbr-configure-pipewire']='Utilitário para configurar pipewire')
+Autils+=(['voidbr-chroot']='Utilitário para executar chroot')
+Autils+=(['voidbr-clonedisk']='Utilitário para clonar discos')
+Autils+=(['voidbr-dialog-theme-selector']='Utilitário para selecionar temas para o dialog')
+Autils+=(['voidbr-mirror']='Utilitário para configurar repositórios do Void')
+Autils+=(['voidbr-maketar']='Utilitário para criar backups com tar')
+Autils+=(['voidbr-parted']='Utilitário para particionar disco')
+Autils+=(['voidbr-remove-vg']='Utilitário para listar e remover VG (Grupo de Volumes)')
+Autils+=(['voidbr-services']='Utilitário para gerenciar serviços do Void')
+Autils+=(['voidbr-setfont']='Utilitário para configurar fonte no tty')
+Autils+=(['voidbr-testmirror']='Utilitário para testar latência dos mirrors do Void')
+Autils+=(['voidbr-xrandr']='Utilitário para configurar resolucao de video')
+Autils+=(['voidbr-gitclone']='Utilitário para clonar repositórios')
+Autils+=(['voidbr-efivar']='Utilitário para listar variáveis UEFI')
+Autils+=(['chili-fr']='Utilitário para rodar dispositivos de bloco - like VirtManager')
+Autils+=(['voidbr-low-ram-optimizer']='Utilitário para otimização automática de máquinas com pouca RAM')
+Autils+=(['pkgmake']='Utilitário para criação de pacotes xbps via receita like Arch PKGBUILD')
+Autils+=(['chili-tradutor-go']='Utilitário para internacionalização de scripts')
+Autils+=(['voidbr-remove-vg']='Utilitário para gerenciar volumes LVM')
+Autils+=(['vinstall']='Utilitário para gerenciamento de pacotes xbps')
+Autils+=(['vservice']='Utilitário para gerenciamento de serviços')
+Autils+=(['vsv']='Utilitário para listar serviços')
 
 for key in "${!Autils[@]}"; do
-	desc="${Autils[$key]}"
-	theme_list+=("$key" "$desc")
+  desc="${Autils[$key]}"
+  theme_list+=("$key" "$desc")
 done
 
+theme_list=()
+while IFS= read -r key; do
+	theme_list+=("$key" "${Autils[$key]}")
+done < <(printf '%s\n' "${!Autils[@]}" | sort)
+
 util_choice=$(dialog \
+  --stdout \
 	--colors \
 	--title "$ctitle" \
 	--backtitle "$ccabec" \
-	--menu "Escolha o utilitário desejado" \
-	20 0 2 \
-	"${theme_list[@]}" 2>&1 >/dev/tty)
+	--menu "${YELLOW}Escolha o utilitário desejado:" \
+	22 0 2 \
+	"${theme_list[@]}")
 
 if [ -n "$util_choice" ]; then
-	sudo bash "$util_choice"
+#	sudo bash "$util_choice"
+	exec "$util_choice"
 else
-	dialog --msgbox "Nenhum utilitário foi escolhido!" 0 0
+	dialog --title "INFO" --colors --msgbox "\n\n${RED}Nenhum utilitário foi escolhido!" 10 60
 fi
