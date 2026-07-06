@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: chili-tradutor-go 2.1.20-20260201\n"
-"POT-Creation-Date: 2026-07-06 19:05-0400\n"
-"PO-Revision-Date: 2026-07-06 19:05-0400\n"
+"POT-Creation-Date: 2026-07-06 19:50-0400\n"
+"PO-Revision-Date: 2026-07-06 19:50-0400\n"
 "Last-Translator: Vilmar Catafesta <vcatafesta@gmail.com>\n"
 "Language-Team: Portuguese <https://github.com/chililinux/chili-tradutor-go>\n"
 "MIME-Version: 1.0\n"
@@ -121,7 +121,7 @@ msgstr "원하는 유틸리티를 선택하세요:"
 #: usr/local/bin/voidbr-utils-selector:155
 #, sh-format
 msgid "utilitário não foi encontrado no \\$PATH!"
-msgstr "\$PATH에서 유틸리티를 찾을 수 없습니다!"
+msgstr "\\$PATH에서 유틸리티를 찾을 수 없습니다!"
 
 #: usr/local/bin/voidbr-utils-selector:162
 msgid "Nenhum utilitário foi escolhido!"
