@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=VoidBR Utils Selector
+GenericName=VoidBR Utils Selector
+Comment=Aplicativo para selecionar utilitários do VoidBR
+Exec=voidbr-utils-selector
+Terminal=true
+MimeType=text/plain;
+Icon=drive-multidisk
+Categories=DesktopSettings;Utility;Accessories;X-XFCE-SettingsDialog;X-XFCE-HardwareSettings;X-VoidBR-Apps;
+StartupNotify=true
+Actions=Window;Document;
+Hidden=false
