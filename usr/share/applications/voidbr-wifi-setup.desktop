@@ -1,0 +1,15 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=VoidBR Wifi Setup
+GenericName=VoidBR Wifi Setup
+Comment=Utilitário para configurar rede wifi
+Exec=voidbr-wifi-setup
+TyrExec=/usr/local/bin/voidbr-wifi-setup
+Terminal=true
+MimeType=text/plain;
+Icon=network-wireless
+Categories=DesktopSettings;Utility;Accessories;X-XFCE-SettingsDialog;X-XFCE-HardwareSettings;X-VoidBR-Apps;
+StartupNotify=true
+Actions=Window;Document;
+Hidden=false
