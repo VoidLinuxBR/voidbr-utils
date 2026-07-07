@@ -95,70 +95,87 @@ declare ctitle="$(gettext 'Menu Principal')"
 declare -A Autils=()
 declare -a theme_list=()
 
+pause_on_exit() {
+	status=$?
+	echo
+	if ((status != 0)); then
+		echo "$(gettext 'O programa terminou com erro ($status).')"
+	fi
+	read -rp "$(gettext 'Pressione ENTER para fechar...')"
+}
+trap pause_on_exit EXIT
+
 has_command() {
-  command -v "$1" >/dev/null && return 0 || return 1
+	command -v "$1" >/dev/null && return 0 || return 1
 }
 
-# Exibir o menu com números e nomes de temas
-Autils+=(['voidbr-wifi-setup']="$(gettext 'Utilitário para configurar redes wi-fi')")
-Autils+=(['voidbr-configure-pulseaudio']="$(gettext 'Utilitário para configurar pulseaudio')")
-Autils+=(['voidbr-configure-pipewire']="$(gettext 'Utilitário para configurar pipewire')")
-Autils+=(['voidbr-chroot']="$(gettext 'Utilitário para executar chroot')")
-Autils+=(['voidbr-clonedisk']="$(gettext 'Utilitário para clonar discos')")
-Autils+=(['voidbr-dialog-theme-selector']="$(gettext 'Utilitário para selecionar temas para o dialog')")
-Autils+=(['voidbr-mirror']="$(gettext 'Utilitário para configurar repositórios do Void')")
-Autils+=(['voidbr-maketar']="$(gettext 'Utilitário para criar backups com tar')")
-Autils+=(['voidbr-parted']="$(gettext 'Utilitário para particionar disco')")
-Autils+=(['voidbr-remove-vg']="$(gettext 'Utilitário para listar e remover VG (Grupo de Volumes)')")
-Autils+=(['voidbr-services']="$(gettext 'Utilitário para gerenciar serviços do Void')")
-Autils+=(['voidbr-setfont']="$(gettext 'Utilitário para configurar fonte no tty')")
-Autils+=(['voidbr-testmirror']="$(gettext 'Utilitário para testar latência dos mirrors do Void')")
-Autils+=(['voidbr-xrandr']="$(gettext 'Utilitário para configurar resolucao de video')")
-Autils+=(['voidbr-gitclone']="$(gettext 'Utilitário para clonar repositórios')")
-Autils+=(['voidbr-efivar']="$(gettext 'Utilitário para listar variáveis UEFI')")
-Autils+=(['chili-fr']="$(gettext 'Utilitário para rodar dispositivos de bloco - like VirtManager')")
-Autils+=(['voidbr-low-ram-optimizer']="$(gettext 'Utilitário para otimização automática de máquinas com pouca RAM')")
-Autils+=(['pkgmake']="$(gettext 'Utilitário para criação de pacotes xbps via receita like Arch PKGBUILD')")
-Autils+=(['chili-tradutor-go']="$(gettext 'Utilitário para internacionalização de scripts')")
-Autils+=(['voidbr-remove-vg']="$(gettext 'Utilitário para gerenciar volumes LVM')")
-Autils+=(['vinstall']="$(gettext 'Utilitário para gerenciamento de pacotes xbps')")
-Autils+=(['vservice']="$(gettext 'Utilitário para gerenciamento de serviços')")
-Autils+=(['vsv']="$(gettext 'Utilitário para listar serviços')")
+while true; do
+	# Exibir o menu com números e nomes de temas
+	Autils+=(['voidbr-wifi-setup']="$(gettext 'Utilitário para configurar redes wi-fi')")
+	Autils+=(['voidbr-configure-pulseaudio']="$(gettext 'Utilitário para configurar pulseaudio')")
+	Autils+=(['voidbr-configure-pipewire']="$(gettext 'Utilitário para configurar pipewire')")
+	Autils+=(['voidbr-chroot']="$(gettext 'Utilitário para executar chroot')")
+	Autils+=(['voidbr-clonedisk']="$(gettext 'Utilitário para clonar discos')")
+	Autils+=(['voidbr-dialog-theme-selector']="$(gettext 'Utilitário para selecionar temas para o dialog')")
+	Autils+=(['voidbr-mirror']="$(gettext 'Utilitário para configurar repositórios do Void')")
+	Autils+=(['voidbr-maketar']="$(gettext 'Utilitário para criar backups com tar')")
+	Autils+=(['voidbr-parted']="$(gettext 'Utilitário para particionar disco')")
+	Autils+=(['voidbr-remove-vg']="$(gettext 'Utilitário para listar e remover VG (Grupo de Volumes)')")
+	Autils+=(['voidbr-services']="$(gettext 'Utilitário para gerenciar serviços do Void')")
+	Autils+=(['voidbr-setfont']="$(gettext 'Utilitário para configurar fonte no tty')")
+	Autils+=(['voidbr-testmirror']="$(gettext 'Utilitário para testar latência dos mirrors do Void')")
+	Autils+=(['voidbr-xrandr']="$(gettext 'Utilitário para configurar resolucao de video')")
+	Autils+=(['voidbr-gitclone']="$(gettext 'Utilitário para clonar repositórios')")
+	Autils+=(['voidbr-efivar']="$(gettext 'Utilitário para listar variáveis UEFI')")
+	Autils+=(['chili-fr']="$(gettext 'Utilitário para rodar dispositivos de bloco - like VirtManager')")
+	Autils+=(['voidbr-low-ram-optimizer']="$(gettext 'Utilitário para otimização automática de máquinas com pouca RAM')")
+	Autils+=(['pkgmake']="$(gettext 'Utilitário para criação de pacotes xbps via receita like Arch PKGBUILD')")
+	Autils+=(['chili-tradutor-go']="$(gettext 'Utilitário para internacionalização de scripts')")
+	Autils+=(['voidbr-remove-vg']="$(gettext 'Utilitário para gerenciar volumes LVM')")
+	Autils+=(['vinstall']="$(gettext 'Utilitário para gerenciamento de pacotes xbps')")
+	Autils+=(['vservice']="$(gettext 'Utilitário para gerenciamento de serviços')")
+	Autils+=(['vsv']="$(gettext 'Utilitário para listar serviços')")
 
-for key in "${!Autils[@]}"; do
-  desc="${Autils[$key]}"
-  theme_list+=("$key" "$desc")
+	for key in "${!Autils[@]}"; do
+		desc="${Autils[$key]}"
+		theme_list+=("$key" "$desc")
+	done
+
+	theme_list=()
+	while IFS= read -r key; do
+		theme_list+=("$key" "${Autils[$key]}")
+	done < <(printf '%s\n' "${!Autils[@]}" | sort)
+
+	util_choice=$(dialog \
+		--stdout \
+		--colors \
+		--title "$ctitle" \
+		--backtitle "$ccabec" \
+		--cancel-button "Sair" \
+		--menu "${YELLOW}$(gettext 'Escolha o utilitário desejado:')" \
+		22 0 2 \
+		"${theme_list[@]}")
+
+	if [ -n "$util_choice" ]; then
+		if has_command "$util_choice"; then
+			"$util_choice"
+			status=$?
+			echo
+			read -rp "$(gettext 'Pressione ENTER para fechar...')"
+			#			exit "$status"
+		else
+			dialog \
+				--title "ERRO" \
+				--colors \
+				--msgbox "\n\n${RED}$(gettext 'utilitário não foi encontrado no \$PATH!')" \
+				9 60
+		fi
+	else
+		dialog \
+			--title "INFO" \
+			--colors \
+			--msgbox "\n\n${RED}$(gettext 'Nenhum utilitário foi escolhido!')" \
+			9 60
+		exit 0
+	fi
 done
-
-theme_list=()
-while IFS= read -r key; do
-	theme_list+=("$key" "${Autils[$key]}")
-done < <(printf '%s\n' "${!Autils[@]}" | sort)
-
-util_choice=$(dialog \
-  --stdout \
-	--colors \
-	--title "$ctitle" \
-	--backtitle "$ccabec" \
-	--menu "${YELLOW}$(gettext 'Escolha o utilitário desejado:')" \
-	22 0 2 \
-	"${theme_list[@]}")
-
-if [ -n "$util_choice" ]; then
-#	sudo bash "$util_choice"
-  if has_command "$util_choice" ; then
-  	exec "$util_choice"
-  else
-  	dialog \
-  	  --title "ERRO" \
-  	  --colors \
-  	  --msgbox "\n\n${RED}$(gettext 'utilitário não foi encontrado no \$PATH!')" \
-  	  9 60
-  fi
-else
-	dialog \
-	  --title "INFO" \
-	  --colors \
-	  --msgbox "\n\n${RED}$(gettext 'Nenhum utilitário foi escolhido!')" \
-	  9 60
-fi
