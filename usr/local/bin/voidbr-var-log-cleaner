@@ -469,8 +469,10 @@ afiles+=(nginx/access.log)
 afiles+=(nginx/error.log)
 
 for f in "${afiles[@]}"; do
-  msg_tab "${cyan}Procesando: /var/log/$f${rst}"
-  >/var/log/"$f"
+  if [[ -e "$f" ]]; then
+    msg_tab "${cyan}Procesando: /var/log/$f${rst}"
+    >/var/log/"$f"
+  fi
 done
 
 log_ok "${APP} - limpeza finalizada"
