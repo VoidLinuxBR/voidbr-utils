@@ -178,7 +178,8 @@ voidbr_update_index_html() {
 		plasma \
 		cinnamon \
 		mate \
-		sway; do
+		sway
+		hyprland; do
 		update_iso "$flavor"
 	done
 
