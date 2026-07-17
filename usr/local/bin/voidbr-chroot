@@ -5,7 +5,7 @@
 #  voidbr-chroot - chroot util compatible with all likeunix
 #
 #  Created: 2019/04/05
-#  Updated: seg 29 jun 2026 16:15:48 -04
+#  Updated: sex 17 jul 2026 01:45:20 -04
 #
 #  Copyright (c) 2019-2026, Vilmar Catafesta <vcatafesta@gmail.com>
 #  Copyright (c) 2019-2026, ChiliLinux Development Team <https://chililinux.com> <https://github.com/chililinux>
@@ -45,7 +45,7 @@ shopt -s extglob
 
 #system
 declare APP="${0##*/}"
-declare _VERSION_="0.06.29-20260629"
+declare _VERSION_="0.07.17-20260717"
 declare APPDESC="$APP - Wraper for "
 
 sh_setenvironment() {
@@ -142,14 +142,23 @@ sh_init_bind() {
 		chroot ${CHROOTDIR}
 		sh_stop_bind
 	else
-		msg "Uso: ${APP} /mnt/full"
-		msg "     ${APP} ."
+	  usage
 	fi
 }
 
 sh_checkroot() {
   (( EUID != 0 )) && die "${red}This script must be run as root.${rst}"
 }
+
+usage() {
+  msg "Uso: ${APP} /mnt/full"
+  msg "     ${APP} ."
+  exit 1
+}
+
+if test $# -eq 0; then
+  usage
+fi
 
 sh_setenvironment
 sh_checkroot
