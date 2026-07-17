@@ -4,8 +4,7 @@
 #
 #  voidbr-utils-selector - Seletor de utilitários para o VoidBR
 #  Created: 2025/02/03 - 00:54
-#  Altered: 2025/02/03 - 00:54
-#  Updated: sáb 08 fev 2025 20:04:45 -04
+#  Updated: sex 17 jul 2026 01:25:48 -04
 #
 #  Copyright (c) 2025-2025, Vilmar Catafesta <vcatafesta@gmail.com>
 #  All rights reserved.
@@ -87,7 +86,7 @@ shopt -s extglob
 
 #system
 declare APP="${0##*/}"
-declare _VERSION_="1.2.08-20250208"
+declare _VERSION_="1.7.17-20260217"
 declare DEPENDENCIES=(tput dialog)
 declare ccabec="$APP - Seletor de utilitários para o VoidBR"
 declare ccabec="${BOLD}${WHITE}${REVERSE}${APP} ${YELLOW}v$_VERSION_ ${BLUE}https://github.com/voidlinuxbr/voidbr-utils"
@@ -158,6 +157,7 @@ while true; do
 
 	if [ -n "$util_choice" ]; then
 		if has_command "$util_choice"; then
+      clear
 			"$util_choice"
 			status=$?
 			echo
