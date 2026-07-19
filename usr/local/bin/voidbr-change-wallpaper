@@ -1,43 +1,62 @@
 #!/bin/bash
 
 DIR="/usr/share/backgrounds/voidbr"
+DEFAULT=""
+
+if [[ -n "$1" ]]; then
+	if [[ -f "$1" ]]; then
+		DEFAULT="$1"
+	elif [[ -f "$DIR/$1" ]]; then
+		DEFAULT="$DIR/$1"
+	fi
+fi
 
 mapfile -t imagens < <(
-    find "$DIR" -type f \( \
-        -iname "*.jpg"  -o \
-        -iname "*.jpeg" -o \
-        -iname "*.png"  -o \
-        -iname "*.webp" -o \
-        -iname "*.avif" -o \
-        -iname "*.heic" \
-    \)
+	find "$DIR" -type f \( \
+		-iname "*.jpg" -o \
+		-iname "*.jpeg" -o \
+		-iname "*.png" -o \
+		-iname "*.webp" -o \
+		-iname "*.avif" -o \
+		-iname "*.heic" \
+		\)
 )
 
-(( ${#imagens[@]} )) || exit 1
+((${#imagens[@]})) || exit 1
+
+# Wallpaper inicial (opcional)
+if [[ -n "$DEFAULT" ]]; then
+	if [[ -n "$HYPRLAND_INSTANCE_SIGNATURE" ]]; then
+		hyprctl hyprpaper wallpaper ",$DEFAULT"
+	elif command -v swaybg >/dev/null; then
+		pkill -x swaybg 2>/dev/null
+		swaybg -i "$DEFAULT" -m fill &
+	fi
+fi
+
+sleep 60
 
 anterior=-1
 
 while :; do
-    if (( ${#imagens[@]} > 1 )); then
-        while :; do
-            indice=$((RANDOM % ${#imagens[@]}))
-            (( indice != anterior )) && break
-        done
-        anterior=$indice
-    else
-        indice=0
-    fi
+	if ((${#imagens[@]} > 1)); then
+		while :; do
+			indice=$((RANDOM % ${#imagens[@]}))
+			((indice != anterior)) && break
+		done
+		anterior=$indice
+	else
+		indice=0
+	fi
 
-    img="${imagens[indice]}"
+	img="${imagens[indice]}"
 
-    if [[ -n "$HYPRLAND_INSTANCE_SIGNATURE" ]]; then
-        # Compatibilidade com o comportamento anterior
-        hyprctl hyprpaper wallpaper ",$img"
+	if [[ -n "$HYPRLAND_INSTANCE_SIGNATURE" ]]; then
+		hyprctl hyprpaper wallpaper ",$img"
+	elif command -v swaybg >/dev/null; then
+		pkill -x swaybg 2>/dev/null
+		swaybg -i "$img" -m fill &
+	fi
 
-    elif [[ -n "$WAYLAND_DISPLAY" ]] && command -v swaybg >/dev/null; then
-        pkill -x swaybg 2>/dev/null
-        swaybg -i "$img" -m fill &
-    fi
-
-    sleep 60
+	sleep 60
 done
