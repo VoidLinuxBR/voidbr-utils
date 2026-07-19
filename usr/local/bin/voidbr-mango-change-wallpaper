@@ -1,0 +1,38 @@
+#!/bin/bash
+
+DIR="/usr/share/backgrounds/voidbr"
+
+backend() {
+	if command -v hyprctl >/dev/null &&
+		[ -n "$HYPRLAND_INSTANCE_SIGNATURE" ]; then
+		echo hyprpaper
+	elif command -v swaybg >/dev/null; then
+		echo swaybg
+	else
+		echo none
+	fi
+}
+
+case "$(backend)" in
+hyprpaper)
+	while :; do
+		img=$(find "$DIR" -type f | shuf -n1)
+		hyprctl hyprpaper wallpaper ",$img"
+		sleep 60
+	done
+	;;
+
+swaybg)
+	while :; do
+		img=$(find "$DIR" -type f | shuf -n1)
+		pkill -x swaybg 2>/dev/null
+		swaybg -i "$img" -m fill &
+		sleep 60
+	done
+	;;
+
+*)
+	echo "Nenhum backend de wallpaper encontrado."
+	exit 1
+	;;
+esac
