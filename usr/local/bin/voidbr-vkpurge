@@ -3,11 +3,11 @@
 # shellcheck shell=bash disable=SC1091,SC2039,SC2166,SC2034
 #
 #  voidbr-vkpurge
-#  Remove kernels órfãos do Void Linux com segurança.
+#  Remove kernels órfãos do Void Linux com segurança
 #  Inspired by the original vkpurge by Juan RP.
 #
 #  Created: sáb 09 mai 2026 10:57:53 -04
-#  Updated: ter 21 jul 2026 20:36:28 -04
+#  Updated: qua 22 jul 2026 01:05:28 -04
 #
 #  Copyright (c) 2019-2026, Vilmar Catafesta <vcatafesta@gmail.com>
 #  Copyright (c) 2019-2026, ChiliLinux Development Team <https://chililinux.com> <https://github.com/chililinux>
@@ -38,8 +38,8 @@ export LANGUAGE="${LANGUAGE:-pt_BR}"
 export TEXTDOMAINDIR=/usr/share/locale
 export TEXTDOMAIN=voidbr-vkpurge
 
-#debug
-export PS4='${red}${0##*/}${green}[$FUNCNAME]${pink}[$LINENO]${reset}'
+# PS4 "limpo" e seguro
+export PS4='${red}${0##*/}${green}[$FUNCNAME]${pink}[$LINENO]${reset}> '
 #set -x
 #set -e
 #set -euo pipefail
@@ -47,7 +47,7 @@ shopt -s extglob
 
 #system
 declare APP="${0##*/}"
-declare _VERSION_="0.07.21-20260721"
+declare _VERSION_="0.07.22-20260722"
 declare APPDESC="$APP - Wraper for "
 declare distro="$(uname -n)"
 declare -A PACKAGEDEP=(
@@ -59,6 +59,7 @@ declare -A PACKAGEDEP=(
 )
 # Mapa: [distro]="lista de pacotes"
 declare -A DISTRO_PKGS=(
+	["voidbr"]="gettext rsync parted curl xz lvm2"
 	["void"]="gettext rsync parted curl xz lvm2"
 	["void-live"]="gettext rsync parted curl xz lvm2"
 	["voidlinux"]="gettext rsync parted curl xz lvm2"
@@ -70,36 +71,13 @@ declare -A DISTRO_PKGS=(
 )
 # Mapa: [distro]="comando de instalação"
 declare -A DISTRO_MGR=(
+	["voidbr"]="xbps-install -Syf"
 	["void"]="xbps-install -Syf"
 	["void-live"]="xbps-install -Syf"
 	["voidlinux"]="xbps-install -Syf"
 	["chili"]="pacman -Sy --needed --noconfirm"
 	["chililinux"]="pacman -Sy --needed --noconfirm"
 	["arch"]="pacman -Sy --needed --noconfirm"
-	["manjaro"]="pacman -Sy --needed --noconfirm"
-	["debian"]="apt-get install -y"
-)
-# Mapa: [distro]="lista de pacotes"
-declare -A DISTRO_PKGS=(
-	["void"]="gettext rsync parted curl xz lvm2"
-	["void-live"]="gettext rsync parted curl xz lvm2"
-	["voidlinux"]="gettext rsync parted curl xz lvm2"
-	["chili"]="gettext rsync parted curl xz"
-	["chililinux"]="gettext rsync parted curl xz"
-	["arch"]="gettext rsync parted curl xz"
-	["biglinux"]="gettext rsync parted curl xz"
-	["manjaro"]="gettext rsync parted curl xz"
-	["debian"]="gettext-base rsync parted curl xz-utils"
-)
-# Mapa: [distro]="comando de instalação"
-declare -A DISTRO_MGR=(
-	["void"]="xbps-install -Syf"
-	["void-live"]="xbps-install -Syf"
-	["voidlinux"]="xbps-install -Syf"
-	["chili"]="pacman -Sy --needed --noconfirm"
-	["chililinux"]="pacman -Sy --needed --noconfirm"
-	["arch"]="pacman -Sy --needed --noconfirm"
-	["viglinux"]="pacman -Sy --needed --noconfirm"
 	["manjaro"]="pacman -Sy --needed --noconfirm"
 	["debian"]="apt-get install -y"
 )
@@ -458,9 +436,6 @@ sh_checkroot "$@"
 
 ##########################################################################################################
 
-# Variável global de controle
-FORCE_REGEN=false
-
 # =========================================================
 # LOG
 # =========================================================
@@ -473,18 +448,17 @@ fun() { printf "%s==>%s %s\n" "$magenta" "$reset" "$*"; }
 
 usage() {
 	cat <<EOF
-${cyan}voidbr-vkpurge${reset}
-${white}Limpa kernels órfãos do Void Linux com segurança.${reset}
+${cyan}voidbr-vkpurge v${_VERSION_}${reset}
+${white}Limpa kernels órfãos do Void Linux com segurança${reset}
 
-${yellow}USO:${reset}
-  ${green}$APP${reset} ${cyan}list${reset} [version ...]
-  ${green}$APP${reset} ${red}rm${reset} all
-  ${green}$APP${reset} ${red}rm${reset} <version ...>
-  ${green}$APP${reset} ${magenta}--dry-run${reset}
-  ${green}$APP${reset} ${magenta}--cleanup${reset}
-  ${green}$APP${reset} ${magenta}--force${reset}       Força a regeneração do grub
+${yellow}Uso:${reset}
+  ${green}$APP${reset} ${cyan}list${reset} [versão]         ${bold}${cyan}# Lista kernels órfãos (filtra por versão se fornecido)
+  ${green}$APP${reset} ${red}rm${reset} all                ${bold}${cyan}# Remove todos os kernels órfãos detectados
+  ${green}$APP${reset} ${red}rm${reset} <versão>           ${bold}${cyan}# Remove uma versão específica de kernel
+  ${green}$APP${reset} ${magenta}--cleanup${reset}             ${bold}${cyan}# Varredura e remoção automática de órfãos
+  ${green}$APP${reset} ${magenta}--force${reset}               ${bold}${cyan}# Força a regeneração do GRUB/bootloader
 
-${yellow}EXEMPLOS:${reset}
+${yellow}Exemplos:${reset}
   ${rst}$APP list${reset}
   ${rst}$APP rm all${reset}
   ${rst}$APP rm 6.6.32_1${reset}
@@ -540,21 +514,27 @@ list_kernels() {
 	running="$(uname -r)"
 	installed="$(xbps-query -o "/boot/vmlinu[xz]-*" 2>/dev/null | awk '{print $2}')"
 
-	for arg in "${@:-all}"; do
-		pattern="$arg"
-		[[ "$arg" == "all" ]] && pattern="*"
+	# Captura o resultado da listagem em uma variável
+	local output=$(
+		for arg in "${@:-all}"; do
+			pattern="$arg"
+			[[ "$arg" == "all" ]] && pattern="*"
+			for k in /boot/vmlinuz-* /boot/vmlinux-*; do
+				[ -e "$k" ] || continue
+				[[ "$pattern" == "*" ]] && case "$installed" in *"$k"*) continue ;; esac
+				kver="${k##*-}"
+				[[ "$kver" == "$running" ]] && continue
+				case "$kver" in $pattern) printf "%s\n" "$kver" ;; esac
+			done
+		done | sort -uV
+	)
 
-		for k in /boot/vmlinuz-* /boot/vmlinux-*; do
-			[ -e "$k" ] || continue
-
-			# Só ignora se for busca "all" (automática)
-			[[ "$pattern" == "*" ]] && case "$installed" in *"$k"*) continue ;; esac
-
-			kver="${k##*-}"
-			[[ "$kver" == "$running" ]] && continue
-			case "$kver" in $pattern) printf "%s\n" "$kver" ;; esac
-		done
-	done | sort -uV
+	# Verifica se a variável está vazia
+	if [[ -z "$output" ]]; then
+		msg "Nenhum kernel órfão encontrado."
+	else
+		printf "Kernal órfãos:\n${yellow}%s${rst}\n" "$output"
+	fi
 }
 
 # =========================================================
@@ -571,13 +551,13 @@ remove_path() {
 		exit 1
 		;;
 	esac
-	warn "Removendo: $target"
+	warn "Removendo: ${yellow}$target${rst}"
 	rm -rf -- "$target"
 }
 
 remove_kernel() {
 	rmkver="$1"
-	fun "Kernel $rmkver será enviado para o além."
+	fun "Kernel ${yellow}$rmkver${rst} será enviado para o além."
 	run_hooks pre-remove "$rmkver"
 
 	remove_path "/boot/config-$rmkver"
@@ -628,16 +608,17 @@ dry_run() {
 }
 
 cleanup_orphans() {
-	msg "Varrendo o sistema em busca de kernels órfãos..."
+	msg "Varrendo o sistema em busca de versões órfãs..."
 
+	# 1. Busca abrangente incluindo config-*
 	local found_versions=$({
-		find /boot -name "vmlinuz-*" -o -name "vmlinux-*" | sed -E 's/.*-(.*)/\1/'
+		find /boot -name "vmlinuz-*" -o -name "vmlinux-*" -o -name "initramfs-*" -o -name "config-*" | sed -E 's/.*-(.*)/\1/; s/\.img//'
 		find /usr/lib/modules -maxdepth 1 -mindepth 1 -type d -exec basename {} \;
 	} | sort -u)
 
 	local running="$(uname -r)"
 	local installed="$(xbps-query -o "/boot/vmlinu[xz]-*" 2>/dev/null | awk '{print $2}')"
-	local removed_any=false # Flag de controle
+	local removed_any=false
 
 	for kver in $found_versions; do
 		[[ "$kver" == "$running" ]] && continue
@@ -645,12 +626,15 @@ cleanup_orphans() {
 			continue
 		fi
 
-		warn "Kernel órfão detectado: $kver. Limpando..."
+		# 2. Lista todos os arquivos órfãos relacionados a essa versão
+		local orphans=$(find /boot -maxdepth 1 -name "*$kver*" -printf "%f ")
+
+		warn "Arquivos órfãos detectados: ${yellow}$orphans${rst}"
+
 		remove_kernel "$kver"
 		removed_any=true
 	done
 
-	# Retorna o status para quem chamou
 	[[ "$removed_any" == "true" ]]
 }
 
@@ -660,6 +644,8 @@ cleanup_orphans() {
 
 trap 'err "Operação interrompida."; exit 1' INT TERM HUP
 
+# Variáveis globais de controle
+FORCE_REGEN=false
 OPT_CLEANUP=false
 OPT_FORCE=false
 OPT_DRY_RUN=false
@@ -668,23 +654,30 @@ TARGET_KERNEL=""
 
 while [[ $# -gt 0 ]]; do
 	case "$1" in
-	--cleanup) OPT_CLEANUP=true ;;
-	--force) OPT_FORCE=true ;;
-	--dry-run) OPT_DRY_RUN=true ;;
-	list)
-		COMMAND="list"
-		[[ -n "$2" && "$2" != --* ]] && TARGET_KERNEL="$2"
+	--cleanup)
+		OPT_CLEANUP=true
 		shift
 		;;
-	rm)
-		COMMAND="rm"
-		[[ -n "$2" ]] && TARGET_KERNEL="$2"
+	--force)
+		OPT_FORCE=true
 		shift
+		;;
+	--dry-run)
+		OPT_DRY_RUN=true
+		shift
+		;;
+	list | rm)
+		COMMAND="$1"
+		shift
+		# Verifica se o próximo argumento não é um flag (começa com -)
+		if [[ -n "$1" && "$1" != -* ]]; then
+			TARGET_KERNEL="$1"
+			shift
+		fi
 		;;
 	-h | --help) usage ;;
 	*) usage ;;
 	esac
-	shift
 done
 
 if [[ "$OPT_CLEANUP" == "true" ]]; then
