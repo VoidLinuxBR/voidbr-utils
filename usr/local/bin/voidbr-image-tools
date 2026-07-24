@@ -2,12 +2,9 @@
 # -*- coding: utf-8 -*-
 # shellcheck shell=bash disable=SC1091,SC2039,SC2166,SC2034
 #
-#  voidbr-vkpurge
-#  Remove kernels órfãos do Void Linux com segurança
-#  Inspired by the original vkpurge by Juan RP.
-#
-#  Created: sáb 09 mai 2026 10:57:53 -04
-#  Updated: qua 22 jul 2026 01:05:28 -04
+#  voidbr-image-tools
+#  Created: sáb 18 jul 2026 22:43:41 -04
+#  Updated: dom 19 jul 2026 11:10:25 -04
 #
 #  Copyright (c) 2019-2026, Vilmar Catafesta <vcatafesta@gmail.com>
 #  Copyright (c) 2019-2026, ChiliLinux Development Team <https://chililinux.com> <https://github.com/chililinux>
@@ -36,10 +33,10 @@
 ##############################################################################
 export LANGUAGE="${LANGUAGE:-pt_BR}"
 export TEXTDOMAINDIR=/usr/share/locale
-export TEXTDOMAIN=voidbr-vkpurge
+export TEXTDOMAIN=voidbr-image-tools
 
-# PS4 "limpo" e seguro
-export PS4='${red}${0##*/}${green}[$FUNCNAME]${pink}[$LINENO]${reset}> '
+#debug
+export PS4='${red}${0##*/}${green}[$FUNCNAME]${pink}[$LINENO]${reset}'
 #set -x
 #set -e
 #set -euo pipefail
@@ -47,7 +44,7 @@ shopt -s extglob
 
 #system
 declare APP="${0##*/}"
-declare _VERSION_="0.07.22-20260722"
+declare _VERSION_="0.07.19-20260719"
 declare APPDESC="$APP - Wraper for "
 declare distro="$(uname -n)"
 declare -A PACKAGEDEP=(
@@ -59,7 +56,6 @@ declare -A PACKAGEDEP=(
 )
 # Mapa: [distro]="lista de pacotes"
 declare -A DISTRO_PKGS=(
-	["voidbr"]="gettext rsync parted curl xz lvm2"
 	["void"]="gettext rsync parted curl xz lvm2"
 	["void-live"]="gettext rsync parted curl xz lvm2"
 	["voidlinux"]="gettext rsync parted curl xz lvm2"
@@ -71,7 +67,6 @@ declare -A DISTRO_PKGS=(
 )
 # Mapa: [distro]="comando de instalação"
 declare -A DISTRO_MGR=(
-	["voidbr"]="xbps-install -Syf"
 	["void"]="xbps-install -Syf"
 	["void-live"]="xbps-install -Syf"
 	["voidlinux"]="xbps-install -Syf"
@@ -81,12 +76,36 @@ declare -A DISTRO_MGR=(
 	["manjaro"]="pacman -Sy --needed --noconfirm"
 	["debian"]="apt-get install -y"
 )
+# Mapa: [distro]="lista de pacotes"
+declare -A DISTRO_PKGS=(
+	["void"]="gettext rsync parted curl xz lvm2"
+	["void-live"]="gettext rsync parted curl xz lvm2"
+	["voidlinux"]="gettext rsync parted curl xz lvm2"
+	["chili"]="gettext rsync parted curl xz"
+	["chililinux"]="gettext rsync parted curl xz"
+	["arch"]="gettext rsync parted curl xz"
+	["biglinux"]="gettext rsync parted curl xz"
+	["manjaro"]="gettext rsync parted curl xz"
+	["debian"]="gettext-base rsync parted curl xz-utils"
+)
+# Mapa: [distro]="comando de instalação"
+declare -A DISTRO_MGR=(
+	["void"]="xbps-install -Syf"
+	["void-live"]="xbps-install -Syf"
+	["voidlinux"]="xbps-install -Syf"
+	["chili"]="pacman -Sy --needed --noconfirm"
+	["chililinux"]="pacman -Sy --needed --noconfirm"
+	["arch"]="pacman -Sy --needed --noconfirm"
+	["viglinux"]="pacman -Sy --needed --noconfirm"
+	["manjaro"]="pacman -Sy --needed --noconfirm"
+	["debian"]="apt-get install -y"
+)
 declare dialogRcFile="$HOME/.dialogrc"
 
-cleanup() { rm -f "$dialogRcFile"; }
+#cleanup() { rm -f "$dialogRcFile"; }
 #trap cleanup EXIT
-MostraErro() { echo "erro: ${red}$1${reset} => comando: ${cyan}'$2'${reset} => result=${yellow}$3${reset}"; }
-trap 'MostraErro "${APP[$FUNCNAME][$LINENO]}" "$BASH_COMMAND" "$?"; exit 1' ERR
+#MostraErro() { echo "erro: ${red}$1${reset} => comando: ${cyan}'$2'${reset} => result=${yellow}$3${reset}"; }
+#trap 'MostraErro "${APP[$FUNCNAME][$LINENO]}" "$BASH_COMMAND" "$?"; exit 1' ERR
 
 sh_check_terminal() { [ ! -t 1 ] && use_color=false; }
 
@@ -260,7 +279,7 @@ sh_checkroot() {
 }
 
 elevate_to_root() {
-	msg "This script must be run as root. Elevating privileges..."
+	log_ok "This script must be run as root. Elevating privileges..."
 	ccabec+='root [elevated]'
 	# Tenta usar sudo primeiro (caso esteja configurado)
 	if command -v sudo >/dev/null 2>&1; then
@@ -430,282 +449,355 @@ sh_checkDependencies() {
 	fi
 }
 
+has_command() {
+	command -v "$1" >/dev/null && return 0 || return 1
+}
+
 # configure ambiente
 set_varcolors
-sh_checkroot "$@"
+#sh_checkroot "$@"
 
 ##########################################################################################################
 
-# =========================================================
-# LOG
-# =========================================================
+set -e
 
-msg() { printf "%s==>%s %s%s%s\n" "$cyan" "$reset" "$white" "$*" "$reset"; }
-ok() { printf "%s==>%s %s\n" "$green" "$reset" "$*"; }
-warn() { printf "%s==>%s %s\n" "$yellow" "$reset" "$*"; }
-err() { printf "%s==>%s %s\n" "$red" "$reset" "$*" >&2; }
-fun() { printf "%s==>%s %s\n" "$magenta" "$reset" "$*"; }
+CACHE_DIR="$HOME/.${APP}"
+CACHE_FILE="${CACHE_DIR}/${APP}.cache"
+declare -A cache
+need_png=1
+need_jpeg=1
+need_svg=1
+recursive=0
+
+################################################################################
 
 usage() {
 	cat <<EOF
-${cyan}voidbr-vkpurge v${_VERSION_}${reset}
-${white}Limpa kernels órfãos do Void Linux com segurança${reset}
+${cyan}Descrição:${reset}
+    Otimiza imagens automaticamente utilizando as melhores ferramentas
+    disponíveis para cada formato.
 
-${yellow}Uso:${reset}
-  ${green}$APP${reset} ${cyan}list${reset} [versão]         ${bold}${cyan}# Lista kernels órfãos (filtra por versão se fornecido)
-  ${green}$APP${reset} ${red}rm${reset} all                ${bold}${cyan}# Remove todos os kernels órfãos detectados
-  ${green}$APP${reset} ${red}rm${reset} <versão>           ${bold}${cyan}# Remove uma versão específica de kernel
-  ${green}$APP${reset} ${magenta}--cleanup${reset}             ${bold}${cyan}# Varredura e remoção automática de órfãos
-  ${green}$APP${reset} ${magenta}--force${reset}               ${bold}${cyan}# Força a regeneração do GRUB/bootloader
+${cyan}Uso:${reset}
+    ${PROGNAME} [opções] <arquivo...>
 
-${yellow}Exemplos:${reset}
-  ${rst}$APP list${reset}
-  ${rst}$APP rm all${reset}
-  ${rst}$APP rm 6.6.32_1${reset}
-  ${rst}$APP --cleanup${reset}
-  ${rst}$APP --cleanup --force${reset}
+${cyan}Formatos suportados:${reset}
+    PNG     pngquant + oxipng
+    JPG     jpegoptim
+    JPEG    jpegoptim
+    SVG     svgo (fallback: scour)
+
+${cyan}Opções:${reset}
+    ${green}-r${reset}, ${green}--recursive${reset} <filtro|diretório...>
+        Processa arquivos recursivamente.
+        Filtros: svg png jpg jpeg
+        Também aceita: .svg *.svg .png *.png .jpg *.jpg .jpeg *.jpeg
+        Diretórios: . imagens assets
+
+    ${green}-h${reset}, ${green}--help${reset}
+        Exibe esta ajuda.
+
+${cyan}Exemplos:${reset}
+    ${PROGNAME} logo.svg
+    ${PROGNAME} *.png
+    ${PROGNAME} foto.jpg desenho.svg
+
+    ${PROGNAME} -r svg
+    ${PROGNAME} -r png jpg
+    ${PROGNAME} -r .svg
+    ${PROGNAME} -r '*.svg'
+
+    ${PROGNAME} -r .
+    ${PROGNAME} -r imagens
+    ${PROGNAME} -r assets
 EOF
-	exit 1
 }
 
-require_root() {
-	if [ "$(id -u)" -ne 0 ]; then
-		err "Execute como root."
-		exit 1
+################################################################################
+cache_load() {
+	local mtime
+	local size
+	local file
+
+	mkdir -p "$CACHE_DIR"
+	[ -f "$CACHE_FILE" ] || return 0
+
+	while IFS='|' read -r mtime size file; do
+		cache["$file"]="$mtime|$size"
+	done <"$CACHE_FILE"
+}
+
+cache_skip() {
+	local file="$1"
+	local old_mtime old_size
+	local new_mtime new_size
+
+	[[ -v cache["$file"] ]] || {
+#		printf 'CACHE MISS: %s\n' "$file"
+		return 1
+	}
+
+	IFS='|' read -r old_mtime old_size <<<"${cache[$file]}"
+
+	new_mtime=$(stat -c %Y "$file") || return 1
+	new_size=$(stat -c %s "$file") || return 1
+
+#	printf 'FILE: %s\n' "$file"
+#	printf 'OLD : %s|%s\n' "$old_mtime" "$old_size"
+#	printf 'NEW : %s|%s\n' "$new_mtime" "$new_size"
+
+	if [[ "$old_mtime" == "$new_mtime" &&
+		"$old_size" == "$new_size" ]]; then
+#		printf 'MATCH\n'
+		return 0
 	fi
+
+#	printf 'NO MATCH\n'
+	return 1
 }
 
-# =========================================================
-# /BOOT
-# =========================================================
+cache_put() {
+	local file="$1"
 
-check_boot() {
-	running="$(uname -r)"
-	if [ ! -e "/boot/vmlinuz-$running" ] && [ ! -e "/boot/vmlinux-$running" ]; then
-		err "/boot parece não estar montado."
-		exit 1
+	cache["$file"]="$(stat -c '%Y|%s' "$file")"
+	cache_save
+}
+
+cache_save() {
+	local file
+
+	mkdir -p "$CACHE_DIR"
+	: >"$CACHE_FILE"
+
+	for file in "${!cache[@]}"; do
+		printf '%s|%s\n' "${cache[$file]}" "$file"
+	done >>"$CACHE_FILE"
+}
+
+################################################################################
+
+install_dep() {
+	has_command "$1" || vinstall "$1"
+}
+
+################################################################################
+
+opt_png() {
+	if ((need_png)); then
+		install_dep pngquant
+		install_dep oxipng
+		need_png=0
 	fi
+
+	local file="$1"
+	local tmp="${file%.png}-fs8.png"
+
+	printf "${cyan}PNG${reset}  %s\n" "$file"
+
+	pngquant \
+		--quality=95-100 \
+		--force \
+		--output "$tmp" \
+		"$file" || return 1
+
+	oxipng -q -o max "$tmp" || {
+		rm -f "$tmp"
+		return 1
+	}
+
+	mv -f "$tmp" "$file" || {
+		rm -f "$tmp"
+		return 1
+	}
+
+	return 0
 }
 
-# =========================================================
-# HOOKS
-# =========================================================
+################################################################################
 
-run_hooks() {
-	hookdir="$1"
-	kver="$2"
-	[ -d "/etc/kernel.d/$hookdir" ] || return 0
+opt_svg() {
 
-	for d in "/etc/kernel.d/$hookdir"/*; do
-		[ -x "$d" ] || continue
-		msg "Executando hook: ${d##*/}"
-		(
-			cd /
-			ROOTDIR=. "$d" kernel "$kver"
-		)
-	done
-}
+	local file="$1"
+	local tmp
 
-# =========================================================
-# LISTA KERNELS
-# =========================================================
+	printf "${cyan}SVG  ${reset}%s\n" "$file"
 
-list_kernels() {
-	running="$(uname -r)"
-	installed="$(xbps-query -o "/boot/vmlinu[xz]-*" 2>/dev/null | awk '{print $2}')"
-
-	# Captura o resultado da listagem em uma variável
-	local output=$(
-		for arg in "${@:-all}"; do
-			pattern="$arg"
-			[[ "$arg" == "all" ]] && pattern="*"
-			for k in /boot/vmlinuz-* /boot/vmlinux-*; do
-				[ -e "$k" ] || continue
-				[[ "$pattern" == "*" ]] && case "$installed" in *"$k"*) continue ;; esac
-				kver="${k##*-}"
-				[[ "$kver" == "$running" ]] && continue
-				case "$kver" in $pattern) printf "%s\n" "$kver" ;; esac
-			done
-		done | sort -uV
-	)
-
-	# Verifica se a variável está vazia
-	if [[ -z "$output" ]]; then
-		msg "Nenhum kernel órfão encontrado."
-	else
-		printf "Kernal órfãos:\n${yellow}%s${rst}\n" "$output"
+	if has_command svgo; then
+		svgo --quiet "$file" >/dev/null 2>&1 || {
+			printf "${yellow}Falha:${reset} %s\n" "$file"
+			return 1
+		}
+		return 0
 	fi
+
+	if ((need_svg)); then
+		install_dep scour
+		need_svg=0
+	fi
+
+	tmp="$(mktemp)"
+
+	if scour \
+		--enable-viewboxing \
+		--strip-xml-prolog \
+		--remove-descriptive-elements \
+		--quiet \
+		-i "$file" \
+		-o "$tmp"; then
+
+		mv -f "$tmp" "$file" || {
+			rm -f "$tmp"
+			return 1
+		}
+
+		return 0
+	fi
+
+	printf "${yellow}Falha:${reset} %s\n" "$file"
+	rm -f "$tmp"
+	return 1
 }
 
-# =========================================================
-# REMOVE ARQUIVOS
-# =========================================================
+################################################################################
 
-remove_path() {
-	target="$1"
-	[ -e "$target" ] || return 0
-	case "$target" in
-	/boot/* | /usr/lib/modules/* | /usr/src/* | /usr/lib/debug/*) ;;
+opt_jpg() {
+
+	if ((need_jpeg)); then
+		install_dep jpegoptim
+		need_jpeg=0
+	fi
+
+	local file="$1"
+
+	printf "${cyan}JPEG ${reset}%s\n" "$file"
+
+	jpegoptim \
+		--strip-all \
+		--all-progressive \
+		-q \
+		"$file" || return 1
+
+	return 0
+}
+
+################################################################################
+
+process_file() {
+	local file="$1"
+
+#	printf 'PROCESSANDO: [%s]\n' "$file"
+
+	[[ -f "$file" ]] || return
+
+	if cache_skip "$file"; then
+		printf "${bold}${yellow}HIT:${reset} %s\n" "$file"
+		return
+	fi
+
+	case "${file,,}" in
+	*.png)
+		opt_png "$file" && cache_put "$file"
+		;;
+
+	*.jpg | *.jpeg)
+		opt_jpg "$file" && cache_put "$file"
+		;;
+
+	*.svg)
+		opt_svg "$file" && cache_put "$file"
+		;;
+
 	*)
-		err "Recusando remover caminho inseguro: $target"
-		exit 1
+		printf "${yellow}Ignorado:${reset} %s\n" "$file"
 		;;
 	esac
-	warn "Removendo: ${yellow}$target${rst}"
-	rm -rf -- "$target"
 }
 
-remove_kernel() {
-	rmkver="$1"
-	fun "Kernel ${yellow}$rmkver${rst} será enviado para o além."
-	run_hooks pre-remove "$rmkver"
-
-	remove_path "/boot/config-$rmkver"
-	remove_path "/boot/System.map-$rmkver"
-	remove_path "/boot/vmlinuz-$rmkver"
-	remove_path "/boot/vmlinux-$rmkver"
-	# ADICIONE ESTA LINHA:
-	remove_path "/boot/initramfs-$rmkver.img"
-	remove_path "/usr/lib/modules/$rmkver"
-	remove_path "/usr/src/kernel-headers-$rmkver"
-	remove_path "/usr/lib/debug/boot/vmlinuz-$rmkver"
-	remove_path "/usr/lib/debug/usr/lib/modules/$rmkver"
-	remove_path "/boot/dtbs/dtbs-$rmkver"
-}
-
-# =========================================================
-# FINALIZAÇÃO
-# =========================================================
-
-finalize_system() {
-	msg "Atualizando bootloader..."
-	fun "Nada de rodar grub-mkconfig 37 vezes."
-
-	(
-		export KERNEL_ACTION="bulk"
-		run_hooks post-remove ""
-	)
-	ok "Bootloader e initramfs atualizados."
-}
-
-# =========================================================
-# DRY RUN
-# =========================================================
-
-dry_run() {
-	kernels="$(list_kernels all)"
-	msg "Modo simulação ativado."
-	echo
-	if [ -z "$kernels" ]; then
-		ok "Nenhum kernel órfão encontrado."
-		exit 0
-	fi
-	warn "Os seguintes kernels seriam removidos:"
-	echo
-	printf "  %s\n" $kernels
-	echo
-	fun "Nenhum arquivo foi alterado."
-}
-
-cleanup_orphans() {
-	msg "Varrendo o sistema em busca de versões órfãs..."
-
-	# 1. Busca abrangente incluindo config-*
-	local found_versions=$({
-		find /boot -name "vmlinuz-*" -o -name "vmlinux-*" -o -name "initramfs-*" -o -name "config-*" | sed -E 's/.*-(.*)/\1/; s/\.img//'
-		find /usr/lib/modules -maxdepth 1 -mindepth 1 -type d -exec basename {} \;
-	} | sort -u)
-
-	local running="$(uname -r)"
-	local installed="$(xbps-query -o "/boot/vmlinu[xz]-*" 2>/dev/null | awk '{print $2}')"
-	local removed_any=false
-
-	for kver in $found_versions; do
-		[[ "$kver" == "$running" ]] && continue
-		if [[ -n "$installed" ]] && echo "$installed" | grep -q "vmlinuz-$kver"; then
-			continue
-		fi
-
-		# 2. Lista todos os arquivos órfãos relacionados a essa versão
-		local orphans=$(find /boot -maxdepth 1 -name "*$kver*" -printf "%f ")
-
-		warn "Arquivos órfãos detectados: ${yellow}$orphans${rst}"
-
-		remove_kernel "$kver"
-		removed_any=true
-	done
-
-	[[ "$removed_any" == "true" ]]
-}
-
-# =========================================================
-# MAIN
-# =========================================================
-
-trap 'err "Operação interrompida."; exit 1' INT TERM HUP
-
-# Variáveis globais de controle
-FORCE_REGEN=false
-OPT_CLEANUP=false
-OPT_FORCE=false
-OPT_DRY_RUN=false
-COMMAND=""
-TARGET_KERNEL=""
+################################################################################
 
 while [[ $# -gt 0 ]]; do
 	case "$1" in
-	--cleanup)
-		OPT_CLEANUP=true
+	-r | --recursive)
+		recursive=1
 		shift
 		;;
-	--force)
-		OPT_FORCE=true
-		shift
+
+	-h | --help)
+		usage
 		;;
-	--dry-run)
-		OPT_DRY_RUN=true
-		shift
+
+	*)
+		break
 		;;
-	list | rm)
-		COMMAND="$1"
-		shift
-		# Verifica se o próximo argumento não é um flag (começa com -)
-		if [[ -n "$1" && "$1" != -* ]]; then
-			TARGET_KERNEL="$1"
-			shift
-		fi
-		;;
-	-h | --help) usage ;;
-	*) usage ;;
 	esac
 done
 
-if [[ "$OPT_CLEANUP" == "true" ]]; then
-	require_root
+[[ $# -gt 0 ]] || usage 1
 
-	# Se a limpeza encontrar algo (retornar true) OU o force estiver ativo
-	if cleanup_orphans || [[ "$OPT_FORCE" == "true" ]]; then
-		[[ "$OPT_FORCE" == "true" ]] && msg "Forçando regeneração do bootloader..."
-		finalize_system
-	else
-		msg "Sistema já está limpo. Nada a fazer."
-	fi
+################################################################################
+
+normalize_ext() {
+	local ext="${1,,}"
+
+	# Diretório?
+	[[ -d "$ext" ]] && return 1
+
+	# Remove caracteres aceitos
+	ext="${ext#\\}" # \*.svg
+	ext="${ext#\*}" # *.svg
+	ext="${ext#.}"  # .svg
+
+	# Se ainda começar com '.', remove novamente
+	ext="${ext#.}"
+
+	case "$ext" in
+	png | jpg | jpeg | svg)
+		printf '%s\n' "$ext"
+		return 0
+		;;
+	esac
+
+	return 1
+}
+
+################################################################################
+
+cache_load
+
+if ((recursive)); then
+	for arg in "$@"; do
+		if [[ -d "$arg" ]]; then
+			while IFS= read -r -d '' file; do
+				process_file "$file"
+			done < <(
+				find "$arg" -type f \
+					\( \
+					-iname '*.png' -o \
+					-iname '*.jpg' -o \
+					-iname '*.jpeg' -o \
+					-iname '*.svg' \
+					\) \
+					-print0
+			)
+
+		elif ext=$(normalize_ext "$arg"); then
+			while IFS= read -r -d '' file; do
+				process_file "$file"
+			done < <(
+				find . -type f -iname "*.${ext}" -print0
+			)
+
+		else
+			process_file "$arg"
+		fi
+
+	done
+
+	printf "\n${green}✔ Otimização concluída.${reset}\n"
 	exit 0
-
-elif [[ "$COMMAND" == "rm" ]]; then
-	require_root
-	if [[ -z "$TARGET_KERNEL" ]]; then
-		err "Você precisa especificar uma versão ou 'all'."
-	fi
-	# Sua lógica de remoção aqui
-	# ...
-	finalize_system # Se remover um kernel específico, sempre atualiza o boot
-	exit 0
-
-elif [[ "$COMMAND" == "list" ]]; then
-	list_kernels "$TARGET_KERNEL"
-	exit 0
-
-else
-	usage
 fi
+
+for file in "$@"; do
+	process_file "$file"
+done
+
+printf "\n${green}✔ Otimização concluída.${reset}\n"
