@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # shellcheck shell=bash disable=SC1091,SC2039,SC2166,SC2034
 #
-#  voidbr-vkpurge
+#  voidbr-vkpurge-sh
 #  Remove kernels órfãos do Void Linux com segurança
 #  Inspired by the original vkpurge by Juan RP.
 #
