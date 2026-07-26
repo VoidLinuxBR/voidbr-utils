@@ -1,0 +1,427 @@
+#!/usr/bin/env python3
+"""
+ISO Writer - Grava uma imagem ISO em um pendrive (dispositivo USB)
+Requer: PyGObject (GTK4), pkexec (polkit) e dd instalados no sistema.
+
+Instalação típica no Void Linux:
+    sudo xbps-install -S python3-gobject gtk4 polkit
+
+Execução:
+    python3 iso_writer.py
+"""
+
+import gi
+import subprocess
+import threading
+import os
+import re
+
+gi.require_version("Gtk", "4.0")
+from gi.repository import Gtk, GLib, Gio
+
+CSS = """
+window {
+    background-color: #1e1f29;
+}
+
+label {
+    color: #f1f1f1;
+}
+
+.titulo-app {
+    font-size: 20px;
+    font-weight: 800;
+    color: #7dd3fc;
+}
+
+.botao-azul {
+    background: linear-gradient(180deg, #3b82f6, #2563eb);
+    color: white;
+    font-weight: bold;
+    border-radius: 10px;
+    padding: 8px 14px;
+}
+.botao-azul:hover { background: #3b82f6; }
+
+.botao-verde {
+    background: linear-gradient(180deg, #34d399, #059669);
+    color: white;
+    font-weight: bold;
+    border-radius: 10px;
+    padding: 10px 14px;
+}
+.botao-verde:hover { background: #34d399; }
+
+.botao-vermelho {
+    background: linear-gradient(180deg, #f87171, #dc2626);
+    color: white;
+    font-weight: bold;
+    border-radius: 10px;
+    padding: 8px 14px;
+}
+.botao-vermelho:hover { background: #f87171; }
+
+.botao-cinza {
+    background: linear-gradient(180deg, #9ca3af, #6b7280);
+    color: white;
+    font-weight: bold;
+    border-radius: 10px;
+    padding: 8px 14px;
+}
+.botao-cinza:hover { background: #9ca3af; }
+
+.botao-laranja {
+    background: linear-gradient(180deg, #fbbf24, #d97706);
+    color: white;
+    font-weight: bold;
+    border-radius: 10px;
+    padding: 8px 14px;
+}
+.botao-laranja:hover { background: #fbbf24; }
+
+progressbar > trough > progress {
+    background: linear-gradient(90deg, #34d399, #3b82f6);
+    border-radius: 8px;
+}
+progressbar > trough {
+    border-radius: 8px;
+}
+
+.caixa-status {
+    background-color: #2a2b3a;
+    border-radius: 10px;
+    padding: 8px;
+}
+
+.cabecalho-app {
+    background-color: #1a1b26;
+    color: #f1f1f1;
+}
+
+.botao-menu {
+    border-radius: 8px;
+}
+"""
+
+
+
+def listar_dispositivos_usb():
+    """Retorna lista de dispositivos removíveis via lsblk (formato JSON)."""
+    dispositivos = []
+    try:
+        saida = subprocess.run(
+            ["lsblk", "-J", "-o", "NAME,SIZE,RM,TYPE,MODEL,TRAN"],
+            capture_output=True, text=True, check=True
+        ).stdout
+        import json
+        dados = json.loads(saida)
+        for dev in dados.get("blockdevices", []):
+            # RM = removível (1), TYPE = disk (ignora partições)
+            if dev.get("type") == "disk" and (dev.get("rm") in (True, "1", 1)):
+                nome = f"/dev/{dev['name']}"
+                tamanho = dev.get("size", "?")
+                modelo = (dev.get("model") or "Dispositivo").strip()
+                dispositivos.append((nome, f"{modelo} ({nome}, {tamanho})"))
+    except Exception as e:
+        print(f"Erro ao listar dispositivos: {e}")
+    return dispositivos
+
+
+class JanelaISOWriter(Gtk.ApplicationWindow):
+    def __init__(self, app):
+        super().__init__(application=app, title="voidbr-iso-writer")
+        self.set_default_size(520, 420)
+
+        self.caminho_iso = None
+        self.dispositivo_alvo = None
+        self.processo = None
+
+        # --- CSS ---
+        provider = Gtk.CssProvider()
+        provider.load_from_data(CSS.encode("utf-8"))
+        Gtk.StyleContext.add_provider_for_display(
+            self.get_display(),
+            provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
+        )
+
+        # --- Barra de título com menu (☰ Sobre / Créditos) ---
+        cabecalho = Gtk.HeaderBar()
+        cabecalho.add_css_class("cabecalho-app")
+        self.set_titlebar(cabecalho)
+
+        menu_modelo = Gio.Menu()
+        menu_modelo.append("ℹ️ Sobre / Créditos", "win.sobre")
+
+        botao_menu = Gtk.MenuButton()
+        botao_menu.set_icon_name("open-menu-symbolic")
+        botao_menu.set_menu_model(menu_modelo)
+        botao_menu.add_css_class("botao-menu")
+        cabecalho.pack_end(botao_menu)
+
+        acao_sobre = Gio.SimpleAction.new("sobre", None)
+        acao_sobre.connect("activate", self.ao_clicar_sobre)
+        self.add_action(acao_sobre)
+
+        caixa = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=14)
+        caixa.set_margin_top(18)
+        caixa.set_margin_bottom(18)
+        caixa.set_margin_start(18)
+        caixa.set_margin_end(18)
+        self.set_child(caixa)
+
+        # --- Título ---
+        titulo = Gtk.Label(label="💿 voidbr-iso-writer")
+        titulo.add_css_class("titulo-app")
+        titulo.set_xalign(0)
+        caixa.append(titulo)
+
+        # --- Seleção do arquivo ISO ---
+        caixa.append(Gtk.Label(label="📀 Arquivo ISO:", xalign=0))
+        linha_iso = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
+        self.label_iso = Gtk.Label(label="Nenhum arquivo selecionado")
+        self.label_iso.set_hexpand(True)
+        self.label_iso.set_xalign(0)
+        botao_escolher = Gtk.Button(label="📂 Selecionar ISO…")
+        botao_escolher.add_css_class("botao-azul")
+        botao_escolher.connect("clicked", self.ao_clicar_escolher_iso)
+        linha_iso.append(self.label_iso)
+        linha_iso.append(botao_escolher)
+        caixa.append(linha_iso)
+
+        # --- Seleção do pendrive ---
+        caixa.append(Gtk.Label(label="🔌 Dispositivo de destino:", xalign=0))
+        linha_dev = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
+        self.combo_dispositivos = Gtk.DropDown()
+        self.combo_dispositivos.set_hexpand(True)
+        botao_atualizar = Gtk.Button(label="🔄 Atualizar")
+        botao_atualizar.add_css_class("botao-laranja")
+        botao_atualizar.connect("clicked", lambda w: self.atualizar_dispositivos())
+        linha_dev.append(self.combo_dispositivos)
+        linha_dev.append(botao_atualizar)
+        caixa.append(linha_dev)
+
+        # --- Barra de progresso ---
+        self.barra_progresso = Gtk.ProgressBar()
+        self.barra_progresso.set_show_text(True)
+        caixa.append(self.barra_progresso)
+
+        # --- Status ---
+        caixa_status = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        caixa_status.add_css_class("caixa-status")
+        self.label_status = Gtk.Label(label="✅ Pronto.", xalign=0)
+        self.label_status.set_hexpand(True)
+        caixa_status.append(self.label_status)
+        caixa.append(caixa_status)
+
+        # --- Linha de ações principais (Gravar / Cancelar) ---
+        linha_acoes = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
+        linha_acoes.set_homogeneous(True)
+
+        self.botao_gravar = Gtk.Button(label="🔥 Gravar ISO")
+        self.botao_gravar.add_css_class("botao-verde")
+        self.botao_gravar.connect("clicked", self.ao_clicar_gravar)
+        linha_acoes.append(self.botao_gravar)
+
+        self.botao_cancelar = Gtk.Button(label="🛑 Cancelar")
+        self.botao_cancelar.add_css_class("botao-vermelho")
+        self.botao_cancelar.set_sensitive(False)
+        self.botao_cancelar.connect("clicked", self.ao_clicar_cancelar)
+        linha_acoes.append(self.botao_cancelar)
+
+        caixa.append(linha_acoes)
+
+        # --- Botão fechar (sempre disponível) ---
+        botao_fechar = Gtk.Button(label="🚪 Fechar")
+        botao_fechar.add_css_class("botao-cinza")
+        botao_fechar.connect("clicked", lambda w: self.close())
+        caixa.append(botao_fechar)
+
+        self._modelo_dispositivos = Gtk.StringList()
+        self.combo_dispositivos.set_model(self._modelo_dispositivos)
+        self._dispositivos_atuais = []
+
+        self.atualizar_dispositivos()
+
+    def ao_clicar_sobre(self, acao, parametro):
+        sobre = Gtk.AboutDialog()
+        sobre.set_transient_for(self)
+        sobre.set_modal(True)
+        sobre.set_program_name("voidbr-iso-writer")
+        sobre.set_version("1.0")
+        sobre.set_logo_icon_name("media-optical-symbolic")
+        sobre.set_comments(
+            "💿 Gravador de imagens ISO em pendrives, feito com Python + GTK4.\n"
+            "Desenvolvido para o VoidBR Linux 🐧"
+        )
+        sobre.set_website("https://voidbr.org")
+        sobre.set_website_label("VoidBR")
+        sobre.set_authors(["Vilmar Catafesta <vcatafesta@gmail.com>"])
+        sobre.set_copyright("© 2026 Vilmar Catafesta — Licença livre, use e modifique à vontade")
+        sobre.set_license_type(Gtk.License.MIT_X11)
+        sobre.present()
+
+    def atualizar_dispositivos(self):
+        self._dispositivos_atuais = listar_dispositivos_usb()
+        self._modelo_dispositivos = Gtk.StringList()
+        if not self._dispositivos_atuais:
+            self._modelo_dispositivos.append("⚠️ Nenhum pendrive encontrado")
+        else:
+            for _, descricao in self._dispositivos_atuais:
+                self._modelo_dispositivos.append(descricao)
+        self.combo_dispositivos.set_model(self._modelo_dispositivos)
+        self.combo_dispositivos.set_selected(0)
+
+    def ao_clicar_escolher_iso(self, botao):
+        dialogo = Gtk.FileChooserNative(
+            title="Selecione a imagem ISO",
+            transient_for=self,
+            action=Gtk.FileChooserAction.OPEN,
+        )
+        filtro = Gtk.FileFilter()
+        filtro.set_name("Imagens ISO")
+        filtro.add_pattern("*.iso")
+        dialogo.add_filter(filtro)
+        dialogo.connect("response", self.ao_responder_escolher_iso)
+        dialogo.show()
+
+    def ao_responder_escolher_iso(self, dialogo, resposta):
+        if resposta == Gtk.ResponseType.ACCEPT:
+            arquivo = dialogo.get_file()
+            if arquivo:
+                self.caminho_iso = arquivo.get_path()
+                self.label_iso.set_text(os.path.basename(self.caminho_iso))
+        dialogo.destroy()
+
+    def _dispositivo_selecionado(self):
+        idx = self.combo_dispositivos.get_selected()
+        if 0 <= idx < len(self._dispositivos_atuais):
+            return self._dispositivos_atuais[idx][0]
+        return None
+
+    def ao_clicar_gravar(self, botao):
+        if not self.caminho_iso:
+            self._mostrar_erro("Selecione um arquivo ISO antes de continuar.")
+            return
+
+        dispositivo = self._dispositivo_selecionado()
+        if not dispositivo:
+            self._mostrar_erro("Selecione um dispositivo de destino válido.")
+            return
+
+        dialogo_confirmacao = Gtk.AlertDialog()
+        dialogo_confirmacao.set_message("⚠️ Confirmar gravação")
+        dialogo_confirmacao.set_detail(
+            f"Isso APAGARÁ todos os dados em {dispositivo}.\n"
+            f"Arquivo: {os.path.basename(self.caminho_iso)}\n\n"
+            "Esta ação não pode ser desfeita. Deseja continuar?"
+        )
+        dialogo_confirmacao.set_buttons(["❌ Cancelar", "🔥 Gravar"])
+        dialogo_confirmacao.set_cancel_button(0)
+        dialogo_confirmacao.set_default_button(0)
+        dialogo_confirmacao.choose(self, None, self._ao_confirmar_gravacao, dispositivo)
+
+    def ao_clicar_cancelar(self, botao):
+        if self.processo and self.processo.poll() is None:
+            try:
+                subprocess.run(["pkexec", "kill", "-TERM", str(self.processo.pid)])
+            except Exception:
+                pass
+            self.label_status.set_text("🛑 Gravação cancelada pelo usuário.")
+            self.botao_cancelar.set_sensitive(False)
+            self.botao_gravar.set_sensitive(True)
+
+    def _ao_confirmar_gravacao(self, dialogo, resultado, dispositivo):
+        try:
+            escolha = dialogo.choose_finish(resultado)
+        except GLib.Error:
+            return
+        if escolha == 1:
+            self._iniciar_gravacao(dispositivo)
+
+    def _mostrar_erro(self, mensagem):
+        dialogo = Gtk.AlertDialog()
+        dialogo.set_message("❌ Erro")
+        dialogo.set_detail(mensagem)
+        dialogo.show(self)
+
+    def _iniciar_gravacao(self, dispositivo):
+        self.botao_gravar.set_sensitive(False)
+        self.botao_cancelar.set_sensitive(True)
+        self.label_status.set_text("⏳ Gravando… não remova o pendrive.")
+        self.barra_progresso.set_fraction(0.0)
+
+        tamanho_iso = os.path.getsize(self.caminho_iso)
+
+        thread = threading.Thread(
+            target=self._executar_dd,
+            args=(self.caminho_iso, dispositivo, tamanho_iso),
+            daemon=True,
+        )
+        thread.start()
+
+    def _executar_dd(self, origem, destino, tamanho_total):
+        comando = [
+            "pkexec", "dd",
+            f"if={origem}",
+            f"of={destino}",
+            "bs=4M",
+            "status=progress",
+            "oflag=sync",
+        ]
+        try:
+            self.processo = subprocess.Popen(
+                comando,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                bufsize=1,
+            )
+
+            padrao_bytes = re.compile(r"(\d+)\s+bytes")
+
+            for linha in self.processo.stderr:
+                m = padrao_bytes.search(linha)
+                if m and tamanho_total:
+                    copiados = int(m.group(1))
+                    fracao = min(copiados / tamanho_total, 1.0)
+                    GLib.idle_add(self.barra_progresso.set_fraction, fracao)
+
+            codigo = self.processo.wait()
+            if codigo == 0:
+                GLib.idle_add(self._ao_concluir_sucesso)
+            else:
+                erro = self.processo.stderr.read() if self.processo.stderr else ""
+                GLib.idle_add(self._ao_concluir_erro, f"dd retornou código {codigo}. {erro}")
+        except FileNotFoundError:
+            GLib.idle_add(
+                self._ao_concluir_erro,
+                "Comando 'pkexec' ou 'dd' não encontrado. Instale polkit e coreutils."
+            )
+        except Exception as e:
+            GLib.idle_add(self._ao_concluir_erro, str(e))
+
+    def _ao_concluir_sucesso(self):
+        self.barra_progresso.set_fraction(1.0)
+        self.label_status.set_text("✅ Gravação concluída com sucesso!")
+        self.botao_gravar.set_sensitive(True)
+        self.botao_cancelar.set_sensitive(False)
+
+    def _ao_concluir_erro(self, mensagem):
+        self.label_status.set_text(f"❌ Falha na gravação: {mensagem}")
+        self.botao_gravar.set_sensitive(True)
+        self.botao_cancelar.set_sensitive(False)
+
+
+class AppISOWriter(Gtk.Application):
+    def __init__(self):
+        super().__init__(application_id="br.voidbr.isowriter")
+
+    def do_activate(self):
+        janela = JanelaISOWriter(self)
+        janela.present()
+
+
+if __name__ == "__main__":
+    app = AppISOWriter()
+    app.run(None)
