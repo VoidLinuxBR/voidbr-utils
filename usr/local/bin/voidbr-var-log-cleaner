@@ -469,9 +469,10 @@ afiles+=(nginx/access.log)
 afiles+=(nginx/error.log)
 
 for f in "${afiles[@]}"; do
-  if [[ -e "$f" ]]; then
-    msg_tab "${cyan}Procesando: /var/log/$f${rst}"
-    >/var/log/"$f"
+  cfile="/var/log/${f}"
+  if [[ -e "${cfile}" ]]; then
+    msg_tab "${cyan}Procesando: ${cfile}${rst}"
+    >"$cfile"
   fi
 done
 
