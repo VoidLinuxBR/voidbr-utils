@@ -49,173 +49,151 @@ declare _VERSION_="0.02.12-20260212"
 declare APPDESC="$APP - Wraper for "
 declare distro="$(uname -n)"
 declare -A PACKAGEDEP=(
-  [gettext]=gettext
-  [dd]=coreutils
-  [hdparm]=hdparm
-  [fio]=fio
-  [tput]=ncurses
+	[gettext]=gettext
+	[dd]=coreutils
+	[hdparm]=hdparm
+	[fio]=fio
+	[tput]=ncurses
 )
 # Mapa: [distro]="lista de pacotes"
 declare -A DISTRO_PKGS=(
-  ["void"]="gettext rsync parted curl xz lvm2"
-  ["void-live"]="gettext rsync parted curl xz lvm2"
-  ["voidlinux"]="gettext rsync parted curl xz lvm2"
-  ["chili"]="gettext rsync parted curl xz"
-  ["chililinux"]="gettext rsync parted curl xz"
-  ["arch"]="gettext rsync parted curl xz"
-  ["manjaro"]="gettext rsync parted curl xz"
-  ["debian"]="gettext-base rsync parted curl xz-utils"
+	["voidbr"]="gettext rsync parted curl xz lvm2"
+	["void"]="gettext rsync parted curl xz lvm2"
+	["void-live"]="gettext rsync parted curl xz lvm2"
+	["voidlinux"]="gettext rsync parted curl xz lvm2"
+	["chili"]="gettext rsync parted curl xz"
+	["chililinux"]="gettext rsync parted curl xz"
+	["arch"]="gettext rsync parted curl xz"
+	["manjaro"]="gettext rsync parted curl xz"
+	["debian"]="gettext-base rsync parted curl xz-utils"
 )
 # Mapa: [distro]="comando de instalação"
 declare -A DISTRO_MGR=(
-  ["void"]="xbps-install -Syf"
-  ["void-live"]="xbps-install -Syf"
-  ["voidlinux"]="xbps-install -Syf"
-  ["chili"]="pacman -Sy --needed --noconfirm"
-  ["chililinux"]="pacman -Sy --needed --noconfirm"
-  ["arch"]="pacman -Sy --needed --noconfirm"
-  ["manjaro"]="pacman -Sy --needed --noconfirm"
-  ["debian"]="apt-get install -y"
-)
-# Mapa: [distro]="lista de pacotes"
-declare -A DISTRO_PKGS=(
-  ["void"]="gettext rsync parted curl xz lvm2"
-  ["void-live"]="gettext rsync parted curl xz lvm2"
-  ["voidlinux"]="gettext rsync parted curl xz lvm2"
-  ["chili"]="gettext rsync parted curl xz"
-  ["chililinux"]="gettext rsync parted curl xz"
-  ["arch"]="gettext rsync parted curl xz"
-  ["biglinux"]="gettext rsync parted curl xz"
-  ["manjaro"]="gettext rsync parted curl xz"
-  ["debian"]="gettext-base rsync parted curl xz-utils"
-)
-# Mapa: [distro]="comando de instalação"
-declare -A DISTRO_MGR=(
-  ["void"]="xbps-install -Syf"
-  ["void-live"]="xbps-install -Syf"
-  ["voidlinux"]="xbps-install -Syf"
-  ["chili"]="pacman -Sy --needed --noconfirm"
-  ["chililinux"]="pacman -Sy --needed --noconfirm"
-  ["arch"]="pacman -Sy --needed --noconfirm"
-  ["viglinux"]="pacman -Sy --needed --noconfirm"
-  ["manjaro"]="pacman -Sy --needed --noconfirm"
-  ["debian"]="apt-get install -y"
+	["voidbr"]="xbps-install -Syf"
+	["void"]="xbps-install -Syf"
+	["void-live"]="xbps-install -Syf"
+	["voidlinux"]="xbps-install -Syf"
+	["chili"]="pacman -Sy --needed --noconfirm"
+	["chililinux"]="pacman -Sy --needed --noconfirm"
+	["arch"]="pacman -Sy --needed --noconfirm"
+	["manjaro"]="pacman -Sy --needed --noconfirm"
+	["debian"]="apt-get install -y"
 )
 declare dialogRcFile="$HOME/.dialogrc"
 
 cleanup() { rm -f "$dialogRcFile"; }
 #trap cleanup EXIT
-MostraErro() { echo "erro: ${red}$1${reset} => comando: ${cyan}'$2'${reset} => result=${yellow}$3${reset}";}
+MostraErro() { echo "erro: ${red}$1${reset} => comando: ${cyan}'$2'${reset} => result=${yellow}$3${reset}"; }
 trap 'MostraErro "$APP[$FUNCNAME][$LINENO]" "$BASH_COMMAND" "$?"; exit 1' ERR
 
 sh_check_terminal() { [ ! -t 1 ] && use_color=false; }
 
 set_varcolors() {
-  sh_check_terminal
-  # does the terminal support true-color?
-  if [[ -n "$(command -v "tput")" ]]; then
-    #tput setaf 127 | cat -v  #capturar saida
-    : "${RED=$(tput bold)$(tput setaf 196)}"
-    : "${GREEN=$(tput bold)$(tput setaf 2)}"
-    : "${YELLOW=$(tput bold)$(tput setaf 3)}"
-    : "${BLUE=$(tput setaf 4)}"
-    : "${PURPLE=$(tput setaf 125)}"
-    : "${CYAN=$(tput setaf 6)}"
-    : "${NC=$(tput sgr0)}"
-    : "${RESET=$(tput sgr0)}"
-    : "${BOLD=$(tput bold)}"
-    : "${black=$(tput bold)$(tput setaf 0)}"
-    : "${reverse=$(tput rev)}"
-    : "${branca=${black}$(tput setab 7)}"
+	sh_check_terminal
+	# does the terminal support true-color?
+	if [[ -n "$(command -v "tput")" ]]; then
+		#tput setaf 127 | cat -v  #capturar saida
+		: "${RED=$(tput bold)$(tput setaf 196)}"
+		: "${GREEN=$(tput bold)$(tput setaf 2)}"
+		: "${YELLOW=$(tput bold)$(tput setaf 3)}"
+		: "${BLUE=$(tput setaf 4)}"
+		: "${PURPLE=$(tput setaf 125)}"
+		: "${CYAN=$(tput setaf 6)}"
+		: "${NC=$(tput sgr0)}"
+		: "${RESET=$(tput sgr0)}"
+		: "${BOLD=$(tput bold)}"
+		: "${black=$(tput bold)$(tput setaf 0)}"
+		: "${reverse=$(tput rev)}"
+		: "${branca=${black}$(tput setab 7)}"
 
-    : "${reset=$(tput sgr0)}"
-    : "${rst=$(tput sgr0)}"
-    : "${bold=$(tput bold)}"
-    : "${underline=$(tput smul)}"
-    : "${nounderline=$(tput rmul)}"
-    : "${reverse=$(tput rev)}"
+		: "${reset=$(tput sgr0)}"
+		: "${rst=$(tput sgr0)}"
+		: "${bold=$(tput bold)}"
+		: "${underline=$(tput smul)}"
+		: "${nounderline=$(tput rmul)}"
+		: "${reverse=$(tput rev)}"
 
-    : "${black=$(tput bold)$(tput setaf 0)}"
-    : "${red=$(tput bold)$(tput setaf 196)}"
-    : "${green=$(tput bold)$(tput setaf 2)}"
-    : "${yellow=$(tput bold)$(tput setaf 3)}"
-    : "${blue=$(tput setaf 27)}"
-    : "${pink=$(tput setaf 5)}"
-    : "${magenta=$(tput setaf 5)}"
-    : "${cyan=$(tput setaf 6)}"
-    : "${white=$(tput setaf 7)}"
-    : "${gray=$(tput setaf 8)}"
-    : "${light_red=$(tput setaf 9)}"
-    : "${light_green=$(tput setaf 10)}"
-    : "${light_yellow=$(tput setaf 11)}"
-    : "${light_blue=$(tput setaf 12)}"
-    : "${light_magenta=$(tput setaf 13)}"
-    : "${light_cyan=$(tput setaf 14)}"
-    : "${light_white=$(tput setaf 15)}"
-    : "${orange=$(tput setaf 202)}"
-    : "${purple=$(tput setaf 125)}"
-    : "${violet=$(tput setaf 61)}"
+		: "${black=$(tput bold)$(tput setaf 0)}"
+		: "${red=$(tput bold)$(tput setaf 196)}"
+		: "${green=$(tput bold)$(tput setaf 2)}"
+		: "${yellow=$(tput bold)$(tput setaf 3)}"
+		: "${blue=$(tput setaf 27)}"
+		: "${pink=$(tput setaf 5)}"
+		: "${magenta=$(tput setaf 5)}"
+		: "${cyan=$(tput setaf 6)}"
+		: "${white=$(tput setaf 7)}"
+		: "${gray=$(tput setaf 8)}"
+		: "${light_red=$(tput setaf 9)}"
+		: "${light_green=$(tput setaf 10)}"
+		: "${light_yellow=$(tput setaf 11)}"
+		: "${light_blue=$(tput setaf 12)}"
+		: "${light_magenta=$(tput setaf 13)}"
+		: "${light_cyan=$(tput setaf 14)}"
+		: "${light_white=$(tput setaf 15)}"
+		: "${orange=$(tput setaf 202)}"
+		: "${purple=$(tput setaf 125)}"
+		: "${violet=$(tput setaf 61)}"
 
-    # Definir cores de fundo
-    : "${preto=$(tput setab 0)}"
-    : "${vermelho=$(tput setab 196)}"
-    : "${verde=$(tput setab 2)}"
-    : "${amarelo=$(tput setab 3)}"
-    : "${azul=$(tput setab 20)}"
-    : "${roxo=$(tput setab 5)}"
-    : "${ciano=$(tput setab 6)}"
-    : "${branca="${black}$(tput setab 7)"}"
-    : "${cinza=$(tput setab 8)}"
-    : "${laranja=$(tput setab 202)}"
-    : "${roxa=$(tput setab 125)}"
-    : "${violeta=$(tput setab 61)}"
+		# Definir cores de fundo
+		: "${preto=$(tput setab 0)}"
+		: "${vermelho=$(tput setab 196)}"
+		: "${verde=$(tput setab 2)}"
+		: "${amarelo=$(tput setab 3)}"
+		: "${azul=$(tput setab 20)}"
+		: "${roxo=$(tput setab 5)}"
+		: "${ciano=$(tput setab 6)}"
+		: "${branca="${black}$(tput setab 7)"}"
+		: "${cinza=$(tput setab 8)}"
+		: "${laranja=$(tput setab 202)}"
+		: "${roxa=$(tput setab 125)}"
+		: "${violeta=$(tput setab 61)}"
 
-    : "${COL_NC='\e[0m'}" # No Color
-    : "${COL_LIGHT_GREEN='\e[1;32m'}"
-    : "${COL_LIGHT_RED='\e[1;31m'}"
-    : "${DONE="${COL_LIGHT_GREEN} done!${COL_NC}"}"
-    : "${OVER="\\r\\033[K"}"
-    : "${DOTPREFIX="  ${black}::${reset} "}"
-    : "${clrkey=${light_white}}"
-    : "${TICK="${clrkey}[${green}✓✓✓${clrkey}]${rst}"}"
-    : "${CROSS="${clrkey}[${red}✗✗✗${clrkey}]${rst}"}"
-    : "${MID="${clrkey}[${red}✗✗${green}✓${clrkey}]${rst}"}"
-    : "${WARN="${clrkey}[${yellow}⚠  ${clrkey}]${yellow}"}"
-    : "${INFO="${clrkey}[${yellow}➡  ${clrkey}]${rst}"}"
+		: "${COL_NC='\e[0m'}" # No Color
+		: "${COL_LIGHT_GREEN='\e[1;32m'}"
+		: "${COL_LIGHT_RED='\e[1;31m'}"
+		: "${DONE="${COL_LIGHT_GREEN} done!${COL_NC}"}"
+		: "${OVER="\\r\\033[K"}"
+		: "${DOTPREFIX="  ${black}::${reset} "}"
+		: "${clrkey=${light_white}}"
+		: "${TICK="${clrkey}[${green}✓${clrkey}]${rst}"}"
+		: "${CROSS="${clrkey}[${red}✗${clrkey}]${rst}"}"
+		: "${MID="${clrkey}[${red}✗${green}✓${clrkey}]${rst}"}"
+		: "${WARN="${clrkey}[${yellow}⚠${clrkey}]${yellow}"}"
+		: "${INFO="${clrkey}[${yellow}→${clrkey}]${rst}"}"
 
-    # dialog colors
-    REVERSE="\Zr"
-    UNDERLINE="\Zu"
-    BOLD="\Zb"
-    RESET="\Zn"
-    BLACK="\Z0"
-    YELLOW="\Z3"
-    AMARELO="\Zb\Z3"
-    WHITE="\Z7"
-    BLUE="\Z4"
-    AZUL="\Zb\Z4"
-    CYAN="\Z6"
-    RED="\Z1"
-    GREEN="\Z2"
-    MAGENTA="\Z5"
-  else
-    unset_varcolors
-  fi
+		# dialog colors
+		REVERSE="\Zr"
+		UNDERLINE="\Zu"
+		BOLD="\Zb"
+		RESET="\Zn"
+		BLACK="\Z0"
+		YELLOW="\Z3"
+		AMARELO="\Zb\Z3"
+		WHITE="\Z7"
+		BLUE="\Z4"
+		AZUL="\Zb\Z4"
+		CYAN="\Z6"
+		RED="\Z1"
+		GREEN="\Z2"
+		MAGENTA="\Z5"
+	else
+		unset_varcolors
+	fi
 }
 
 unset_varcolors() {
-  unset RED GREEN YELLOW BLUE PURPLE CYAN NC RESET BOLD
-  unset reset rst bold underline nounderline reverse
-  unset black red green yellow blue magenta cyan white gray orange purple violet
-  unset light_red light_green light_yellow light_blue light_magenta light_cyan light_white
-  unset preto vermelho verde amarelo azul roxo ciano branca cinza laranja roxa violeta
-  TICK="${white}[${verde}✓${rst}${white}]${rst}"
-  CROSS="${white}[${roxa}✗${rst}${white}]${rst}"
-  INFO="${white}[${cinza}i${rst}${white}]${rst}"
+	unset RED GREEN YELLOW BLUE PURPLE CYAN NC RESET BOLD
+	unset reset rst bold underline nounderline reverse
+	unset black red green yellow blue magenta cyan white gray orange purple violet
+	unset light_red light_green light_yellow light_blue light_magenta light_cyan light_white
+	unset preto vermelho verde amarelo azul roxo ciano branca cinza laranja roxa violeta
+	TICK="${white}[${verde}✓${rst}${white}]${rst}"
+	CROSS="${white}[${roxa}✗${rst}${white}]${rst}"
+	INFO="${white}[${cinza}i${rst}${white}]${rst}"
 }
 
 sh_create_dialogrc() {
-  cat > "$dialogRcFile" <<EOF_DIALOGRC
+	cat >"$dialogRcFile" <<EOF_DIALOGRC
 screen_color = (white,black,off)
 dialog_color = (white,black,off)
 title_color = (green,black,on)
@@ -259,200 +237,200 @@ visit_items = off
 use_shadow = off
 use_colors = on
 EOF_DIALOGRC
-  export DIALOGRC="$dialogRcFile"
+	export DIALOGRC="$dialogRcFile"
 }
 
 # Teste se o terminal suporta caracteres gráficos estendidos
 sh_ascii_lines() {
-  #Isso força o dialog a usar caracteres ASCII básicos para as bordas.
-  #if [[ "$LANG" =~ 'UTF-8' ]]; then
-  [[ "$(printf '\u250C')" == "┌" ]]
-  export NCURSES_NO_UTF8_ACS=$((!$?))
+	#Isso força o dialog a usar caracteres ASCII básicos para as bordas.
+	#if [[ "$LANG" =~ 'UTF-8' ]]; then
+	[[ "$(printf '\u250C')" == "┌" ]]
+	export NCURSES_NO_UTF8_ACS=$((!$?))
 }
 
 sh_setEnvironment() {
-  [[ ! -e "$dialogRcFile" ]] && sh_create_dialogrc
-  sh_ascii_lines
+	[[ ! -e "$dialogRcFile" ]] && sh_create_dialogrc
+	sh_ascii_lines
 }
 
 sh_checkroot() {
-  (( EUID != 0 )) && elevate_to_root "$@" || return 0
+	((EUID != 0)) && elevate_to_root "$@" || return 0
 }
 
 elevate_to_root() {
-  log_err "This script must be run as root. Elevating privileges..."
-  ccabec+='root [elevated]'
-  # Tenta usar sudo primeiro (caso esteja configurado)
-  if command -v sudo >/dev/null 2>&1; then
-    exec sudo bash "$0" "$@"
-  fi
-  # Se sudo falhar, tenta su
-  if command -v su >/dev/null 2>&1; then
-    exec su -c "$0 $*"
-  fi
-  die "Error: Unable to elevate privileges. Run manually as root."
+	log_err "This script must be run as root. Elevating privileges..."
+	ccabec+='root [elevated]'
+	# Tenta usar sudo primeiro (caso esteja configurado)
+	if command -v sudo >/dev/null 2>&1; then
+		exec sudo bash "$0" "$@"
+	fi
+	# Se sudo falhar, tenta su
+	if command -v su >/dev/null 2>&1; then
+		exec su -c "$0 $*"
+	fi
+	die "Error: Unable to elevate privileges. Run manually as root."
 }
 
 replicate() {
-  local char="${1:-#}"
-  local nsize="${2:-$(tput cols)}"
-  # Gera linha com substituição direta sem forks extras
-  printf -v _line "%*s" "$nsize" && printf '%b\n' "${blue}${_line// /$char}${reset}"
+	local char="${1:-#}"
+	local nsize="${2:-$(tput cols)}"
+	# Gera linha com substituição direta sem forks extras
+	printf -v _line "%*s" "$nsize" && printf '%b\n' "${blue}${_line// /$char}${reset}"
 }
 
 readconf() {
-  local msg="$1"
-  local color="${2:-${yellow}}"
+	local msg="$1"
+	local color="${2:-${yellow}}"
 
-  echo -n -e "$color"
-  if [[ $LC_DEFAULT -eq 0 ]]; then
-    read -r -p "$msg [N/s] :"
-  else
-    read -r -p "$msg [N/y] :"
-  fi
-  echo -n -e "$reset"
-  case "${REPLY^}" in
-  [SY]) return 0 ;;
-  "") return 1 ;;
-  *) return 1 ;;
-  esac
+	echo -n -e "$color"
+	if [[ $LC_DEFAULT -eq 0 ]]; then
+		read -r -p "$msg [N/s] :"
+	else
+		read -r -p "$msg [N/y] :"
+	fi
+	echo -n -e "$reset"
+	case "${REPLY^}" in
+	[SY]) return 0 ;;
+	"") return 1 ;;
+	*) return 1 ;;
+	esac
 }
 
 debug() {
-# dialog
-  whiptail --fb  --clear --backtitle "[debug]$0" --title "[debug]$0" --yesno "${*}\n"  0 40
-  local result="$?"
-  ((result)) && exit "$result"
-  return "$result"
+	# dialog
+	whiptail --fb --clear --backtitle "[debug]$0" --title "[debug]$0" --yesno "${*}\n" 0 40
+	local result="$?"
+	((result)) && exit "$result"
+	return "$result"
 }
 
 # ===================================================================
 # Funções auxiliares
 # ===================================================================
 run_cmd() {
-  local info="$1"
-  shift
-  local cmd="$*"
+	local info="$1"
+	shift
+	local cmd="$*"
 
-  if [[ $DRYRUN -eq 1 ]]; then
-    msg "${cyan}[DRY-RUN]${rst} ${cmd}"
-  else
-    if $quiet; then
-        echo -e "  [⚙  ] ${yellow}$info${rst}"
-    else
-        echo -e -n "  [⚙  ] ${yellow}$info ${cyan}${cmd}${rst}"
-    fi
-    # Executa o comando, falha se houver erro
-    # Redireciona stderr para /dev/null apenas para mkdir -p e ummount -R
-    if [[ "$cmd" =~ ^mkdir\ -p ]] || [[ "$cmd" =~ ^umount\ -R ]]; then
-      eval "$cmd" &>/dev/null || true
-    else
-      eval "$cmd" &>/dev/null || die "Falha ao executar: $cmd"
-    fi
-    if ! $quiet; then
-        replicate
-    fi
-  fi
+	if [[ $DRYRUN -eq 1 ]]; then
+		msg "${cyan}[DRY-RUN]${rst} ${cmd}"
+	else
+		if $quiet; then
+			echo -e "  [⚙  ] ${yellow}$info${rst}"
+		else
+			echo -e -n "  [⚙  ] ${yellow}$info ${cyan}${cmd}${rst}"
+		fi
+		# Executa o comando, falha se houver erro
+		# Redireciona stderr para /dev/null apenas para mkdir -p e ummount -R
+		if [[ "$cmd" =~ ^mkdir\ -p ]] || [[ "$cmd" =~ ^umount\ -R ]]; then
+			eval "$cmd" &>/dev/null || true
+		else
+			eval "$cmd" &>/dev/null || die "Falha ao executar: $cmd"
+		fi
+		if ! $quiet; then
+			replicate
+		fi
+	fi
 }
 
 sh_copyright() {
-  cat <<-EOF-COPY
-${bold}${cyan}${0##*/} v${_VERSION_}${rst}
-${bold}${cyan}${APPDESC}${rst}
-${bold}${orange}Copyright (c) 2019-2026, ${reset}ChiliLinux Development Team <https://chililinux.com> <https://github.com/chililinux>
-${bold}${orange}Copyright (c) 2019-2026, ${reset}Vilmar Catafesta <vcatafesta@gmail.com>${black}
-EOF-COPY
+	cat <<-EOF-COPY
+		${bold}${cyan}${0##*/} v${_VERSION_}${rst}
+		${bold}${cyan}${APPDESC}${rst}
+		${bold}${orange}Copyright (c) 2019-2026, ${reset}ChiliLinux Development Team <https://chililinux.com> <https://github.com/chililinux>
+		${bold}${orange}Copyright (c) 2019-2026, ${reset}Vilmar Catafesta <vcatafesta@gmail.com>${black}
+	EOF-COPY
 }
 
 sh_version() {
-  cat <<-EOF-VERSION
-  $(sh_copyright)
+	cat <<-EOF-VERSION
+		  $(sh_copyright)
 
-        $(gettext 'Este é um software livre: você é livre para alterá-lo e redistribuí-lo.')
-        $(gettext 'O $APP é disponibilizado para você sob a ${yellow}Licença MIT${black}, e')
-        $(gettext 'inclui software de código aberto sob uma variedade de outras licenças.')
-        $(gettext 'Você pode ler instruções sobre como baixar e criar para você mesmo')
-        $(gettext 'o código fonte específico usado para criar esta cópia.')
-        ${red}$(gettext 'Este programa vem com absolutamente NENHUMA garantia.')${reset}
-EOF-VERSION
+		        $(gettext 'Este é um software livre: você é livre para alterá-lo e redistribuí-lo.')
+		        $(gettext 'O $APP é disponibilizado para você sob a ${yellow}Licença MIT${black}, e')
+		        $(gettext 'inclui software de código aberto sob uma variedade de outras licenças.')
+		        $(gettext 'Você pode ler instruções sobre como baixar e criar para você mesmo')
+		        $(gettext 'o código fonte específico usado para criar esta cópia.')
+		        ${red}$(gettext 'Este programa vem com absolutamente NENHUMA garantia.')${reset}
+	EOF-VERSION
 }
 
-msg()          { echo -e "${INFO} ${*}${reset}"; }
-log_ok()       { echo -e "${TICK} ${*}${reset}"; }
-log_err()      { echo -e "${CROSS} ${*}${reset}"; }
-log_mid()      { echo -e "${MID} ${*}${reset}"; }
-log_warn()     { echo -e "${WARN} ${*}${reset}"; }
-msg_tab()      { echo -e "  ${INFO} ${*}${reset}"; }
-log_ok_tab()   { echo -e "  ${TICK} ${*}${reset}"; }
-log_err_tab()  { echo -e "  ${CROSS} ${*}${reset}"; }
-log_mid_tab()  { echo -e "  ${MID} ${*}${reset}"; }
+msg() { echo -e "${INFO} ${*}${reset}"; }
+log_ok() { echo -e "${TICK} ${*}${reset}"; }
+log_err() { echo -e "${CROSS} ${*}${reset}"; }
+log_mid() { echo -e "${MID} ${*}${reset}"; }
+log_warn() { echo -e "${WARN} ${*}${reset}"; }
+msg_tab() { echo -e "  ${INFO} ${*}${reset}"; }
+log_ok_tab() { echo -e "  ${TICK} ${*}${reset}"; }
+log_err_tab() { echo -e "  ${CROSS} ${*}${reset}"; }
+log_mid_tab() { echo -e "  ${MID} ${*}${reset}"; }
 log_warn_tab() { echo -e "  ${WARN} ${*}${reset}"; }
 die() {
-  echo -e "${CROSS} ${red}${*}${reset}"
-  exit 1
+	echo -e "${CROSS} ${red}${*}${reset}"
+	exit 1
 }
 
 detect_distro() {
-  local id=""
+	local id=""
 
-  if [[ -r /etc/os-release ]]; then
-    # Lê ID=void|arch|debian|... exatamente como a distro declara
-    id=$(grep -E '^ID=' /etc/os-release | cut -d= -f2 | tr -d '"')
-  elif [[ -r /usr/lib/os-release ]]; then
-    id=$(grep -E '^ID=' /usr/lib/os-release | cut -d= -f2 | tr -d '"')
-  else
-    echo "unknown"
-    return
-  fi
-  echo "$id"
+	if [[ -r /etc/os-release ]]; then
+		# Lê ID=void|arch|debian|... exatamente como a distro declara
+		id=$(grep -E '^ID=' /etc/os-release | cut -d= -f2 | tr -d '"')
+	elif [[ -r /usr/lib/os-release ]]; then
+		id=$(grep -E '^ID=' /usr/lib/os-release | cut -d= -f2 | tr -d '"')
+	else
+		echo "unknown"
+		return
+	fi
+	echo "$id"
 }
 
 sh_checkDependencies() {
-  local DISTRO="$(detect_distro)"
-  local aBlock_files=()
-  local d
-  local pkg
-  local errorFound=false
-  declare -a missing
-  local cmsgNot="$(gettext "Não foi possível encontrar o comando")"
-  local cmsgPkg="$(gettext "instalar pacote")"
+	local DISTRO="$(detect_distro)"
+	local aBlock_files=()
+	local d
+	local pkg
+	local errorFound=false
+	declare -a missing
+	local cmsgNot="$(gettext "Não foi possível encontrar o comando")"
+	local cmsgPkg="$(gettext "instalar pacote")"
 
-  for d in "${!PACKAGEDEP[@]}"; do
-    if ! command -v "$d" &>/dev/null; then
-      pkg="${PACKAGEDEP[$d]}"
-        log_err "${red}Error${rst}: ${cmsgNot} $(printf "${cyan}%-15s${rst}\n" "$d") -> ${cmsgPkg} ${cyan}${pkg}${rst}"
-        missing+=("${pkg}")
-        errorFound=true
-    else
-      #log_msg "Check: ${cyan}$d"
-      :
-    fi
-  done
+	for d in "${!PACKAGEDEP[@]}"; do
+		if ! command -v "$d" &>/dev/null; then
+			pkg="${PACKAGEDEP[$d]}"
+			log_err "${red}Error${rst}: ${cmsgNot} $(printf "${cyan}%-15s${rst}\n" "$d") -> ${cmsgPkg} ${cyan}${pkg}${rst}"
+			missing+=("${pkg}")
+			errorFound=true
+		else
+			#log_msg "Check: ${cyan}$d"
+			:
+		fi
+	done
 
-  if $errorFound; then
-    replicate '='
-    echo "${yellow}             $(gettext "IMPOSSÍVEL CONTINUAR")"
-    echo "${black}$(gettext "Este script precisa dos comandos listados acima")"
-    echo "${black}$(gettext "Instale-os e/ou verifique se eles estão em seu") ${red}\$PATH${reset}"
-    replicate '='
+	if $errorFound; then
+		replicate '='
+		echo "${yellow}             $(gettext "IMPOSSÍVEL CONTINUAR")"
+		echo "${black}$(gettext "Este script precisa dos comandos listados acima")"
+		echo "${black}$(gettext "Instale-os e/ou verifique se eles estão em seu") ${red}\$PATH${reset}"
+		replicate '='
 
-    local cmd="${DISTRO_MGR[$DISTRO]}"
-    #local pkgs="${DISTRO_PKGS[$DISTRO]}"
-    local pkgs="${missing[@]}"
+		local cmd="${DISTRO_MGR[$DISTRO]}"
+		#local pkgs="${DISTRO_PKGS[$DISTRO]}"
+		local pkgs="${missing[@]}"
 
-    msg_info "Distro detectada: ${cyan}$DISTRO${rst}"
-    if readconf "$(gettext "Instalar dependências base agora?")"; then
-      echo -e "${blue}::${rst} $(gettext "Preparando ambiente para") ${green}${DISTRO}${reset}..."
-      # Execução dinâmica: $cmd (gerenciador) + $pkgs (lista de pacotes)
-      if ! $cmd $pkgs; then
-        echo
-        echo -e "${red}$(gettext "Erro Crítico:")${rst} $(gettext "A instalação dos pacotes básicos falhou.")"
-        exit 1
-      fi
-        echo
-        echo -e "${green}$(gettext "Sucesso:")${reset} $(gettext "Dependências instaladas.")"
-      fi
-    fi
+		msg_info "Distro detectada: ${cyan}$DISTRO${rst}"
+		if readconf "$(gettext "Instalar dependências base agora?")"; then
+			echo -e "${blue}::${rst} $(gettext "Preparando ambiente para") ${green}${DISTRO}${reset}..."
+			# Execução dinâmica: $cmd (gerenciador) + $pkgs (lista de pacotes)
+			if ! $cmd $pkgs; then
+				echo
+				echo -e "${red}$(gettext "Erro Crítico:")${rst} $(gettext "A instalação dos pacotes básicos falhou.")"
+				exit 1
+			fi
+			echo
+			echo -e "${green}$(gettext "Sucesso:")${reset} $(gettext "Dependências instaladas.")"
+		fi
+	fi
 }
 
 # configure ambiente
@@ -460,15 +438,35 @@ set_varcolors
 #sh_checkroot "$@"
 
 ##########################################################################################################
+
+#!/bin/sh
 quiet=true
 
+############################################################
+# INSTALACAO DE PACOTES
+############################################################
 run_cmd 'Instalando pacotes necessários' "
-    sudo xbps-install -Sfyu --ignore-file-conflicts pulseaudio pavucontrol pasystray gst-plugins-bad1 gst-plugins-good1 gst-plugins-ugly1 gst-plugins-base1 alsa-plugins-pulseaudio alsa-utils
+    sudo xbps-install \
+      -Sy \
+      --ignore-file-conflicts \
+      pulseaudio \
+      pavucontrol \
+      pasystray \
+      gst-plugins-bad1 \
+      gst-plugins-good1 \
+      gst-plugins-ugly1 \
+      gst-plugins-base1 \
+      alsa-plugins-pulseaudio \
+      alsa-utils \
+      helvum \
+      qpwgraph
 "
+# Removido '-fu': -u dispara upgrade completo do sistema, nao so dos pacotes listados.
 
-# LIMPEZA GLOBAL — remover qualquer autostart do sistema
+############################################################
+# LIMPEZA GLOBAL — remover qualquer autostart/config do sistema
 # (evita conflito com configuração do usuário)
-
+############################################################
 run_cmd 'remover PipeWire global' "
     sudo rm -f /etc/xdg/autostart/pipewire.desktop
     sudo rm -f /etc/xdg/autostart/pipewire-pulse.desktop
@@ -486,10 +484,18 @@ run_cmd 'remover qualquer config ALSA global que redirecione áudio' "
     sudo rm -f /etc/alsa/conf.d/50-pulseaudio.conf
 "
 
+run_cmd 'limpar /etc/asound.conf residual' "
+    sudo rm -f /etc/asound.conf
+"
+# O pacote alsa-plugins-pulseaudio reinstala /etc/asound.conf automaticamente
+# (é quem de fato define pcm.!default como pulse — não o symlink de 50-pulseaudio.conf,
+# que só cria um PCM nomeado 'pulse' para teste, sem afetar o dispositivo default).
+# Remover aqui garante que não sobrou um /etc/asound.conf de uma config anterior
+# conflitando com o que o pacote vai recriar na reinstalação acima.
+
 ############################################################
 # PULSEAUDIO — configuração completa (usuário + ALSA)
 ############################################################
-
 run_cmd 'criar diretórios necessários' "
     mkdir -p ~/.config/autostart
     mkdir -p ~/.config/alsa/conf.d
@@ -512,6 +518,56 @@ run_cmd 'remover autostart do PipeWire (evitar conflito)' "
     rm -f ~/.config/autostart/pipewire-pulse.desktop
     rm -f ~/.config/autostart/wireplumber.desktop
 "
+
 run_cmd '---- integração ALSA → PulseAudio ----' "
     ln -sf /usr/share/alsa/alsa.conf.d/50-pulseaudio.conf ~/.config/alsa/conf.d/50-pulseaudio.conf
 "
+# Nota: quem realmente define o dispositivo default como pulse é o /etc/asound.conf
+# reinstalado pelo pacote (ver acima). Este symlink fica só como complemento —
+# cria o PCM nomeado "pulse" (util para 'aplay -D pulse'), sem função crítica.
+
+############################################################
+# LIMPEZA DE RESÍDUO — remover config antiga do PipeWire (client.conf)
+############################################################
+run_cmd 'remover ~/.config/pulse residual (cookie e client.conf do PipeWire)' "
+   rm -rf ~/.config/pulse
+    mkdir -p ~/.config/pulse
+"
+# O script do PipeWire cria ~/.config/pulse/client.conf com autospawn=no e
+# daemon-binary=/bin/true. Isso não bloquearia o 'pulseaudio --start' direto do
+# autostart acima (é uma invocação direta, não passa pelo autospawn), mas remover
+# a pasta inteira evita qualquer resíduo de config ou cookie de sessões anteriores.
+
+
+echo
+log_ok "${green}Configuração concluída.${rst}"
+msg "Recomenda-se fazer logout/login (ou reiniciar a sessão gráfica) para"
+msg "garantir que o pulseaudio suba limpo com a nova config."
+echo
+replicate '-'
+msg "${cyan}TESTES DE VALIDAÇÃO${rst}"
+replicate '-'
+msg "${cyan}Status geral:${rst}"
+msg_tab "inxi -Aa"
+msg_tab "pactl info"
+msg_tab "ps aux | grep pulseaudio"
+echo
+msg "${cyan}Playback/captura:${rst}"
+msg_tab "speaker-test -c 2 -t wav"
+msg_tab "parecord /tmp/teste.wav      # Ctrl+C pra parar"
+msg_tab "paplay /tmp/teste.wav"
+echo
+msg "${cyan}Mixer gráfico:${rst}"
+msg_tab "pavucontrol"
+echo
+msg "${cyan}Sinks/sources e volume via pactl:${rst}"
+msg_tab "pactl list sinks short"
+msg_tab "pactl list sources short"
+msg_tab "pactl set-sink-volume @DEFAULT_SINK@ 50%"
+echo
+msg "${cyan}Bandeja do sistema:${rst}"
+msg_tab "pgrep -a pasystray"
+echo
+msg "${cyan}Resiliência entre trocas de sessão:${rst}"
+msg_tab "ps aux | grep -E 'pulseaudio|pipewire|wireplumber'"
+msg_tab "(rodar antes e depois de trocar de sessão, pra checar processo órfão)"

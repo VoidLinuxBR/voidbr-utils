@@ -3,6 +3,10 @@
 # shellcheck shell=bash disable=SC1091,SC2039,SC2166,SC2034
 #
 #  voidbr-configure-pipewire
+#  Configura PipeWire + WirePlumber + pipewire-pulse como stack de audio,
+#  neutraliza o PulseAudio real, e integra ALSA/JACK — tudo em nivel de usuario
+#  (Hyprland/Sway/Mango nao leem ~/.config/autostart; se voce usa DE, ela cuida disso sozinha).
+#
 #  Created: qui 12 fev 2026 06:43:56 -04
 #  Altered: qui 12 fev 2026 06:43:56 -04
 #  Updated: qui 12 fev 2026 06:43:56 -04
@@ -57,6 +61,7 @@ declare -A PACKAGEDEP=(
 )
 # Mapa: [distro]="lista de pacotes"
 declare -A DISTRO_PKGS=(
+	["voidbr"]="gettext rsync parted curl xz lvm2"
 	["void"]="gettext rsync parted curl xz lvm2"
 	["void-live"]="gettext rsync parted curl xz lvm2"
 	["voidlinux"]="gettext rsync parted curl xz lvm2"
@@ -68,36 +73,12 @@ declare -A DISTRO_PKGS=(
 )
 # Mapa: [distro]="comando de instalação"
 declare -A DISTRO_MGR=(
+	["voidbr"]="xbps-install -Syf"
 	["void"]="xbps-install -Syf"
-	["void-live"]="xbps-install -Syf"
 	["voidlinux"]="xbps-install -Syf"
 	["chili"]="pacman -Sy --needed --noconfirm"
 	["chililinux"]="pacman -Sy --needed --noconfirm"
 	["arch"]="pacman -Sy --needed --noconfirm"
-	["manjaro"]="pacman -Sy --needed --noconfirm"
-	["debian"]="apt-get install -y"
-)
-# Mapa: [distro]="lista de pacotes"
-declare -A DISTRO_PKGS=(
-	["void"]="gettext rsync parted curl xz lvm2"
-	["void-live"]="gettext rsync parted curl xz lvm2"
-	["voidlinux"]="gettext rsync parted curl xz lvm2"
-	["chili"]="gettext rsync parted curl xz"
-	["chililinux"]="gettext rsync parted curl xz"
-	["arch"]="gettext rsync parted curl xz"
-	["biglinux"]="gettext rsync parted curl xz"
-	["manjaro"]="gettext rsync parted curl xz"
-	["debian"]="gettext-base rsync parted curl xz-utils"
-)
-# Mapa: [distro]="comando de instalação"
-declare -A DISTRO_MGR=(
-	["void"]="xbps-install -Syf"
-	["void-live"]="xbps-install -Syf"
-	["voidlinux"]="xbps-install -Syf"
-	["chili"]="pacman -Sy --needed --noconfirm"
-	["chililinux"]="pacman -Sy --needed --noconfirm"
-	["arch"]="pacman -Sy --needed --noconfirm"
-	["viglinux"]="pacman -Sy --needed --noconfirm"
 	["manjaro"]="pacman -Sy --needed --noconfirm"
 	["debian"]="apt-get install -y"
 )
@@ -177,11 +158,11 @@ set_varcolors() {
 		: "${OVER="\\r\\033[K"}"
 		: "${DOTPREFIX="  ${black}::${reset} "}"
 		: "${clrkey=${light_white}}"
-		: "${TICK="${clrkey}[${green}✓✓✓${clrkey}]${rst}"}"
-		: "${CROSS="${clrkey}[${red}✗✗✗${clrkey}]${rst}"}"
-		: "${MID="${clrkey}[${red}✗✗${green}✓${clrkey}]${rst}"}"
-		: "${WARN="${clrkey}[${yellow}⚠  ${clrkey}]${yellow}"}"
-		: "${INFO="${clrkey}[${yellow}➡  ${clrkey}]${rst}"}"
+		: "${TICK="${clrkey}[${green}✓${clrkey}]${rst}"}"
+		: "${CROSS="${clrkey}[${red}✗${clrkey}]${rst}"}"
+		: "${MID="${clrkey}[${red}✗${green}✓${clrkey}]${rst}"}"
+		: "${WARN="${clrkey}[${yellow}⚠${clrkey}]${yellow}"}"
+		: "${INFO="${clrkey}[${yellow}→${clrkey}]${rst}"}"
 
 		# dialog colors
 		REVERSE="\Zr"
@@ -330,29 +311,29 @@ debug() {
 # Funções auxiliares
 # ===================================================================
 run_cmd() {
-  local info="$1"
-  shift
-  local cmd="$*"
+	local info="$1"
+	shift
+	local cmd="$*"
 
-  if [[ $DRYRUN -eq 1 ]]; then
-    msg "${cyan}[DRY-RUN]${rst} ${cmd}"
-  else
-    if $quiet; then
-        echo -e "  [⚙  ] ${yellow}$info${rst}"
-    else
-        echo -e -n "  [⚙  ] ${yellow}$info ${cyan}${cmd}${rst}"
-    fi
-    # Executa o comando, falha se houver erro
-    # Redireciona stderr para /dev/null apenas para mkdir -p e ummount -R
-    if [[ "$cmd" =~ ^mkdir\ -p ]] || [[ "$cmd" =~ ^umount\ -R ]]; then
-      eval "$cmd" &>/dev/null || true
-    else
-      eval "$cmd" &>/dev/null || die "Falha ao executar: $cmd"
-    fi
-    if ! $quiet; then
-        replicate
-    fi
-  fi
+	if [[ $DRYRUN -eq 1 ]]; then
+		msg "${cyan}[DRY-RUN]${rst} ${cmd}"
+	else
+		if $quiet; then
+			echo -e "  [⚙] ${yellow}$info${rst}"
+		else
+			echo -e -n "  [⚙] ${yellow}$info ${cyan}${cmd}${rst}"
+		fi
+		# Executa o comando, falha se houver erro
+		# Redireciona stderr para /dev/null apenas para mkdir -p e ummount -R
+		if [[ "$cmd" =~ ^mkdir\ -p ]] || [[ "$cmd" =~ ^umount\ -R ]]; then
+			eval "$cmd" &>/dev/null || true
+		else
+			eval "$cmd" &>/dev/null || die "Falha ao executar: $cmd"
+		fi
+		if ! $quiet; then
+			replicate
+		fi
+	fi
 }
 
 sh_copyright() {
@@ -378,11 +359,11 @@ sh_version() {
 }
 
 msg() { echo -e "${INFO} ${*}${reset}"; }
+msg_tab() { echo -e "  ${INFO} ${*}${reset}"; }
 log_ok() { echo -e "${TICK} ${*}${reset}"; }
 log_err() { echo -e "${CROSS} ${*}${reset}"; }
 log_mid() { echo -e "${MID} ${*}${reset}"; }
 log_warn() { echo -e "${WARN} ${*}${reset}"; }
-msg_tab() { echo -e "  ${INFO} ${*}${reset}"; }
 log_ok_tab() { echo -e "  ${TICK} ${*}${reset}"; }
 log_err_tab() { echo -e "  ${CROSS} ${*}${reset}"; }
 log_mid_tab() { echo -e "  ${MID} ${*}${reset}"; }
@@ -460,12 +441,36 @@ set_varcolors
 #sh_checkroot "$@"
 
 ##########################################################################################################
+
 quiet=true
 
+############################################################
+# INSTALACAO DE PACOTES
+############################################################
 run_cmd 'Instalando pacotes necessários' "
-    sudo xbps-install -Sfyu --ignore-file-conflicts pipewire wireplumber alsa-pipewire pulseaudio-utils pavucontrol libspa-bluetooth libjack-pipewire alsa-plugins-pulseaudio alsa-utils
+    sudo xbps-install \
+      -Sy \
+      --ignore-file-conflicts \
+      pipewire \
+      wireplumber \
+      alsa-pipewire \
+      pulseaudio-utils \
+      pavucontrol \
+      libspa-bluetooth \
+      libjack-pipewire \
+      alsa-utils \
+      helvum \
+      qpwgraph
 "
+# Nota: removido '-fu' do xbps-install original.
+# -u faz upgrade COMPLETO do sistema (todos os pacotes, nao so os listados aqui) —
+# separar isso evita surpresas num script que deveria só cuidar de áudio.
+# Se você quiser mesmo atualizar o sistema todo, rode 'sudo xbps-install -Suy' à parte.
+# Também removido 'alsa-plugins-pulseaudio': redundante com alsa-pipewire, já que
+# pipewire-pulse cobre a compatibilidade PulseAudio. Reinstale se algum app específico
+# exigir o dispositivo ALSA chamado "pulse" em vez de "pipewire".
 
+############################################################
 # LIMPEZA GLOBAL — remover qualquer autostart do sistema
 # (evita conflito com configuração do usuário)
 ############################################################
@@ -474,7 +479,6 @@ run_cmd 'remover PipeWire global' "
     sudo rm -f /etc/xdg/autostart/pipewire-pulse.desktop
     sudo rm -f /etc/xdg/autostart/wireplumber.desktop
 "
-
 run_cmd 'remover PulseAudio global' "
     sudo rm -f /etc/xdg/autostart/pulseaudio.desktop
     sudo rm -f /etc/xdg/autostart/pulseaudio-kde.desktop
@@ -484,11 +488,17 @@ run_cmd 'remover qualquer config ALSA global que redirecione áudio' "
     sudo rm -f /etc/alsa/conf.d/99-pipewire-default.conf
     sudo rm -f /etc/alsa/conf.d/50-pulseaudio.conf
 "
+run_cmd 'limpar /etc/asound.conf residual' "
+    sudo rm -f /etc/asound.conf
+"
+# Se o alsa-plugins-pulseaudio já foi instalado alguma vez, ele deixa /etc/asound.conf
+# com pcm.!default apontando pro pulse — isso sobrescreve o !default que os symlinks
+# 50-pipewire.conf/99-pipewire-default.conf tentam configurar logo abaixo. Remover aqui
+# garante que o padrão ALSA vá de fato para o PipeWire, sem resíduo do outro stack.
 
 ############################################################
 # PIPEWIRE — configuração completa (usuário + ALSA)
 ############################################################
-
 run_cmd 'criar diretórios necessários' "
     mkdir -p ~/.config/autostart
     mkdir -p ~/.config/alsa/conf.d
@@ -498,25 +508,94 @@ run_cmd '---- autostart do PipeWire ----' "
     ln -sf /usr/share/applications/pipewire-pulse.desktop ~/.config/autostart/pipewire-pulse.desktop
     ln -sf /usr/share/applications/wireplumber.desktop ~/.config/autostart/wireplumber.desktop
 "
-
 run_cmd 'remover autostart do PulseAudio (evitar conflito)' "
     rm -f ~/.config/autostart/pulseaudio.desktop
     rm -f ~/.config/autostart/pulseaudio-kde.desktop
 "
-
 run_cmd '---- integração ALSA → PipeWire ----' "
     ln -sf /usr/share/alsa/alsa.conf.d/50-pipewire.conf ~/.config/alsa/conf.d/50-pipewire.conf
     ln -sf /usr/share/alsa/alsa.conf.d/99-pipewire-default.conf ~/.config/alsa/conf.d/99-pipewire-default.conf
 "
 
 ############################################################
+# JACK — compatibilidade global (opcional, evita precisar de pw-jack)
+############################################################
+run_cmd 'integração JACK global via ld.so.conf.d' "
+    echo '/usr/lib/pipewire-0.3/jack' | sudo tee /etc/ld.so.conf.d/pipewire-jack.conf >/dev/null
+    sudo ldconfig
+"
+# Alternativa sem mexer no sistema: prefixar apps JACK manualmente com 'pw-jack <app>'.
+# Se preferir essa forma, comente o bloco acima.
+
+############################################################
 # DESATIVAR AUTOSPAWN DO PULSEAUDIO (usuário)
-# impede PulseAudio iniciar automaticamente
+# impede PulseAudio real iniciar automaticamente
 ############################################################
 run_cmd 'impedir PulseAudio iniciar automaticamente' "
+   rm -rf ~/.config/pulse
     mkdir -p ~/.config/pulse
     cat > ~/.config/pulse/client.conf <<EOF
+# autospawn = no - desliga o comportamento padrao do PulseAudio real de subir
+# sozinho quando algum app tenta se conectar e nao encontra servidor rodando.
 autospawn = no
+# cinto de seguranca extra: mesmo que algo force o autospawn por outro caminho,
+# o binario executado vira /bin/true (retorna sucesso sem fazer nada de verdade).
 daemon-binary = /bin/true
 EOF
 "
+
+############################################################
+# LIMPEZA DE RESÍDUO — mata instância antiga do PulseAudio real, se houver
+############################################################
+run_cmd 'matar PulseAudio residual (se estiver rodando)' "
+    pkill -x pulseaudio 2>/dev/null || true
+"
+
+echo
+log_ok "${green}Configuração concluída.${rst}"
+msg "Recomenda-se fazer logout/login (ou reiniciar a sessão gráfica) para"
+msg "garantir que pipewire, wireplumber e pipewire-pulse subam limpos com a nova config."
+echo
+
+replicate '-'
+msg "${cyan}TESTES DE VALIDAÇÃO${rst}"
+replicate '-'
+msg "${cyan}Status geral:${rst}"
+msg_tab "inxi -Aa"
+msg_tab "wpctl status"
+msg_tab "pactl info"
+echo
+
+msg "${cyan}Playback/captura:${rst}"
+msg_tab "speaker-test -c 2 -t wav"
+msg_tab "pw-cat --record /tmp/teste.wav      # Ctrl+C pra parar"
+msg_tab "pw-cat --playback /tmp/teste.wav"
+echo
+
+msg "${cyan}Grafo de conexões em tempo real:${rst}"
+msg_tab "pw-top"
+msg_tab "qpwgraph   # ou: helvum"
+echo
+
+msg "${cyan}Latência/buffer:${rst}"
+msg_tab "pw-cli info 0"
+echo
+
+msg "${cyan}Bluetooth (se libspa-bluetooth instalado):${rst}"
+msg_tab "bluetoothctl"
+msg_tab "wpctl status   # dispositivo deve aparecer em Sinks/Sources"
+echo
+
+msg "${cyan}JACK:${rst}"
+msg_tab "pw-jack jack_lsp"
+msg_tab "jack_lsp       # sem prefixo, se a integração global via ld.so.conf.d estiver ativa"
+echo
+
+msg "${cyan}Volume via wpctl:${rst}"
+msg_tab "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.5"
+msg_tab "wpctl get-volume @DEFAULT_AUDIO_SINK@"
+echo
+
+msg "${cyan}Resiliência entre trocas de sessão:${rst}"
+msg_tab "ps aux | grep -E 'pulseaudio|pipewire|wireplumber'"
+msg_tab "(rodar antes e depois de trocar de sessão, pra checar processo órfão)"
