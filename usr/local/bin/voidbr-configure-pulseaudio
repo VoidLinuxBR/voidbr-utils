@@ -472,16 +472,25 @@ run_cmd 'remover PipeWire global' "
     sudo rm -f /etc/xdg/autostart/pipewire-pulse.desktop
     sudo rm -f /etc/xdg/autostart/wireplumber.desktop
 "
-
+run_cmd 'remover autostart do PipeWire local (evitar conflito)' "
+    rm -f ~/.config/autostart/pipewire.desktop
+    rm -f ~/.config/autostart/pipewire-pulse.desktop
+    rm -f ~/.config/autostart/wireplumber.desktop
+"
+run_cmd 'remover session manager (WirePlumber) + interface PulseAudio' "
+    rm -rf ~/.config/pipewire
+"
 run_cmd 'remover PulseAudio global' "
     sudo rm -f /etc/xdg/autostart/pulseaudio.desktop
     sudo rm -f /etc/xdg/autostart/pulseaudio-kde.desktop
 "
-
 run_cmd 'remover qualquer config ALSA global que redirecione áudio' "
     sudo rm -f /etc/alsa/conf.d/50-pipewire.conf
     sudo rm -f /etc/alsa/conf.d/99-pipewire-default.conf
     sudo rm -f /etc/alsa/conf.d/50-pulseaudio.conf
+"
+run_cmd 'remover qualquer config ALSA local que redirecione áudio' "
+    rm -rf ~/.config/alsa
 "
 
 run_cmd 'limpar /etc/asound.conf residual' "
@@ -498,7 +507,6 @@ run_cmd 'limpar /etc/asound.conf residual' "
 ############################################################
 run_cmd 'criar diretórios necessários' "
     mkdir -p ~/.config/autostart
-    mkdir -p ~/.config/alsa/conf.d
 "
 
 run_cmd '---- autostart do PulseAudio ----' "
@@ -512,15 +520,9 @@ X-GNOME-Autostart-enabled=true
 Name=PulseAudio
 EOF
 "
-
-run_cmd 'remover autostart do PipeWire (evitar conflito)' "
-    rm -f ~/.config/autostart/pipewire.desktop
-    rm -f ~/.config/autostart/pipewire-pulse.desktop
-    rm -f ~/.config/autostart/wireplumber.desktop
-"
-
-run_cmd '---- integração ALSA → PulseAudio ----' "
-    ln -sf /usr/share/alsa/alsa.conf.d/50-pulseaudio.conf ~/.config/alsa/conf.d/50-pulseaudio.conf
+run_cmd '---- integração ALSA → Pulseaudio (sistema) ----' "
+    sudo mkdir -p /etc/alsa/conf.d
+    sudo ln -sf /usr/share/alsa/alsa.conf.d/50-pulseaudio.conf /etc/alsa/conf.d/50-pulseaudio.conf
 "
 # Nota: quem realmente define o dispositivo default como pulse é o /etc/asound.conf
 # reinstalado pelo pacote (ver acima). Este symlink fica só como complemento —
@@ -530,14 +532,13 @@ run_cmd '---- integração ALSA → PulseAudio ----' "
 # LIMPEZA DE RESÍDUO — remover config antiga do PipeWire (client.conf)
 ############################################################
 run_cmd 'remover ~/.config/pulse residual (cookie e client.conf do PipeWire)' "
-   rm -rf ~/.config/pulse
-    mkdir -p ~/.config/pulse
+  rm -rf ~/.config/pulse
+  mkdir -p ~/.config/pulse
 "
 # O script do PipeWire cria ~/.config/pulse/client.conf com autospawn=no e
 # daemon-binary=/bin/true. Isso não bloquearia o 'pulseaudio --start' direto do
 # autostart acima (é uma invocação direta, não passa pelo autospawn), mas remover
 # a pasta inteira evita qualquer resíduo de config ou cookie de sessões anteriores.
-
 
 echo
 log_ok "${green}Configuração concluída.${rst}"
