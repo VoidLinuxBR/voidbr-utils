@@ -479,6 +479,14 @@ run_cmd 'remover PipeWire global' "
     sudo rm -f /etc/xdg/autostart/pipewire-pulse.desktop
     sudo rm -f /etc/xdg/autostart/wireplumber.desktop
 "
+run_cmd 'remover qualquer config ALSA local que redirecione áudio' "
+    rm -rf ~/.config/alsa
+"
+run_cmd 'remover PiipeWire ocal' "
+    rm -f ~/.config/autostart/pipewire.desktop
+    rm -f ~/.config/autostart/pipewire-pulse.dekstop
+    rm -f ~/.config/autostart/wireplumber.dekstop
+"
 run_cmd 'remover PulseAudio global' "
     sudo rm -f /etc/xdg/autostart/pulseaudio.desktop
     sudo rm -f /etc/xdg/autostart/pulseaudio-kde.desktop
@@ -501,21 +509,33 @@ run_cmd 'limpar /etc/asound.conf residual' "
 ############################################################
 run_cmd 'criar diretórios necessários' "
     mkdir -p ~/.config/autostart
-    mkdir -p ~/.config/alsa/conf.d
 "
-run_cmd '---- autostart do PipeWire ----' "
+run_cmd '---- autostart do PipeWire (XDG Autostart, se a DE suportar) ----' "
     ln -sf /usr/share/applications/pipewire.desktop ~/.config/autostart/pipewire.desktop
-    ln -sf /usr/share/applications/pipewire-pulse.desktop ~/.config/autostart/pipewire-pulse.desktop
-    ln -sf /usr/share/applications/wireplumber.desktop ~/.config/autostart/wireplumber.desktop
 "
+
+run_cmd '---- session manager (WirePlumber) + interface PulseAudio ----' "
+    mkdir -p ~/.config/pipewire/pipewire.conf.d
+    ln -sf /usr/share/examples/wireplumber/10-wireplumber.conf ~/.config/pipewire/pipewire.conf.d/10-wireplumber.conf
+    ln -sf /usr/share/examples/pipewire/20-pipewire-pulse.conf ~/.config/pipewire/pipewire.conf.d/20-pipewire-pulse.conf
+"
+
 run_cmd 'remover autostart do PulseAudio (evitar conflito)' "
     rm -f ~/.config/autostart/pulseaudio.desktop
     rm -f ~/.config/autostart/pulseaudio-kde.desktop
 "
-run_cmd '---- integração ALSA → PipeWire ----' "
-    ln -sf /usr/share/alsa/alsa.conf.d/50-pipewire.conf ~/.config/alsa/conf.d/50-pipewire.conf
-    ln -sf /usr/share/alsa/alsa.conf.d/99-pipewire-default.conf ~/.config/alsa/conf.d/99-pipewire-default.conf
+run_cmd '---- integração ALSA → PipeWire (sistema) ----' "
+    sudo mkdir -p /etc/alsa/conf.d
+    sudo ln -sf /usr/share/alsa/alsa.conf.d/50-pipewire.conf /etc/alsa/conf.d/50-pipewire.conf
+    sudo ln -sf /usr/share/alsa/alsa.conf.d/99-pipewire-default.conf /etc/alsa/conf.d/99-pipewire-default.conf
 "
+# Nota: alsa-lib (alsa.conf @hooks) só carrega automaticamente:
+#   /var/lib/alsa/conf.d, /usr/etc/alsa/conf.d, /etc/alsa/conf.d,
+#   /etc/asound.conf, ~/.asoundrc, ~/.config/alsa/asoundrc
+# ~/.config/alsa/conf.d NÃO está nessa lista — link ali não tem efeito algum.
+# Confirmado via 'inxi -Aa': plugin "pipewire-alsa" só aparece listado como
+# ativo depois de mover os links pra /etc/alsa/conf.d/. Mesmo caminho usado
+# pelo Arch (pipewire-alsa PKGBUILD) e pela doc oficial do Void.
 
 ############################################################
 # JACK — compatibilidade global (opcional, evita precisar de pw-jack)
@@ -599,3 +619,4 @@ echo
 msg "${cyan}Resiliência entre trocas de sessão:${rst}"
 msg_tab "ps aux | grep -E 'pulseaudio|pipewire|wireplumber'"
 msg_tab "(rodar antes e depois de trocar de sessão, pra checar processo órfão)"
+
