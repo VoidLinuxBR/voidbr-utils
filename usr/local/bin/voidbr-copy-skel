@@ -162,6 +162,14 @@ backup_files() {
     fi
 }
 
+if (( EUID == 0 )); then
+    printf '%s✗ ERRO:%s este programa não pode ser executado como root.\n' \
+        "${red}${bold}" "$reset" >&2
+    printf 'Execute como usuário normal: %s%s%s\n' \
+        "$green" "$(basename "$0")" "$reset"
+    exit 1
+fi
+
 # -----------------------------------------------------------------------------
 # Argumentos
 # -----------------------------------------------------------------------------
