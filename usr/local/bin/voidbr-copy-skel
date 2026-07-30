@@ -1,0 +1,249 @@
+#!/usr/bin/env bash
+
+set -e
+
+# -----------------------------------------------------------------------------
+# voidbr-copy-skel
+# Copia /etc/skel para o HOME preservando os arquivos substituídos em backup.
+# -----------------------------------------------------------------------------
+
+skel="/etc/skel"
+dest="${HOME:?HOME não definido}"
+backup="$HOME/.voidbr-skel-backup-$(date +%Y%m%d-%H%M%S)"
+
+# -----------------------------------------------------------------------------
+# Cores
+# -----------------------------------------------------------------------------
+
+if [[ -t 1 ]] && command -v tput >/dev/null 2>&1; then
+    reset="$(tput sgr0)"
+    bold="$(tput bold)"
+    dim="$(tput dim)"
+
+    red="$(tput setaf 1)"
+    green="$(tput setaf 2)"
+    yellow="$(tput setaf 3)"
+    blue="$(tput setaf 4)"
+    magenta="$(tput setaf 5)"
+    cyan="$(tput setaf 6)"
+    white="$(tput setaf 7)"
+else
+    reset=""
+    bold=""
+    dim=""
+
+    red=""
+    green=""
+    yellow=""
+    blue=""
+    magenta=""
+    cyan=""
+    white=""
+fi
+
+# -----------------------------------------------------------------------------
+# Usage
+# -----------------------------------------------------------------------------
+
+usage() {
+    cat <<EOF
+
+${bold}${cyan}voidbr-copy-skel${reset}
+
+${white}Uso:${reset}
+  ${green}$(basename "$0")${reset} ${dim}[OPÇÃO]${reset}
+
+${white}Descrição:${reset}
+  Copia todo o conteúdo de:
+
+    ${cyan}$skel${reset}
+
+  para o HOME do usuário atual:
+
+    ${cyan}$dest${reset}
+
+  Antes da cópia, todos os arquivos existentes que seriam
+  substituídos são preservados em um diretório de backup.
+
+${white}Backup:${reset}
+  ${magenta}~/.voidbr-skel-backup-AAAAMMDD-HHMMSS/${reset}
+
+${yellow}${bold}ATENÇÃO:${reset}
+  Arquivos existentes no HOME com o mesmo nome dos arquivos
+  encontrados em ${cyan}$skel${reset} serão ${red}${bold}SUBSTITUÍDOS${reset}.
+
+${white}Opções:${reset}
+  ${green}-h, --help${reset}    Exibe esta ajuda
+
+${white}Exemplo:${reset}
+  ${green}$(basename "$0")${reset}
+
+EOF
+}
+
+# -----------------------------------------------------------------------------
+# Confirmação
+# -----------------------------------------------------------------------------
+
+confirm() {
+    local answer
+
+    echo
+    printf '%s\n' "${yellow}${bold}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${reset}"
+    printf '%s\n' "${yellow}${bold}  ⚠  ATENÇÃO${reset}"
+    printf '%s\n' "${yellow}${bold}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${reset}"
+    echo
+
+    printf '  %sOrigem :%s %s\n' "$white" "$reset" "${cyan}$skel${reset}"
+    printf '  %sDestino:%s %s\n' "$white" "$reset" "${cyan}$dest${reset}"
+    printf '  %sBackup :%s %s\n' "$white" "$reset" "${magenta}$backup${reset}"
+
+    echo
+    printf '  Arquivos existentes serão %s%sSUBSTITUÍDOS%s após o backup.\n' \
+        "$red" "$bold" "$reset"
+    echo
+
+    printf '%sDeseja continuar? %s[s/N]%s: ' "$bold" "$yellow" "$reset"
+    read -r answer
+
+    case "$answer" in
+        s|S|sim|Sim|SIM)
+            ;;
+        *)
+            echo
+            printf '%s●%s Operação cancelada.\n\n' "$yellow" "$reset"
+            exit 0
+            ;;
+    esac
+}
+
+# -----------------------------------------------------------------------------
+# Backup
+# -----------------------------------------------------------------------------
+
+backup_files() {
+    local src
+    local rel
+    local dst
+    local count=0
+
+    echo
+    printf '%s◆%s %sVerificando arquivos existentes...%s\n' \
+        "$cyan" "$reset" "$bold" "$reset"
+    echo
+
+    while IFS= read -r -d '' src; do
+        rel="${src#"$skel"/}"
+        dst="$dest/$rel"
+
+        if [[ -e "$dst" || -L "$dst" ]]; then
+            mkdir -p "$backup/$(dirname "$rel")"
+
+            printf '  %s↳%s %-8s %s%s%s\n' \
+                "$magenta" "$reset" \
+                "backup" "$dim" "$rel" "$reset"
+
+            cp -pa "$dst" "$backup/$rel"
+
+            ((count++)) || true
+        fi
+    done < <(find "$skel" \( -type f -o -type l \) -print0)
+
+    echo
+
+    if (( count > 0 )); then
+        printf '%s✓%s %s%d arquivo(s) preservado(s) no backup.%s\n' \
+            "$green" "$reset" "$bold" "$count" "$reset"
+
+        printf '  %s%s%s\n' "$magenta" "$backup" "$reset"
+    else
+        printf '%s✓%s Nenhum arquivo existente precisa de backup.\n' \
+            "$green" "$reset"
+    fi
+}
+
+# -----------------------------------------------------------------------------
+# Argumentos
+# -----------------------------------------------------------------------------
+
+case "${1:-}" in
+    -h|--help)
+        usage
+        exit 0
+        ;;
+
+    "")
+        ;;
+
+    *)
+        echo
+        printf '%s✗ ERRO:%s opção inválida: %s\n' \
+            "${red}${bold}" "$reset" "$1" >&2
+        usage
+        exit 1
+        ;;
+esac
+
+# -----------------------------------------------------------------------------
+# Validações
+# -----------------------------------------------------------------------------
+
+if [[ ! -d "$skel" ]]; then
+    printf '%s✗ ERRO:%s diretório não encontrado: %s\n' \
+        "${red}${bold}" "$reset" "$skel" >&2
+    exit 1
+fi
+
+if [[ ! -d "$dest" ]]; then
+    printf '%s✗ ERRO:%s HOME não encontrado: %s\n' \
+        "${red}${bold}" "$reset" "$dest" >&2
+    exit 1
+fi
+
+# -----------------------------------------------------------------------------
+# Confirmação
+# -----------------------------------------------------------------------------
+
+confirm
+
+# -----------------------------------------------------------------------------
+# Backup
+# -----------------------------------------------------------------------------
+
+backup_files
+
+# -----------------------------------------------------------------------------
+# Cópia
+# -----------------------------------------------------------------------------
+
+echo
+printf '%s◆%s %sCopiando configurações do VoidBR...%s\n' \
+    "$cyan" "$reset" "$bold" "$reset"
+echo
+
+printf '  %s%s%s\n' "$dim" "$skel → $dest" "$reset"
+echo
+
+cp -Rvpa "$skel"/. "$dest"/
+
+# -----------------------------------------------------------------------------
+# Finalização
+# -----------------------------------------------------------------------------
+
+echo
+printf '%s%s━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━%s\n' \
+    "$green" "$bold" "$reset"
+
+printf '%s✓ Cópia concluída com sucesso.%s\n' \
+    "${green}${bold}" "$reset"
+
+printf '%s%s━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━%s\n' \
+    "$green" "$bold" "$reset"
+
+if [[ -d "$backup" ]]; then
+    echo
+    printf '%sBackup:%s\n' "$white" "$reset"
+    printf '  %s%s%s\n' "$magenta" "$backup" "$reset"
+fi
+
+echo
