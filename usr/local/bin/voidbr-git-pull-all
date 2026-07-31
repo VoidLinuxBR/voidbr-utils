@@ -48,23 +48,21 @@ declare _VERSION_="0.07.31-20260731"
 declare APPDESC="$APP - Wraper for "
 declare -A PACKAGEDEP=(
 	[gettext]=gettext
-	[dd]=coreutils
-	[hdparm]=hdparm
-	[fio]=fio
+	[git]=git
 	[tput]=ncurses
 )
 # Mapa: [distro]="lista de pacotes"
 declare -A DISTRO_PKGS=(
-	["voidbr"]="gettext rsync parted curl xz lvm2"
-	["void"]="gettext rsync parted curl xz lvm2"
-	["void-live"]="gettext rsync parted curl xz lvm2"
-	["voidlinux"]="gettext rsync parted curl xz lvm2"
-	["chili"]="gettext rsync parted curl xz"
-	["chililinux"]="gettext rsync parted curl xz"
-	["arch"]="gettext rsync parted curl xz"
-	["manjaro"]="gettext rsync parted curl xz"
-	["biglinux"]="gettext rsync parted curl xz"
-	["debian"]="gettext-base rsync parted curl xz-utils"
+	["voidbr"]="gettext git ncurses"
+	["void"]="gettext git ncurses"
+	["void-live"]="gettext git ncurses"
+	["voidlinux"]="gettext git ncurses"
+	["chili"]="gettext git ncurses"
+	["chililinux"]="gettext git ncurses"
+	["arch"]="gettext git ncurses"
+	["manjaro"]="gettext git ncurses"
+	["biglinux"]="gettext git ncurses"
+	["debian"]="gettext git ncurses"
 )
 # Mapa: [distro]="comando de instalação"
 declare -A DISTRO_MGR=(
@@ -79,19 +77,14 @@ declare -A DISTRO_MGR=(
 	["biglinux"]="pacman -Sy --needed --noconfirm"
 	["debian"]="apt-get install -y"
 )
-declare dialogRcFile="$HOME/.dialogrc"
 
-cleanup() { rm -f "$dialogRcFile"; }
-#trap cleanup EXIT
-#MostraErro() { echo "erro: ${red}$1${reset} => comando: ${cyan}'$2'${reset} => result=${yellow}$3${reset}"; }
-#trap 'MostraErro "$APP[$FUNCNAME][$LINENO]" "$BASH_COMMAND" "$?"; exit 1' ERR
-
-sh_check_terminal() { [ ! -t 1 ] && use_color=false; }
+has_command() {
+  command -v "$1" >/dev/null && return 0 || return 1
+}
 
 set_varcolors() {
-	sh_check_terminal
 	# does the terminal support true-color?
-	if [[ -n "$(command -v "tput")" ]]; then
+	if has_command tput; then
 		#tput setaf 127 | cat -v  #capturar saida
 		: "${RED=$(tput bold)$(tput setaf 196)}"
 		: "${GREEN=$(tput bold)$(tput setaf 2)}"
@@ -159,7 +152,7 @@ set_varcolors() {
 		: "${CROSS="${clrkey}[${red}✗${clrkey}]${rst}"}"
 		: "${MID="${clrkey}[${red}✗${green}✓${clrkey}]${rst}"}"
 		: "${WARN="${clrkey}[${yellow}⚠${clrkey}]${yellow}"}"
-		#		: "${INFO="${cyan}[➜]${rst}"}"
+#		: "${INFO="${cyan}[➜]${rst}"}"
 		: "${INFO="${cyan}[⛭]${rst}"}"
 
 		# dialog colors
@@ -193,67 +186,6 @@ unset_varcolors() {
 	INFO="${white}[${cinza}i${rst}${white}]${rst}"
 }
 
-sh_create_dialogrc() {
-	cat >"$dialogRcFile" <<EOF_DIALOGRC
-screen_color = (white,black,off)
-dialog_color = (white,black,off)
-title_color = (green,black,on)
-border_color = dialog_color
-shadow_color = (black,black,on)
-button_inactive_color = dialog_color
-button_key_inactive_color = dialog_color
-button_label_inactive_color = dialog_color
-button_active_color = (black,green,on)
-button_key_active_color = button_active_color
-button_label_active_color = (white,green,on)
-tag_key_selected_color = (white,green,on)
-item_selected_color = tag_key_selected_color
-form_text_color = (green,black,on)
-form_item_readonly_color = (cyan,black,on)
-itemhelp_color = (white,green,off)
-inputbox_color = dialog_color
-inputbox_border_color = dialog_color
-searchbox_color = dialog_color
-searchbox_title_color = title_color
-searchbox_border_color = border_color
-position_indicator_color = title_color
-menubox_color = dialog_color
-menubox_border_color = border_color
-item_color = dialog_color
-tag_color = title_color
-tag_selected_color = button_label_active_color
-tag_key_color = button_key_inactive_color
-check_color = dialog_color
-check_selected_color = button_active_color
-uarrow_color = screen_color
-darrow_color = screen_color
-form_active_text_color = button_active_color
-gauge_color = title_color
-border2_color = dialog_color
-searchbox_border2_color = dialog_color
-menubox_border2_color = dialog_color
-separate_widget = ''
-tab_len = 0
-visit_items = off
-use_shadow = off
-use_colors = on
-EOF_DIALOGRC
-	export DIALOGRC="$dialogRcFile"
-}
-
-# Teste se o terminal suporta caracteres gráficos estendidos
-sh_ascii_lines() {
-	#Isso força o dialog a usar caracteres ASCII básicos para as bordas.
-	#if [[ "$LANG" =~ 'UTF-8' ]]; then
-	[[ "$(printf '\u250C')" == "┌" ]]
-	export NCURSES_NO_UTF8_ACS=$((!$?))
-}
-
-sh_setEnvironment() {
-	[[ ! -e "$dialogRcFile" ]] && sh_create_dialogrc
-	sh_ascii_lines
-}
-
 sh_checkroot() {
 	((EUID != 0)) && elevate_to_root "$@" || return 0
 }
@@ -262,11 +194,11 @@ elevate_to_root() {
 	log_err "This script must be run as root. Elevating privileges..."
 	ccabec+='root [elevated]'
 	# Tenta usar sudo primeiro (caso esteja configurado)
-	if command -v sudo >/dev/null 2>&1; then
+	if has_command sudo; then
 		exec sudo bash "$0" "$@"
 	fi
 	# Se sudo falhar, tenta su
-	if command -v su >/dev/null 2>&1; then
+	if has_command su; then
 		exec su -c "$0 $*"
 	fi
 	die "Error: Unable to elevate privileges. Run manually as root."
@@ -326,25 +258,25 @@ run_cmd() {
 }
 
 sh_copyright() {
-	cat <<-EOF-COPY
-		${bold}${cyan}${0##*/} v${_VERSION_}${rst}
-		${bold}${cyan}${APPDESC}${rst}
-		${bold}${orange}Copyright (c) 2019-2026, ${reset}ChiliLinux Development Team <https://chililinux.com> <https://github.com/chililinux>
-		${bold}${orange}Copyright (c) 2019-2026, ${reset}Vilmar Catafesta <vcatafesta@gmail.com>${black}
-	EOF-COPY
+  cat <<EOF-COPY
+${bold}${cyan}${0##*/} v${_VERSION_}${rst}
+${bold}${cyan}${APPDESC}${rst}
+${bold}${orange}Copyright (c) 2019-2026, ${reset}ChiliLinux Development Team <https://github.com/chililinux>
+${bold}${orange}Copyright (c) 2019-2026, ${reset}Vilmar Catafesta <vcatafesta@gmail.com>${black}
+EOF-COPY
 }
 
 sh_version() {
-	cat <<-EOF-VERSION
-		  $(sh_copyright)
+  cat <<-EOF-VERSION
+  $(sh_copyright)
 
-		        $(gettext 'Este é um software livre: você é livre para alterá-lo e redistribuí-lo.')
-		        $(gettext 'O $APP é disponibilizado para você sob a ${yellow}Licença MIT${black}, e')
-		        $(gettext 'inclui software de código aberto sob uma variedade de outras licenças.')
-		        $(gettext 'Você pode ler instruções sobre como baixar e criar para você mesmo')
-		        $(gettext 'o código fonte específico usado para criar esta cópia.')
-		        ${red}$(gettext 'Este programa vem com absolutamente NENHUMA garantia.')${reset}
-	EOF-VERSION
+  $(gettext 'Este é um software livre: você é livre para alterá-lo e redistribuí-lo.')
+  $(gettext 'O $APP é disponibilizado para você sob a ${yellow}Licença MIT${black}, e')
+  $(gettext 'inclui software de código aberto sob uma variedade de outras licenças.')
+  $(gettext 'Você pode ler instruções sobre como baixar e criar para você mesmo')
+  $(gettext 'o código fonte específico usado para criar esta cópia.')
+  ${red}$(gettext 'Este programa vem com absolutamente NENHUMA garantia.')${reset}
+EOF-VERSION
 }
 
 msg() { echo -e "${INFO} ${*}${reset}"; }
@@ -388,7 +320,7 @@ sh_checkDependencies() {
 	local cmsgPkg="$(gettext "instalar pacote")"
 
 	for d in "${!PACKAGEDEP[@]}"; do
-		if ! command -v "$d" &>/dev/null; then
+		if ! has_command "$d"; then
 			pkg="${PACKAGEDEP[$d]}"
 			log_err "${red}Error${rst}: ${cmsgNot} $(printf "${cyan}%-15s${rst}\n" "$d") -> ${cmsgPkg} ${cyan}${pkg}${rst}"
 			missing+=("${pkg}")
@@ -446,7 +378,8 @@ usage() {
 		só é mesclado de fato se estiver realmente desatualizado em relação ao remoto.
 
 		${yellow}Opções:${reset}
-		  ${green}-h, --help${reset}     Mostra esta ajuda e sai.
+		  ${green}-h, --help${reset}     Mostra esta ajuda e sai
+		  ${green}-V, --version${reset}     Mostra versão do applicativo
 
 		${yellow}Variáveis de ambiente:${reset}
 		  ${green}JOBS=N${reset}           Quantidade de repositórios processados em paralelo.
@@ -466,6 +399,10 @@ for arg in "$@"; do
 	case "$arg" in
 	-h | --help)
 		usage
+		exit 0
+		;;
+	-V | --version)
+		sh_version
 		exit 0
 		;;
 	esac
