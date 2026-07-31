@@ -8,8 +8,7 @@
 #  (Hyprland/Sway/Mango nao leem ~/.config/autostart; se voce usa DE, ela cuida disso sozinha).
 #
 #  Created: qui 12 fev 2026 06:43:56 -04
-#  Altered: qui 12 fev 2026 06:43:56 -04
-#  Updated: qui 12 fev 2026 06:43:56 -04
+#  Updated: qui 30 jul 2026 09:35:39 -04
 #
 #  Copyright (c) 2019-2026, Vilmar Catafesta <vcatafesta@gmail.com>
 #  Copyright (c) 2019-2026, ChiliLinux Development Team <https://chililinux.com> <https://github.com/chililinux>
@@ -49,7 +48,7 @@ shopt -s extglob
 
 #system
 declare APP="${0##*/}"
-declare _VERSION_="0.02.12-20260212"
+declare _VERSION_="0.07.30-20260730"
 declare APPDESC="$APP - Wraper for "
 declare distro="$(uname -n)"
 declare -A PACKAGEDEP=(
@@ -484,8 +483,8 @@ run_cmd 'remover qualquer config ALSA local que redirecione áudio' "
 "
 run_cmd 'remover PiipeWire ocal' "
     rm -f ~/.config/autostart/pipewire.desktop
-    rm -f ~/.config/autostart/pipewire-pulse.dekstop
-    rm -f ~/.config/autostart/wireplumber.dekstop
+    rm -f ~/.config/autostart/pipewire-pulse.desktop
+    rm -f ~/.config/autostart/wireplumber.desktop
 "
 run_cmd 'remover PulseAudio global' "
     sudo rm -f /etc/xdg/autostart/pulseaudio.desktop
