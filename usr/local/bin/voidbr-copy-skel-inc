@@ -1,0 +1,560 @@
+#!/usr/bin/env bash
+
+set -e
+
+# =============================================================================
+# voidbr-copy-skel
+#
+# Sincroniza /etc/skel com o HOME do usuário atual.
+#
+# - deve ser executado como usuário normal
+# - arquivos idênticos são ignorados
+# - arquivos diferentes são salvos em backup antes da substituição
+# - arquivos novos são copiados
+# - symlinks são comparados pelo destino
+# - arquivos copiados de /etc/skel passam a pertencer ao usuário atual
+# =============================================================================
+
+skel="/etc/skel"
+dest="${HOME:?HOME não definido}"
+backup="$HOME/.voidbr-skel-backup-$(date +%Y%m%d-%H%M%S)"
+
+# -----------------------------------------------------------------------------
+# Cores
+# -----------------------------------------------------------------------------
+
+if [[ -t 1 ]] && command -v tput >/dev/null 2>&1; then
+    reset="$(tput sgr0)"
+    bold="$(tput bold)"
+    dim="$(tput dim)"
+
+    red="$(tput setaf 1)"
+    green="$(tput setaf 2)"
+    yellow="$(tput setaf 3)"
+    blue="$(tput setaf 4)"
+    magenta="$(tput setaf 5)"
+    cyan="$(tput setaf 6)"
+    white="$(tput setaf 7)"
+else
+    reset=""
+    bold=""
+    dim=""
+
+    red=""
+    green=""
+    yellow=""
+    blue=""
+    magenta=""
+    cyan=""
+    white=""
+fi
+
+# -----------------------------------------------------------------------------
+# Contadores
+# -----------------------------------------------------------------------------
+
+count_new=0
+count_updated=0
+count_identical=0
+count_backup=0
+count_dirs=0
+count_errors=0
+
+# -----------------------------------------------------------------------------
+# Usage
+# -----------------------------------------------------------------------------
+
+usage() {
+    cat <<EOF
+
+${bold}${cyan}voidbr-copy-skel${reset}
+
+${white}Uso:${reset}
+  ${green}$(basename "$0")${reset} ${dim}[OPÇÃO]${reset}
+
+${white}Descrição:${reset}
+  Sincroniza o conteúdo de:
+
+    ${cyan}$skel${reset}
+
+  com o HOME do usuário atual:
+
+    ${cyan}$dest${reset}
+
+  Somente arquivos novos ou diferentes serão copiados.
+
+  Arquivos existentes que forem diferentes serão preservados
+  antes da substituição em:
+
+    ${magenta}~/.voidbr-skel-backup-AAAAMMDD-HHMMSS/${reset}
+
+${white}Comportamento:${reset}
+
+  ${green}=${reset}  Idêntico      → ignorado
+  ${cyan}+${reset}  Novo          → copiado
+  ${yellow}↻${reset}  Diferente     → backup + atualização
+  ${magenta}↳${reset}  Backup        → original preservado
+  ${red}!${reset}  Conflito      → nenhuma alteração
+
+${yellow}${bold}ATENÇÃO:${reset}
+  Arquivos diferentes existentes no HOME serão ${red}${bold}SUBSTITUÍDOS${reset}
+  somente depois da criação do backup.
+
+  Este programa deve ser executado como ${green}usuário normal${reset}.
+  Não utilize sudo.
+
+${white}Opções:${reset}
+  ${green}-h, --help${reset}    Exibe esta ajuda
+
+${white}Exemplo:${reset}
+  ${green}$(basename "$0")${reset}
+
+EOF
+}
+
+# -----------------------------------------------------------------------------
+# Validação
+# -----------------------------------------------------------------------------
+
+validate() {
+    if (( EUID == 0 )); then
+        echo
+        printf '%s✗ ERRO:%s este programa não pode ser executado como root.\n' \
+            "${red}${bold}" "$reset" >&2
+
+        printf 'Execute como usuário normal: %s%s%s\n\n' \
+            "$green" "$(basename "$0")" "$reset"
+
+        exit 1
+    fi
+
+    if [[ ! -d "$skel" ]]; then
+        printf '%s✗ ERRO:%s diretório não encontrado: %s\n' \
+            "${red}${bold}" "$reset" "$skel" >&2
+        exit 1
+    fi
+
+    if [[ ! -d "$dest" ]]; then
+        printf '%s✗ ERRO:%s HOME não encontrado: %s\n' \
+            "${red}${bold}" "$reset" "$dest" >&2
+        exit 1
+    fi
+
+    if [[ "$dest" == "/" ]]; then
+        printf '%s✗ ERRO:%s HOME inválido: /\n' \
+            "${red}${bold}" "$reset" >&2
+        exit 1
+    fi
+
+    if [[ ! -w "$dest" ]]; then
+        printf '%s✗ ERRO:%s HOME sem permissão de escrita: %s\n' \
+            "${red}${bold}" "$reset" "$dest" >&2
+        exit 1
+    fi
+}
+
+# -----------------------------------------------------------------------------
+# Confirmação
+# -----------------------------------------------------------------------------
+
+confirm() {
+    local answer
+
+    echo
+    printf '%s\n' \
+        "${yellow}${bold}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${reset}"
+
+    printf '%s\n' \
+        "${yellow}${bold}  ⚠  SINCRONIZAÇÃO DO /etc/skel${reset}"
+
+    printf '%s\n' \
+        "${yellow}${bold}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${reset}"
+
+    echo
+
+    printf '  %sUsuário :%s %s\n' \
+        "$white" "$reset" "${green}$(id -un)${reset}"
+
+    printf '  %sOrigem  :%s %s\n' \
+        "$white" "$reset" "${cyan}$skel${reset}"
+
+    printf '  %sDestino :%s %s\n' \
+        "$white" "$reset" "${cyan}$dest${reset}"
+
+    printf '  %sBackup  :%s %s\n' \
+        "$white" "$reset" "${magenta}$backup${reset}"
+
+    echo
+
+    printf '  Somente arquivos %snovos%s ou %sdiferentes%s serão copiados.\n' \
+        "$cyan" "$reset" "$yellow" "$reset"
+
+    printf '  Arquivos diferentes serão %spreservados em backup%s.\n' \
+        "$magenta" "$reset"
+
+    echo
+
+    printf '%sDeseja continuar? %s[s/N]%s: ' \
+        "$bold" "$yellow" "$reset"
+
+    read -r answer
+
+    case "$answer" in
+        s|S|sim|Sim|SIM)
+            ;;
+        *)
+            echo
+            printf '%s●%s Operação cancelada.\n\n' \
+                "$yellow" "$reset"
+            exit 0
+            ;;
+    esac
+}
+
+# -----------------------------------------------------------------------------
+# Copiar /etc/skel -> HOME
+#
+# IMPORTANTE:
+# Não preserva ownership de /etc/skel.
+# O arquivo criado passa a pertencer ao usuário que executa o programa.
+# -----------------------------------------------------------------------------
+
+copy_to_home() {
+    local src="$1"
+    local dst="$2"
+
+    mkdir -p "$(dirname "$dst")"
+
+    cp -a --no-preserve=ownership "$src" "$dst"
+}
+
+# -----------------------------------------------------------------------------
+# Backup
+#
+# Aqui preservamos os atributos porque o arquivo original já pertence
+# ao usuário.
+# -----------------------------------------------------------------------------
+
+backup_item() {
+    local src="$1"
+    local rel="$2"
+    local backup_dest="$backup/$rel"
+
+    mkdir -p "$(dirname "$backup_dest")"
+
+    cp -pa "$src" "$backup_dest"
+
+    ((count_backup++)) || true
+
+    printf '  %s↳%s %-12s %s\n' \
+        "$magenta" "$reset" \
+        "backup" "$rel"
+}
+
+# -----------------------------------------------------------------------------
+# Arquivo normal
+# -----------------------------------------------------------------------------
+
+process_file() {
+    local src="$1"
+    local rel="$2"
+    local dst="$dest/$rel"
+
+    # -------------------------------------------------------------------------
+    # Novo
+    # -------------------------------------------------------------------------
+
+    if [[ ! -e "$dst" && ! -L "$dst" ]]; then
+
+        copy_to_home "$src" "$dst"
+
+        ((count_new++)) || true
+
+        printf '  %s+%s %-12s %s\n' \
+            "$cyan" "$reset" \
+            "novo" "$rel"
+
+        return
+    fi
+
+    # -------------------------------------------------------------------------
+    # Arquivo existente
+    # -------------------------------------------------------------------------
+
+    if [[ -f "$dst" && ! -L "$dst" ]]; then
+
+        if cmp -s "$src" "$dst"; then
+
+            ((count_identical++)) || true
+
+            printf '  %s=%s %-12s %s%s%s\n' \
+                "$green" "$reset" \
+                "idêntico" "$dim" "$rel" "$reset"
+
+            return
+        fi
+
+        backup_item "$dst" "$rel"
+
+        copy_to_home "$src" "$dst"
+
+        ((count_updated++)) || true
+
+        printf '  %s↻%s %-12s %s\n' \
+            "$yellow" "$reset" \
+            "atualizado" "$rel"
+
+        return
+    fi
+
+    # -------------------------------------------------------------------------
+    # Conflito
+    # -------------------------------------------------------------------------
+
+    printf '  %s!%s %-12s %s\n' \
+        "$red" "$reset" \
+        "conflito" "$rel"
+
+    printf '    %sArquivo no HOME possui tipo diferente.%s\n' \
+        "$dim" "$reset"
+
+    ((count_errors++)) || true
+}
+
+# -----------------------------------------------------------------------------
+# Symlink
+# -----------------------------------------------------------------------------
+
+process_link() {
+    local src="$1"
+    local rel="$2"
+    local dst="$dest/$rel"
+
+    local src_link
+    local dst_link
+
+    src_link="$(readlink "$src")"
+
+    # -------------------------------------------------------------------------
+    # Novo
+    # -------------------------------------------------------------------------
+
+    if [[ ! -e "$dst" && ! -L "$dst" ]]; then
+
+        copy_to_home "$src" "$dst"
+
+        ((count_new++)) || true
+
+        printf '  %s+%s %-12s %s %s→ %s%s\n' \
+            "$cyan" "$reset" \
+            "novo" "$rel" \
+            "$dim" "$src_link" "$reset"
+
+        return
+    fi
+
+    # -------------------------------------------------------------------------
+    # Symlink existente
+    # -------------------------------------------------------------------------
+
+    if [[ -L "$dst" ]]; then
+
+        dst_link="$(readlink "$dst")"
+
+        if [[ "$src_link" == "$dst_link" ]]; then
+
+            ((count_identical++)) || true
+
+            printf '  %s=%s %-12s %s%s%s\n' \
+                "$green" "$reset" \
+                "idêntico" "$dim" "$rel" "$reset"
+
+            return
+        fi
+
+        backup_item "$dst" "$rel"
+
+        rm -f "$dst"
+
+        copy_to_home "$src" "$dst"
+
+        ((count_updated++)) || true
+
+        printf '  %s↻%s %-12s %s %s→ %s%s\n' \
+            "$yellow" "$reset" \
+            "atualizado" "$rel" \
+            "$dim" "$src_link" "$reset"
+
+        return
+    fi
+
+    # -------------------------------------------------------------------------
+    # Conflito
+    # -------------------------------------------------------------------------
+
+    printf '  %s!%s %-12s %s\n' \
+        "$red" "$reset" \
+        "conflito" "$rel"
+
+    printf '    %sSymlink no /etc/skel encontra outro tipo no HOME.%s\n' \
+        "$dim" "$reset"
+
+    ((count_errors++)) || true
+}
+
+# -----------------------------------------------------------------------------
+# Diretório
+# -----------------------------------------------------------------------------
+
+process_dir() {
+    local src="$1"
+    local rel="$2"
+    local dst="$dest/$rel"
+
+    # Já existe
+    if [[ -d "$dst" && ! -L "$dst" ]]; then
+        return
+    fi
+
+    # Novo
+    if [[ ! -e "$dst" && ! -L "$dst" ]]; then
+
+        mkdir -p "$dst"
+
+        ((count_dirs++)) || true
+
+        return
+    fi
+
+    # Conflito
+    printf '  %s!%s %-12s %s/\n' \
+        "$red" "$reset" \
+        "conflito" "$rel"
+
+    printf '    %sEra esperado um diretório.%s\n' \
+        "$dim" "$reset"
+
+    ((count_errors++)) || true
+}
+
+# -----------------------------------------------------------------------------
+# Sincronização
+# -----------------------------------------------------------------------------
+
+sync_skel() {
+    local src
+    local rel
+
+    echo
+
+    printf '%s◆%s %sAnalisando /etc/skel...%s\n' \
+        "$cyan" "$reset" "$bold" "$reset"
+
+    echo
+
+    while IFS= read -r -d '' src; do
+
+        rel="${src#"$skel"/}"
+
+        if [[ -L "$src" ]]; then
+            process_link "$src" "$rel"
+
+        elif [[ -d "$src" ]]; then
+            process_dir "$src" "$rel"
+
+        elif [[ -f "$src" ]]; then
+            process_file "$src" "$rel"
+        fi
+
+    done < <(find "$skel" -mindepth 1 -print0)
+}
+
+# -----------------------------------------------------------------------------
+# Resumo
+# -----------------------------------------------------------------------------
+
+summary() {
+    echo
+
+    printf '%s%s━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━%s\n' \
+        "$green" "$bold" "$reset"
+
+    printf '%s✓ Sincronização concluída.%s\n' \
+        "${green}${bold}" "$reset"
+
+    printf '%s%s━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━%s\n' \
+        "$green" "$bold" "$reset"
+
+    echo
+
+    printf '  %s=%s Idênticos   : %d\n' \
+        "$green" "$reset" "$count_identical"
+
+    printf '  %s+%s Novos       : %d\n' \
+        "$cyan" "$reset" "$count_new"
+
+    printf '  %s↻%s Atualizados : %d\n' \
+        "$yellow" "$reset" "$count_updated"
+
+    printf '  %s↳%s Backups     : %d\n' \
+        "$magenta" "$reset" "$count_backup"
+
+    if (( count_dirs > 0 )); then
+        printf '  %s+%s Diretórios  : %d\n' \
+            "$blue" "$reset" "$count_dirs"
+    fi
+
+    if (( count_errors > 0 )); then
+        printf '  %s!%s Conflitos   : %d\n' \
+            "$red" "$reset" "$count_errors"
+    fi
+
+    if (( count_backup > 0 )); then
+        echo
+
+        printf '%sBackup:%s\n' \
+            "$white" "$reset"
+
+        printf '  %s%s%s\n' \
+            "$magenta" "$backup" "$reset"
+    fi
+
+    echo
+}
+
+# -----------------------------------------------------------------------------
+# Argumentos
+# -----------------------------------------------------------------------------
+
+case "${1:-}" in
+    -h|--help)
+        usage
+        exit 0
+        ;;
+
+    "")
+        ;;
+
+    *)
+        printf '%s✗ ERRO:%s opção inválida: %s\n' \
+            "${red}${bold}" "$reset" "$1" >&2
+
+        usage
+        exit 1
+        ;;
+esac
+
+# -----------------------------------------------------------------------------
+# Main
+# -----------------------------------------------------------------------------
+
+validate
+confirm
+sync_skel
+summary
+
+if (( count_errors > 0 )); then
+    exit 1
+fi
+
+exit 0
