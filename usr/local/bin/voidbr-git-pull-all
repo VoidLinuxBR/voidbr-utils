@@ -4,8 +4,7 @@
 #
 #  voidbr-git-pull-all
 #  Created: dom 15 fev 2026 10:42:38 -04
-#  Altered: dom 15 fev 2026 10:42:38 -04
-#  Updated: dom 15 fev 2026 10:42:38 -04
+#  Updated: sex 31 jul 2026 12:05:53 -04
 #
 #  Copyright (c) 2019-2026, Vilmar Catafesta <vcatafesta@gmail.com>
 #  Copyright (c) 2019-2026, ChiliLinux Development Team <https://chililinux.com> <https://github.com/chililinux>
@@ -45,7 +44,7 @@ shopt -s extglob
 
 #system
 declare APP="${0##*/}"
-declare _VERSION_="0.02.15-20260215"
+declare _VERSION_="0.07.31-20260731"
 declare APPDESC="$APP - Wraper for "
 declare -A PACKAGEDEP=(
 	[gettext]=gettext
@@ -433,31 +432,90 @@ set_varcolors
 ##########################################################################################################
 
 #
+# Parse de argumentos: --force reprocessa tudo, ignorando o estado salvo em /tmp.
+# -h/--help mostra o usage e sai. Os demais argumentos (se houver) continuam
+# sendo tratados como lista explícita de repositórios.
+#
+usage() {
+	cat <<-USAGE
+		${bold}${cyan}Uso:${reset} ${APP} [opções] [repositório ...]
+
+		Atualiza (git pull) todos os subdiretórios git do diretório atual,
+		ou apenas os repositórios passados explicitamente como argumento.
+
+		${yellow}Opções:${reset}
+		  ${green}-h, --help${reset}     Mostra esta ajuda e sai.
+		  ${green}--force${reset}        Ignora o estado salvo em /tmp (sucessos/falhas de
+		                 execuções anteriores) e reprocessa tudo.
+
+		${yellow}Variáveis de ambiente:${reset}
+		  ${green}JOBS=N${reset}           Quantidade de repositórios processados em paralelo.
+		                   Padrão: 4. Use JOBS=1 para sequencial.
+		  ${green}PULL_TIMEOUT=N${reset}   Timeout em segundos para cada 'git pull'.
+		                   Padrão: 60.
+
+		${yellow}Exemplos:${reset}
+		  ${cyan}${APP}${reset}                       # processa todos os repositórios da pasta atual
+		  ${cyan}${APP} repo1 repo2${reset}           # processa só repo1 e repo2
+		  ${cyan}${APP} --force${reset}               # ignora estado salvo, reprocessa tudo
+		  ${cyan}JOBS=8 ${APP}${reset}                # roda com 8 processos em paralelo
+		  ${cyan}PULL_TIMEOUT=120 ${APP}${reset}      # timeout de 120s por repositório
+
+		${yellow}Arquivos de estado:${reset}
+		  /tmp/${APP}-success-\$USER   Repositórios já processados com sucesso.
+		  /tmp/${APP}-failed-\$USER    Repositórios que falharam na última passagem
+		                              (entram primeiro na próxima execução).
+	USAGE
+}
+
+FORCE=0
+args=()
+for arg in "$@"; do
+	case "$arg" in
+	-h | --help)
+		usage
+		exit 0
+		;;
+	--force)
+		FORCE=1
+		;;
+	*)
+		args+=("$arg")
+		;;
+	esac
+done
+set -- "${args[@]}"
+
+#
 # APP já deve estar definido anteriormente no script.
 #
-workdir_hash="$(pwd -P | md5sum | cut -d' ' -f1)"
-state_file="/tmp/${APP}-success.$(id -u).${workdir_hash}"
-failed_file="/tmp/${APP}-failed.$(id -u).${workdir_hash}"
+state_file="/tmp/${APP}-success-${USER:-$(id -un)}"
+failed_file="/tmp/${APP}-failed-${USER:-$(id -un)}"
 
 touch "$state_file" "$failed_file" || {
 	printf "${red}Erro: não foi possível criar arquivos de estado em /tmp${reset}\n"
 	exit 1
 }
 
-getbranch() {
-	local tracking_ref
-	tracking_ref="$(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null)"
+if ((FORCE)); then
+	: >"$state_file"
+	: >"$failed_file"
+	printf "${yellow}--force: ignorando estado salvo, reprocessando todos os repositórios.${reset}\n"
+fi
 
-	if [[ -n "$tracking_ref" ]]; then
-		remote="${tracking_ref%%/*}"
-		branch="${tracking_ref#*/}"
+getbranch() {
+	if git rev-parse --verify origin/main >/dev/null 2>&1; then
+		branch='main'
+	elif git rev-parse --verify origin/master >/dev/null 2>&1; then
+		branch='master'
 	else
-		if git remote | grep -qx upstream; then
-			remote=upstream
-		else
-			remote=origin
-		fi
 		branch="$(git symbolic-ref --short HEAD 2>/dev/null)"
+	fi
+
+	if git remote | grep -qx upstream; then
+		remote=upstream
+	else
+		remote=origin
 	fi
 
 	[[ -n "$branch" ]]
@@ -465,13 +523,6 @@ getbranch() {
 
 already_processed() {
 	grep -Fqx -- "$1" "$state_file"
-}
-
-mark_processed() {
-	local repo="$1"
-
-	grep -Fqx -- "$repo" "$state_file" ||
-		printf '%s\n' "$repo" >>"$state_file"
 }
 
 #
@@ -597,12 +648,14 @@ updated=0
 current=0
 ignored=0
 failed=0
+dirty=0
 
 failed_repos=()
+dirty_repos=()
 
 # Número de repositórios processados em paralelo.
 # JOBS=1 (padrão) preserva o comportamento sequencial original.
-JOBS="${JOBS:-1}"
+JOBS="${JOBS:-4}"
 
 msg "Atualizando ${pending} de ${total} repositórios (JOBS=${JOBS})"
 
@@ -638,11 +691,24 @@ process_repo() {
 			(
 				cd "$repo" || exit 1
 
+				#
+				# Não mexe em repositório com alterações locais não commitadas.
+				# Evita sobrescrever/misturar trabalho em andamento com o pull.
+				#
+				dirty_status="$(git status --porcelain --untracked-files=no 2>/dev/null)"
+				if [[ -n "$dirty_status" ]]; then
+					echo "__REPO_SUJO__"
+					git status
+					exit 1
+				fi
+
 				getbranch || exit 1
+
+				git checkout "$branch" >/dev/null 2>&1 || exit 1
 
 				before="$(git rev-parse HEAD)" || exit 1
 
-				timeout "${PULL_TIMEOUT:-60}" git pull --ff-only "$remote" "$branch"
+				timeout "${PULL_TIMEOUT:-60}" git pull --no-ff "$remote" "$branch"
 				pull_status=$?
 
 				if ((pull_status == 124)); then
@@ -660,6 +726,13 @@ process_repo() {
 		)"
 
 		local status=$?
+
+		if grep -q '__REPO_SUJO__' <<<"$output"; then
+			printf "${yellow}[SUJO]${reset}\n"
+			printf '%s\n' "$output" | grep -v '__REPO_SUJO__'
+			printf 'DIRTY\n%s\n' "$repo" >"${resultfile}.status"
+			return
+		fi
 
 		if ((status == 0)); then
 			#
@@ -697,15 +770,53 @@ process_repo() {
 	} >"$resultfile" 2>&1
 }
 
-result_files=()
-running=0
 idx=0
+next_to_print=1
+
+#
+# Imprime na ordem original os resultados já concluídos.
+# Chamada depois de cada job terminar, permite acompanhar o progresso
+# em tempo real em vez de só ver tudo no final.
+#
+print_ready_results() {
+	while ((next_to_print <= idx)); do
+		local rf
+		rf="$resultdir/$(printf '%05d' "$next_to_print")"
+
+		[[ -f "${rf}.status" ]] || break
+
+		cat "$rf"
+
+		local word repo_name
+		{
+			read -r word
+			read -r repo_name
+		} <"${rf}.status" 2>/dev/null
+
+		case "$word" in
+		UPDATED) updated=$((updated + 1)) ;;
+		CURRENT) current=$((current + 1)) ;;
+		IGNORED) ignored=$((ignored + 1)) ;;
+		DIRTY)
+			dirty=$((dirty + 1))
+			dirty_repos+=("$repo_name")
+			;;
+		FAILED)
+			failed=$((failed + 1))
+			failed_repos+=("$repo_name")
+			;;
+		esac
+
+		next_to_print=$((next_to_print + 1))
+	done
+}
+
+running=0
 
 for repo in "${repos[@]}"; do
 	idx=$((idx + 1))
 	count=$((processed_before + idx))
 	resultfile="$resultdir/$(printf '%05d' "$idx")"
-	result_files+=("$resultfile")
 
 	process_repo "$repo" "$count" "$resultfile" &
 
@@ -713,32 +824,12 @@ for repo in "${repos[@]}"; do
 	if ((running >= JOBS)); then
 		wait -n
 		running=$((running - 1))
+		print_ready_results
 	fi
 done
 
 wait
-
-#
-# Imprime na ordem original (não na ordem de conclusão) e agrega os contadores.
-#
-for resultfile in "${result_files[@]}"; do
-	cat "$resultfile"
-
-	{
-		read -r word
-		read -r repo_name
-	} <"${resultfile}.status" 2>/dev/null
-
-	case "$word" in
-	UPDATED) updated=$((updated + 1)) ;;
-	CURRENT) current=$((current + 1)) ;;
-	IGNORED) ignored=$((ignored + 1)) ;;
-	FAILED)
-		failed=$((failed + 1))
-		failed_repos+=("$repo_name")
-		;;
-	esac
-done
+print_ready_results
 
 rm -f "${state_file}.lock" "${failed_file}.lock"
 
@@ -748,8 +839,19 @@ printf " Total         : %d\n" "$total"
 printf " ${green}Updated${reset}       : %d\n" "$updated"
 printf " ${cyan}Current${reset}       : %d\n" "$current"
 printf " ${yellow}Ignorados${reset}     : %d\n" "$ignored"
+printf " ${yellow}Sujos${reset}         : %d\n" "$dirty"
 printf " ${red}Falhas${reset}        : %d\n" "$failed"
 printf "${bold}──────────────────────────────────────────────────────────────${reset}\n"
+
+if ((dirty > 0)); then
+	printf "\n"
+	printf "${yellow}${bold}Repositórios com alterações locais não commitadas (pulados):${reset}\n\n"
+
+	for repo in "${dirty_repos[@]}"; do
+		printf "  ${yellow}•${reset} %s\n" "$repo"
+	done
+	printf "\n"
+fi
 
 if ((failed > 0)); then
 	printf "\n"
