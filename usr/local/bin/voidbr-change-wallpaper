@@ -1,4 +1,6 @@
 #!/bin/bash
+# voidbr-change-wallpaper — compatível com Hyprland, Sway e Fluxbox/X11.
+# Detecta o ambiente e usa o método certo pra trocar o wallpaper.
 
 DIR="/usr/share/backgrounds/voidbr"
 DEFAULT=""
@@ -21,23 +23,30 @@ mapfile -t imagens < <(
 		-iname "*.heic" \
 		\)
 )
-
 ((${#imagens[@]})) || exit 1
+
+set_wallpaper() {
+	local img="$1"
+	if [[ -n "$HYPRLAND_INSTANCE_SIGNATURE" ]]; then
+		hyprctl hyprpaper wallpaper ",$img"
+	elif command -v swaybg >/dev/null && [[ -n "$WAYLAND_DISPLAY" ]]; then
+		pkill -x swaybg 2>/dev/null
+		swaybg -i "$img" -m fill &
+	elif command -v feh >/dev/null && [[ -n "$DISPLAY" ]]; then
+		feh --bg-fill "$img"
+	else
+		echo "voidbr-change-wallpaper: nenhum ambiente compatível encontrado" >&2
+		exit 1
+	fi
+}
 
 # Wallpaper inicial (opcional)
 if [[ -n "$DEFAULT" ]]; then
-	if [[ -n "$HYPRLAND_INSTANCE_SIGNATURE" ]]; then
-		hyprctl hyprpaper wallpaper ",$DEFAULT"
-	elif command -v swaybg >/dev/null; then
-		pkill -x swaybg 2>/dev/null
-		swaybg -i "$DEFAULT" -m fill &
-	fi
+	set_wallpaper "$DEFAULT"
 fi
 
 sleep 60
-
 anterior=-1
-
 while :; do
 	if ((${#imagens[@]} > 1)); then
 		while :; do
@@ -48,15 +57,7 @@ while :; do
 	else
 		indice=0
 	fi
-
 	img="${imagens[indice]}"
-
-	if [[ -n "$HYPRLAND_INSTANCE_SIGNATURE" ]]; then
-		hyprctl hyprpaper wallpaper ",$img"
-	elif command -v swaybg >/dev/null; then
-		pkill -x swaybg 2>/dev/null
-		swaybg -i "$img" -m fill &
-	fi
-
+	set_wallpaper "$img"
 	sleep 60
 done
