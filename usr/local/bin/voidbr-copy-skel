@@ -5,11 +5,15 @@ set -e
 # -----------------------------------------------------------------------------
 # voidbr-copy-skel
 # Copia /etc/skel para o HOME preservando os arquivos substituídos em backup.
+#
+# Opções:
+#   --user USUARIO   Copia para o HOME do usuário informado (requer root)
+#   --force          Não pede confirmação antes de copiar
 # -----------------------------------------------------------------------------
 
 skel="/etc/skel"
-dest="${HOME:?HOME não definido}"
-backup="$HOME/.voidbr-skel-backup-$(date +%Y%m%d-%H%M%S)"
+target_user=""
+force=0
 
 # -----------------------------------------------------------------------------
 # Cores
@@ -51,32 +55,35 @@ usage() {
 ${bold}${cyan}voidbr-copy-skel${reset}
 
 ${white}Uso:${reset}
-  ${green}$(basename "$0")${reset} ${dim}[OPÇÃO]${reset}
+  ${green}$(basename "$0")${reset} ${dim}[OPÇÕES]${reset}
 
 ${white}Descrição:${reset}
   Copia todo o conteúdo de:
 
     ${cyan}$skel${reset}
 
-  para o HOME do usuário atual:
-
-    ${cyan}$dest${reset}
+  para o HOME do usuário atual (ou de outro usuário, com ${green}--user${reset}).
 
   Antes da cópia, todos os arquivos existentes que seriam
   substituídos são preservados em um diretório de backup.
 
 ${white}Backup:${reset}
-  ${magenta}~/.voidbr-skel-backup-AAAAMMDD-HHMMSS/${reset}
+  ${magenta}<HOME>/.voidbr-skel-backup-AAAAMMDD-HHMMSS/${reset}
 
 ${yellow}${bold}ATENÇÃO:${reset}
   Arquivos existentes no HOME com o mesmo nome dos arquivos
   encontrados em ${cyan}$skel${reset} serão ${red}${bold}SUBSTITUÍDOS${reset}.
 
 ${white}Opções:${reset}
-  ${green}-h, --help${reset}    Exibe esta ajuda
+  ${green}--user USUARIO${reset}   Copia para o HOME do USUARIO informado.
+                    ${dim}Requer que o script seja executado como root.${reset}
+  ${green}--force${reset}          Não pede confirmação antes de copiar.
+  ${green}-h, --help${reset}       Exibe esta ajuda.
 
-${white}Exemplo:${reset}
+${white}Exemplos:${reset}
   ${green}$(basename "$0")${reset}
+  ${green}sudo $(basename "$0") --user joao${reset}
+  ${green}$(basename "$0") --force${reset}
 
 EOF
 }
@@ -87,6 +94,10 @@ EOF
 
 confirm() {
     local answer
+
+    if (( force == 1 )); then
+        return 0
+    fi
 
     echo
     printf '%s\n' "${yellow}${bold}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${reset}"
@@ -162,35 +173,111 @@ backup_files() {
     fi
 }
 
-if (( EUID == 0 )); then
-    printf '%s✗ ERRO:%s este programa não pode ser executado como root.\n' \
-        "${red}${bold}" "$reset" >&2
-    printf 'Execute como usuário normal: %s%s%s\n' \
-        "$green" "$(basename "$0")" "$reset"
-    exit 1
-fi
+# -----------------------------------------------------------------------------
+# Ajusta dono dos arquivos copiados (somente com --user)
+# -----------------------------------------------------------------------------
+
+fix_ownership() {
+    local item
+    local rel
+
+    printf '%s◆%s %sAjustando dono dos arquivos para %s%s...%s\n' \
+        "$cyan" "$reset" "$bold" "$target_user" "$bold" "$reset"
+
+    shopt -s dotglob nullglob
+    for item in "$skel"/*; do
+        rel="$(basename "$item")"
+        chown -R "$target_uid:$target_gid" "$dest/$rel" 2>/dev/null || true
+    done
+    shopt -u dotglob nullglob
+
+    if [[ -d "$backup" ]]; then
+        chown -R "$target_uid:$target_gid" "$backup" 2>/dev/null || true
+    fi
+
+    printf '%s✓%s Dono ajustado.\n' "$green" "$reset"
+}
 
 # -----------------------------------------------------------------------------
 # Argumentos
 # -----------------------------------------------------------------------------
 
-case "${1:-}" in
-    -h|--help)
-        usage
-        exit 0
-        ;;
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --user)
+            if [[ -z "${2:-}" ]]; then
+                echo
+                printf '%s✗ ERRO:%s --user requer um nome de usuário.\n' \
+                    "${red}${bold}" "$reset" >&2
+                exit 1
+            fi
+            target_user="$2"
+            shift 2
+            ;;
 
-    "")
-        ;;
+        --force)
+            force=1
+            shift
+            ;;
 
-    *)
-        echo
-        printf '%s✗ ERRO:%s opção inválida: %s\n' \
-            "${red}${bold}" "$reset" "$1" >&2
-        usage
+        -h|--help)
+            usage
+            exit 0
+            ;;
+
+        *)
+            echo
+            printf '%s✗ ERRO:%s opção inválida: %s\n' \
+                "${red}${bold}" "$reset" "$1" >&2
+            usage
+            exit 1
+            ;;
+    esac
+done
+
+# -----------------------------------------------------------------------------
+# Resolução de destino / validação de usuário root
+# -----------------------------------------------------------------------------
+
+if [[ -n "$target_user" ]]; then
+    if (( EUID != 0 )); then
+        printf '%s✗ ERRO:%s --user requer que o script seja executado como root.\n' \
+            "${red}${bold}" "$reset" >&2
+        printf 'Execute com: %ssudo %s --user %s%s\n' \
+            "$green" "$(basename "$0")" "$target_user" "$reset"
         exit 1
-        ;;
-esac
+    fi
+
+    if ! id "$target_user" >/dev/null 2>&1; then
+        printf '%s✗ ERRO:%s usuário não encontrado: %s\n' \
+            "${red}${bold}" "$reset" "$target_user" >&2
+        exit 1
+    fi
+
+    dest="$(getent passwd "$target_user" | cut -d: -f6)"
+    target_uid="$(id -u "$target_user")"
+    target_gid="$(id -g "$target_user")"
+
+    if [[ -z "$dest" ]]; then
+        printf '%s✗ ERRO:%s não foi possível determinar o HOME de %s\n' \
+            "${red}${bold}" "$reset" "$target_user" >&2
+        exit 1
+    fi
+else
+    if (( EUID == 0 )); then
+        printf '%s✗ ERRO:%s este programa não pode ser executado como root.\n' \
+            "${red}${bold}" "$reset" >&2
+        printf 'Execute como usuário normal: %s%s%s\n' \
+            "$green" "$(basename "$0")" "$reset"
+        printf 'Ou use %s%s --user USUARIO%s para copiar para outro usuário.\n' \
+            "$green" "$(basename "$0")" "$reset"
+        exit 1
+    fi
+
+    dest="${HOME:?HOME não definido}"
+fi
+
+backup="$dest/.voidbr-skel-backup-$(date +%Y%m%d-%H%M%S)"
 
 # -----------------------------------------------------------------------------
 # Validações
@@ -235,6 +322,15 @@ echo
 cp -Rvpa "$skel"/. "$dest"/
 
 # -----------------------------------------------------------------------------
+# Ajuste de dono (somente com --user)
+# -----------------------------------------------------------------------------
+
+if [[ -n "$target_user" ]]; then
+    echo
+    fix_ownership
+fi
+
+# -----------------------------------------------------------------------------
 # Finalização
 # -----------------------------------------------------------------------------
 
@@ -253,5 +349,3 @@ if [[ -d "$backup" ]]; then
     printf '%sBackup:%s\n' "$white" "$reset"
     printf '  %s%s%s\n' "$magenta" "$backup" "$reset"
 fi
-
-echo
