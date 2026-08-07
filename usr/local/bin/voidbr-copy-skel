@@ -183,6 +183,7 @@ backup_files() {
 fix_ownership() {
     local item
     local rel
+    local errors=0
 
     printf '%s◆%s %sAjustando dono dos arquivos para %s%s...%s\n' \
         "$cyan" "$reset" "$bold" "$target_user" "$bold" "$reset"
@@ -190,12 +191,29 @@ fix_ownership() {
     shopt -s dotglob nullglob
     for item in "$skel"/*; do
         rel="$(basename "$item")"
-        chown -R "$target_uid:$target_gid" "$dest/$rel" 2>/dev/null || true
+
+        if ! chown -R "$target_uid:$target_gid" "$dest/$rel"; then
+            printf '  %s✗%s falha ao ajustar dono de: %s\n' \
+                "$red" "$reset" "$dest/$rel" >&2
+            ((errors++)) || true
+        fi
     done
     shopt -u dotglob nullglob
 
     if [[ -d "$backup" ]]; then
-        chown -R "$target_uid:$target_gid" "$backup" 2>/dev/null || true
+        if ! chown -R "$target_uid:$target_gid" "$backup"; then
+            printf '  %s✗%s falha ao ajustar dono de: %s\n' \
+                "$red" "$reset" "$backup" >&2
+            ((errors++)) || true
+        fi
+    fi
+
+    if (( errors > 0 )); then
+        printf '%s✗ ERRO:%s %d item(ns) continuaram pertencendo a %s%s%s.\n' \
+            "${red}${bold}" "$reset" "$errors" "$bold" "$(id -un)" "$reset" >&2
+        printf 'Corrija manualmente: %ssudo chown -R %s:%s %s%s\n' \
+            "$green" "$target_uid" "$target_gid" "$dest" "$reset" >&2
+        exit 1
     fi
 
     printf '%s✓%s Dono ajustado.\n' "$green" "$reset"
