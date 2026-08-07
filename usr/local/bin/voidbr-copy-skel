@@ -358,7 +358,29 @@ echo
 printf '  %s%s%s\n' "$dim" "$skel → $dest" "$reset"
 echo
 
-cp -Rvpa "$skel"/. "$dest"/
+# -----------------------------------------------------------------------------
+# IMPORTANTE:
+# NÃO usar "cp -a $skel/. $dest/". Com o truque "origem/.", o cp aplica
+# dono e permissão do PRÓPRIO $skel em $dest (não só no conteúdo) quando
+# o destino já existe — foi isso que deixava o HOME com dono/permissão
+# de /etc/skel (root:root, 755) depois da cópia.
+#
+# Copiando item por item (com dotglob para pegar os arquivos ocultos),
+# apenas o conteúdo copiado é afetado; $dest em si nunca é tocado.
+# -----------------------------------------------------------------------------
+
+(
+    shopt -s dotglob nullglob
+    skel_items=( "$skel"/* )
+
+    if (( ${#skel_items[@]} == 0 )); then
+        printf '%s✗%s %s está vazio, nada para copiar.\n' \
+            "$yellow" "$reset" "$skel"
+        exit 0
+    fi
+
+    cp -Rvpa "${skel_items[@]}" "$dest"/
+)
 
 # -----------------------------------------------------------------------------
 # Ajuste de dono (somente com --user)
