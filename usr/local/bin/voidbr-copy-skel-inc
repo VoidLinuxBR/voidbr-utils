@@ -27,29 +27,29 @@ quiet=0
 # -----------------------------------------------------------------------------
 
 if [[ -t 1 ]] && command -v tput >/dev/null 2>&1; then
-	reset="$(tput sgr0)"
-	bold="$(tput bold)"
-	dim="$(tput dim)"
+    reset="$(tput sgr0)"
+    bold="$(tput bold)"
+    dim="$(tput dim)"
 
-	red="$(tput setaf 1)"
-	green="$(tput setaf 2)"
-	yellow="$(tput setaf 3)"
-	blue="$(tput setaf 4)"
-	magenta="$(tput setaf 5)"
-	cyan="$(tput setaf 6)"
-	white="$(tput setaf 7)"
+    red="$(tput setaf 1)"
+    green="$(tput setaf 2)"
+    yellow="$(tput setaf 3)"
+    blue="$(tput setaf 4)"
+    magenta="$(tput setaf 5)"
+    cyan="$(tput setaf 6)"
+    white="$(tput setaf 7)"
 else
-	reset=""
-	bold=""
-	dim=""
+    reset=""
+    bold=""
+    dim=""
 
-	red=""
-	green=""
-	yellow=""
-	blue=""
-	magenta=""
-	cyan=""
-	white=""
+    red=""
+    green=""
+    yellow=""
+    blue=""
+    magenta=""
+    cyan=""
+    white=""
 fi
 
 # -----------------------------------------------------------------------------
@@ -68,7 +68,7 @@ count_errors=0
 # -----------------------------------------------------------------------------
 
 usage() {
-	cat <<EOF
+    cat <<EOF
 
 ${bold}${cyan}voidbr-copy-skel${reset}
 
@@ -128,41 +128,41 @@ EOF
 # -----------------------------------------------------------------------------
 
 parse_args() {
-	while [[ $# -gt 0 ]]; do
-		case "$1" in
-		--user)
-			if [[ -z "${2:-}" ]]; then
-				printf '%s✗ ERRO:%s --user requer um nome de usuário.\n' \
-					"${red}${bold}" "$reset" >&2
-				exit 1
-			fi
-			target_user="$2"
-			shift 2
-			;;
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --user)
+                if [[ -z "${2:-}" ]]; then
+                    printf '%s✗ ERRO:%s --user requer um nome de usuário.\n' \
+                        "${red}${bold}" "$reset" >&2
+                    exit 1
+                fi
+                target_user="$2"
+                shift 2
+                ;;
 
-		--force)
-			force=1
-			shift
-			;;
+            --force)
+                force=1
+                shift
+                ;;
 
-		-q | --quiet)
-			quiet=1
-			shift
-			;;
+            -q|--quiet)
+                quiet=1
+                shift
+                ;;
 
-		-h | --help)
-			usage
-			exit 0
-			;;
+            -h|--help)
+                usage
+                exit 0
+                ;;
 
-		*)
-			printf '%s✗ ERRO:%s opção inválida: %s\n' \
-				"${red}${bold}" "$reset" "$1" >&2
-			usage
-			exit 1
-			;;
-		esac
-	done
+            *)
+                printf '%s✗ ERRO:%s opção inválida: %s\n' \
+                    "${red}${bold}" "$reset" "$1" >&2
+                usage
+                exit 1
+                ;;
+        esac
+    done
 }
 
 # -----------------------------------------------------------------------------
@@ -170,27 +170,27 @@ parse_args() {
 # -----------------------------------------------------------------------------
 
 resolve_dest() {
-	if [[ -n "$target_user" ]]; then
-		if ! id "$target_user" >/dev/null 2>&1; then
-			printf '%s✗ ERRO:%s usuário não encontrado: %s\n' \
-				"${red}${bold}" "$reset" "$target_user" >&2
-			exit 1
-		fi
+    if [[ -n "$target_user" ]]; then
+        if ! id "$target_user" >/dev/null 2>&1; then
+            printf '%s✗ ERRO:%s usuário não encontrado: %s\n' \
+                "${red}${bold}" "$reset" "$target_user" >&2
+            exit 1
+        fi
 
-		dest="$(getent passwd "$target_user" | cut -d: -f6)"
-		target_uid="$(id -u "$target_user")"
-		target_gid="$(id -g "$target_user")"
+        dest="$(getent passwd "$target_user" | cut -d: -f6)"
+        target_uid="$(id -u "$target_user")"
+        target_gid="$(id -g "$target_user")"
 
-		if [[ -z "$dest" ]]; then
-			printf '%s✗ ERRO:%s não foi possível determinar o HOME de %s\n' \
-				"${red}${bold}" "$reset" "$target_user" >&2
-			exit 1
-		fi
-	else
-		dest="${HOME:?HOME não definido}"
-	fi
+        if [[ -z "$dest" ]]; then
+            printf '%s✗ ERRO:%s não foi possível determinar o HOME de %s\n' \
+                "${red}${bold}" "$reset" "$target_user" >&2
+            exit 1
+        fi
+    else
+        dest="${HOME:?HOME não definido}"
+    fi
 
-	backup="$dest/.voidbr-skel-backup-$(date +%Y%m%d-%H%M%S)"
+    backup="$dest/.voidbr-skel-backup-$(date +%Y%m%d-%H%M%S)"
 }
 
 # -----------------------------------------------------------------------------
@@ -198,49 +198,49 @@ resolve_dest() {
 # -----------------------------------------------------------------------------
 
 validate() {
-	if [[ -n "$target_user" ]]; then
-		if ((EUID != 0)); then
-			printf '%s✗ ERRO:%s --user requer que o script seja executado como root.\n' \
-				"${red}${bold}" "$reset" >&2
-			printf 'Execute com: %ssudo %s --user %s%s\n' \
-				"$green" "$(basename "$0")" "$target_user" "$reset" >&2
-			exit 1
-		fi
-	else
-		if ((EUID == 0)); then
-			printf '%s✗ ERRO:%s este programa não pode ser executado como root.\n' \
-				"${red}${bold}" "$reset" >&2
-			printf 'Execute como usuário normal: %s%s%s\n' \
-				"$green" "$(basename "$0")" "$reset" >&2
-			printf 'Ou use %s%s --user USUARIO%s para sincronizar com outro usuário.\n' \
-				"$green" "$(basename "$0")" "$reset" >&2
-			exit 1
-		fi
-	fi
+    if [[ -n "$target_user" ]]; then
+        if (( EUID != 0 )); then
+            printf '%s✗ ERRO:%s --user requer que o script seja executado como root.\n' \
+                "${red}${bold}" "$reset" >&2
+            printf 'Execute com: %ssudo %s --user %s%s\n' \
+                "$green" "$(basename "$0")" "$target_user" "$reset" >&2
+            exit 1
+        fi
+    else
+        if (( EUID == 0 )); then
+            printf '%s✗ ERRO:%s este programa não pode ser executado como root.\n' \
+                "${red}${bold}" "$reset" >&2
+            printf 'Execute como usuário normal: %s%s%s\n' \
+                "$green" "$(basename "$0")" "$reset" >&2
+            printf 'Ou use %s%s --user USUARIO%s para sincronizar com outro usuário.\n' \
+                "$green" "$(basename "$0")" "$reset" >&2
+            exit 1
+        fi
+    fi
 
-	if [[ ! -d "$skel" ]]; then
-		printf '%s✗ ERRO:%s diretório não encontrado: %s\n' \
-			"${red}${bold}" "$reset" "$skel" >&2
-		exit 1
-	fi
+    if [[ ! -d "$skel" ]]; then
+        printf '%s✗ ERRO:%s diretório não encontrado: %s\n' \
+            "${red}${bold}" "$reset" "$skel" >&2
+        exit 1
+    fi
 
-	if [[ ! -d "$dest" ]]; then
-		printf '%s✗ ERRO:%s HOME não encontrado: %s\n' \
-			"${red}${bold}" "$reset" "$dest" >&2
-		exit 1
-	fi
+    if [[ ! -d "$dest" ]]; then
+        printf '%s✗ ERRO:%s HOME não encontrado: %s\n' \
+            "${red}${bold}" "$reset" "$dest" >&2
+        exit 1
+    fi
 
-	if [[ "$dest" == "/" ]]; then
-		printf '%s✗ ERRO:%s HOME inválido: /\n' \
-			"${red}${bold}" "$reset" >&2
-		exit 1
-	fi
+    if [[ "$dest" == "/" ]]; then
+        printf '%s✗ ERRO:%s HOME inválido: /\n' \
+            "${red}${bold}" "$reset" >&2
+        exit 1
+    fi
 
-	if [[ ! -w "$dest" ]]; then
-		printf '%s✗ ERRO:%s HOME sem permissão de escrita: %s\n' \
-			"${red}${bold}" "$reset" "$dest" >&2
-		exit 1
-	fi
+    if [[ ! -w "$dest" ]]; then
+        printf '%s✗ ERRO:%s HOME sem permissão de escrita: %s\n' \
+            "${red}${bold}" "$reset" "$dest" >&2
+        exit 1
+    fi
 }
 
 # -----------------------------------------------------------------------------
@@ -248,69 +248,69 @@ validate() {
 # -----------------------------------------------------------------------------
 
 confirm() {
-	local answer
+    local answer
 
-	if ((force == 1)); then
-		return 0
-	fi
+    if (( force == 1 )); then
+        return 0
+    fi
 
-	echo
-	printf '%s\n' \
-		"${yellow}${bold}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${reset}"
+    echo
+    printf '%s\n' \
+        "${yellow}${bold}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${reset}"
 
-	printf '%s\n' \
-		"${yellow}${bold}  ⚠  SINCRONIZAÇÃO DO /etc/skel${reset}"
+    printf '%s\n' \
+        "${yellow}${bold}  ⚠  SINCRONIZAÇÃO DO /etc/skel${reset}"
 
-	printf '%s\n' \
-		"${yellow}${bold}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${reset}"
+    printf '%s\n' \
+        "${yellow}${bold}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${reset}"
 
-	echo
+    echo
 
-	if [[ -n "$target_user" ]]; then
-		printf '  %sExecutando como:%s %s\n' \
-			"$white" "$reset" "${green}$(id -un)${reset}"
+    if [[ -n "$target_user" ]]; then
+        printf '  %sExecutando como:%s %s\n' \
+            "$white" "$reset" "${green}$(id -un)${reset}"
 
-		printf '  %sUsuário alvo   :%s %s\n' \
-			"$white" "$reset" "${green}$target_user${reset}"
-	else
-		printf '  %sUsuário :%s %s\n' \
-			"$white" "$reset" "${green}$(id -un)${reset}"
-	fi
+        printf '  %sUsuário alvo   :%s %s\n' \
+            "$white" "$reset" "${green}$target_user${reset}"
+    else
+        printf '  %sUsuário :%s %s\n' \
+            "$white" "$reset" "${green}$(id -un)${reset}"
+    fi
 
-	printf '  %sOrigem  :%s %s\n' \
-		"$white" "$reset" "${cyan}$skel${reset}"
+    printf '  %sOrigem  :%s %s\n' \
+        "$white" "$reset" "${cyan}$skel${reset}"
 
-	printf '  %sDestino :%s %s\n' \
-		"$white" "$reset" "${cyan}$dest${reset}"
+    printf '  %sDestino :%s %s\n' \
+        "$white" "$reset" "${cyan}$dest${reset}"
 
-	printf '  %sBackup  :%s %s\n' \
-		"$white" "$reset" "${magenta}$backup${reset}"
+    printf '  %sBackup  :%s %s\n' \
+        "$white" "$reset" "${magenta}$backup${reset}"
 
-	echo
+    echo
 
-	printf '  Somente arquivos %snovos%s ou %sdiferentes%s serão copiados.\n' \
-		"$cyan" "$reset" "$yellow" "$reset"
+    printf '  Somente arquivos %snovos%s ou %sdiferentes%s serão copiados.\n' \
+        "$cyan" "$reset" "$yellow" "$reset"
 
-	printf '  Arquivos diferentes serão %spreservados em backup%s.\n' \
-		"$magenta" "$reset"
+    printf '  Arquivos diferentes serão %spreservados em backup%s.\n' \
+        "$magenta" "$reset"
 
-	echo
+    echo
 
-	printf '%sDeseja continuar? %s[s/N]%s: ' \
-		"$bold" "$yellow" "$reset"
+    printf '%sDeseja continuar? %s[s/N]%s: ' \
+        "$bold" "$yellow" "$reset"
 
-	read -r answer
+    read -r answer
 
-	case "$answer" in
-	s | S | sim | Sim | SIM)
-		;;
-	*)
-		echo
-		printf '%s●%s Operação cancelada.\n\n' \
-			"$yellow" "$reset"
-		exit 0
-		;;
-	esac
+    case "$answer" in
+        s|S|sim|Sim|SIM)
+            ;;
+        *)
+            echo
+            printf '%s●%s Operação cancelada.\n\n' \
+                "$yellow" "$reset"
+            exit 0
+            ;;
+    esac
 }
 
 # -----------------------------------------------------------------------------
@@ -323,16 +323,16 @@ confirm() {
 # -----------------------------------------------------------------------------
 
 copy_to_home() {
-	local src="$1"
-	local dst="$2"
+    local src="$1"
+    local dst="$2"
 
-	mkdir -p "$(dirname "$dst")"
+    mkdir -p "$(dirname "$dst")"
 
-	cp -a --no-preserve=ownership "$src" "$dst"
+    cp -a --no-preserve=ownership "$src" "$dst"
 
-	if [[ -n "$target_user" ]]; then
-		chown -h "$target_uid:$target_gid" "$dst"
-	fi
+    if [[ -n "$target_user" ]]; then
+        chown -h "$target_uid:$target_gid" "$dst"
+    fi
 }
 
 # -----------------------------------------------------------------------------
@@ -343,23 +343,23 @@ copy_to_home() {
 # -----------------------------------------------------------------------------
 
 backup_item() {
-	local src="$1"
-	local rel="$2"
-	local backup_dest="$backup/$rel"
+    local src="$1"
+    local rel="$2"
+    local backup_dest="$backup/$rel"
 
-	mkdir -p "$(dirname "$backup_dest")"
+    mkdir -p "$(dirname "$backup_dest")"
 
-	cp -pa "$src" "$backup_dest"
+    cp -pa "$src" "$backup_dest"
 
-	if [[ -n "$target_user" ]]; then
-		chown -R "$target_uid:$target_gid" "$backup_dest"
-	fi
+    if [[ -n "$target_user" ]]; then
+        chown -R "$target_uid:$target_gid" "$backup_dest"
+    fi
 
-	((count_backup++)) || true
+    ((count_backup++)) || true
 
-	printf '  %s↳%s %-12s %s\n' \
-		"$magenta" "$reset" \
-		"backup" "$rel"
+    printf '  %s↳%s %-12s %s\n' \
+        "$magenta" "$reset" \
+        "backup" "$rel"
 }
 
 # -----------------------------------------------------------------------------
@@ -367,69 +367,69 @@ backup_item() {
 # -----------------------------------------------------------------------------
 
 process_file() {
-	local src="$1"
-	local rel="$2"
-	local dst="$dest/$rel"
+    local src="$1"
+    local rel="$2"
+    local dst="$dest/$rel"
 
-	# -------------------------------------------------------------------------
-	# Novo
-	# -------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
+    # Novo
+    # -------------------------------------------------------------------------
 
-	if [[ ! -e "$dst" && ! -L "$dst" ]]; then
+    if [[ ! -e "$dst" && ! -L "$dst" ]]; then
 
-		copy_to_home "$src" "$dst"
+        copy_to_home "$src" "$dst"
 
-		((count_new++)) || true
+        ((count_new++)) || true
 
-		printf '  %s+%s %-12s %s\n' \
-			"$cyan" "$reset" \
-			"novo" "$rel"
+        printf '  %s+%s %-12s %s\n' \
+            "$cyan" "$reset" \
+            "novo" "$rel"
 
-		return
-	fi
+        return
+    fi
 
-	# -------------------------------------------------------------------------
-	# Arquivo existente
-	# -------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
+    # Arquivo existente
+    # -------------------------------------------------------------------------
 
-	if [[ -f "$dst" && ! -L "$dst" ]]; then
+    if [[ -f "$dst" && ! -L "$dst" ]]; then
 
-		if cmp -s "$src" "$dst"; then
+        if cmp -s "$src" "$dst"; then
 
-			((count_identical++)) || true
+            ((count_identical++)) || true
 
-			printf '  %s=%s %-12s %s%s%s\n' \
-				"$green" "$reset" \
-				"idêntico" "$dim" "$rel" "$reset"
+            printf '  %s=%s %-12s %s%s%s\n' \
+                "$green" "$reset" \
+                "idêntico" "$dim" "$rel" "$reset"
 
-			return
-		fi
+            return
+        fi
 
-		backup_item "$dst" "$rel"
+        backup_item "$dst" "$rel"
 
-		copy_to_home "$src" "$dst"
+        copy_to_home "$src" "$dst"
 
-		((count_updated++)) || true
+        ((count_updated++)) || true
 
-		printf '  %s↻%s %-12s %s\n' \
-			"$yellow" "$reset" \
-			"atualizado" "$rel"
+        printf '  %s↻%s %-12s %s\n' \
+            "$yellow" "$reset" \
+            "atualizado" "$rel"
 
-		return
-	fi
+        return
+    fi
 
-	# -------------------------------------------------------------------------
-	# Conflito
-	# -------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
+    # Conflito
+    # -------------------------------------------------------------------------
 
-	printf '  %s!%s %-12s %s\n' \
-		"$red" "$reset" \
-		"conflito" "$rel"
+    printf '  %s!%s %-12s %s\n' \
+        "$red" "$reset" \
+        "conflito" "$rel"
 
-	printf '    %sArquivo no HOME possui tipo diferente.%s\n' \
-		"$dim" "$reset"
+    printf '    %sArquivo no HOME possui tipo diferente.%s\n' \
+        "$dim" "$reset"
 
-	((count_errors++)) || true
+    ((count_errors++)) || true
 }
 
 # -----------------------------------------------------------------------------
@@ -437,80 +437,80 @@ process_file() {
 # -----------------------------------------------------------------------------
 
 process_link() {
-	local src="$1"
-	local rel="$2"
-	local dst="$dest/$rel"
+    local src="$1"
+    local rel="$2"
+    local dst="$dest/$rel"
 
-	local src_link
-	local dst_link
+    local src_link
+    local dst_link
 
-	src_link="$(readlink "$src")"
+    src_link="$(readlink "$src")"
 
-	# -------------------------------------------------------------------------
-	# Novo
-	# -------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
+    # Novo
+    # -------------------------------------------------------------------------
 
-	if [[ ! -e "$dst" && ! -L "$dst" ]]; then
+    if [[ ! -e "$dst" && ! -L "$dst" ]]; then
 
-		copy_to_home "$src" "$dst"
+        copy_to_home "$src" "$dst"
 
-		((count_new++)) || true
+        ((count_new++)) || true
 
-		printf '  %s+%s %-12s %s %s→ %s%s\n' \
-			"$cyan" "$reset" \
-			"novo" "$rel" \
-			"$dim" "$src_link" "$reset"
+        printf '  %s+%s %-12s %s %s→ %s%s\n' \
+            "$cyan" "$reset" \
+            "novo" "$rel" \
+            "$dim" "$src_link" "$reset"
 
-		return
-	fi
+        return
+    fi
 
-	# -------------------------------------------------------------------------
-	# Symlink existente
-	# -------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
+    # Symlink existente
+    # -------------------------------------------------------------------------
 
-	if [[ -L "$dst" ]]; then
+    if [[ -L "$dst" ]]; then
 
-		dst_link="$(readlink "$dst")"
+        dst_link="$(readlink "$dst")"
 
-		if [[ "$src_link" == "$dst_link" ]]; then
+        if [[ "$src_link" == "$dst_link" ]]; then
 
-			((count_identical++)) || true
+            ((count_identical++)) || true
 
-			printf '  %s=%s %-12s %s%s%s\n' \
-				"$green" "$reset" \
-				"idêntico" "$dim" "$rel" "$reset"
+            printf '  %s=%s %-12s %s%s%s\n' \
+                "$green" "$reset" \
+                "idêntico" "$dim" "$rel" "$reset"
 
-			return
-		fi
+            return
+        fi
 
-		backup_item "$dst" "$rel"
+        backup_item "$dst" "$rel"
 
-		rm -f "$dst"
+        rm -f "$dst"
 
-		copy_to_home "$src" "$dst"
+        copy_to_home "$src" "$dst"
 
-		((count_updated++)) || true
+        ((count_updated++)) || true
 
-		printf '  %s↻%s %-12s %s %s→ %s%s\n' \
-			"$yellow" "$reset" \
-			"atualizado" "$rel" \
-			"$dim" "$src_link" "$reset"
+        printf '  %s↻%s %-12s %s %s→ %s%s\n' \
+            "$yellow" "$reset" \
+            "atualizado" "$rel" \
+            "$dim" "$src_link" "$reset"
 
-		return
-	fi
+        return
+    fi
 
-	# -------------------------------------------------------------------------
-	# Conflito
-	# -------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
+    # Conflito
+    # -------------------------------------------------------------------------
 
-	printf '  %s!%s %-12s %s\n' \
-		"$red" "$reset" \
-		"conflito" "$rel"
+    printf '  %s!%s %-12s %s\n' \
+        "$red" "$reset" \
+        "conflito" "$rel"
 
-	printf '    %sSymlink no /etc/skel encontra outro tipo no HOME.%s\n' \
-		"$dim" "$reset"
+    printf '    %sSymlink no /etc/skel encontra outro tipo no HOME.%s\n' \
+        "$dim" "$reset"
 
-	((count_errors++)) || true
+    ((count_errors++)) || true
 }
 
 # -----------------------------------------------------------------------------
@@ -518,38 +518,38 @@ process_link() {
 # -----------------------------------------------------------------------------
 
 process_dir() {
-	local src="$1"
-	local rel="$2"
-	local dst="$dest/$rel"
+    local src="$1"
+    local rel="$2"
+    local dst="$dest/$rel"
 
-	# Já existe
-	if [[ -d "$dst" && ! -L "$dst" ]]; then
-		return
-	fi
+    # Já existe
+    if [[ -d "$dst" && ! -L "$dst" ]]; then
+        return
+    fi
 
-	# Novo
-	if [[ ! -e "$dst" && ! -L "$dst" ]]; then
+    # Novo
+    if [[ ! -e "$dst" && ! -L "$dst" ]]; then
 
-		mkdir -p "$dst"
+        mkdir -p "$dst"
 
-		if [[ -n "$target_user" ]]; then
-			chown "$target_uid:$target_gid" "$dst"
-		fi
+        if [[ -n "$target_user" ]]; then
+            chown "$target_uid:$target_gid" "$dst"
+        fi
 
-		((count_dirs++)) || true
+        ((count_dirs++)) || true
 
-		return
-	fi
+        return
+    fi
 
-	# Conflito
-	printf '  %s!%s %-12s %s/\n' \
-		"$red" "$reset" \
-		"conflito" "$rel"
+    # Conflito
+    printf '  %s!%s %-12s %s/\n' \
+        "$red" "$reset" \
+        "conflito" "$rel"
 
-	printf '    %sEra esperado um diretório.%s\n' \
-		"$dim" "$reset"
+    printf '    %sEra esperado um diretório.%s\n' \
+        "$dim" "$reset"
 
-	((count_errors++)) || true
+    ((count_errors++)) || true
 }
 
 # -----------------------------------------------------------------------------
@@ -557,31 +557,31 @@ process_dir() {
 # -----------------------------------------------------------------------------
 
 sync_skel() {
-	local src
-	local rel
+    local src
+    local rel
 
-	echo
+    echo
 
-	printf '%s◆%s %sAnalisando /etc/skel...%s\n' \
-		"$cyan" "$reset" "$bold" "$reset"
+    printf '%s◆%s %sAnalisando /etc/skel...%s\n' \
+        "$cyan" "$reset" "$bold" "$reset"
 
-	echo
+    echo
 
-	while IFS= read -r -d '' src; do
+    while IFS= read -r -d '' src; do
 
-		rel="${src#"$skel"/}"
+        rel="${src#"$skel"/}"
 
-		if [[ -L "$src" ]]; then
-			process_link "$src" "$rel"
+        if [[ -L "$src" ]]; then
+            process_link "$src" "$rel"
 
-		elif [[ -d "$src" ]]; then
-			process_dir "$src" "$rel"
+        elif [[ -d "$src" ]]; then
+            process_dir "$src" "$rel"
 
-		elif [[ -f "$src" ]]; then
-			process_file "$src" "$rel"
-		fi
+        elif [[ -f "$src" ]]; then
+            process_file "$src" "$rel"
+        fi
 
-	done < <(find "$skel" -mindepth 1 -print0)
+    done < <(find "$skel" -mindepth 1 -print0)
 }
 
 # -----------------------------------------------------------------------------
@@ -589,52 +589,75 @@ sync_skel() {
 # -----------------------------------------------------------------------------
 
 summary() {
-	echo
+    echo
 
-	printf '%s%s━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━%s\n' \
-		"$green" "$bold" "$reset"
+    printf '%s%s━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━%s\n' \
+        "$green" "$bold" "$reset"
 
-	printf '%s✓ Sincronização concluída.%s\n' \
-		"${green}${bold}" "$reset"
+    printf '%s✓ Sincronização concluída.%s\n' \
+        "${green}${bold}" "$reset"
 
-	printf '%s%s━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━%s\n' \
-		"$green" "$bold" "$reset"
+    printf '%s%s━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━%s\n' \
+        "$green" "$bold" "$reset"
 
-	echo
+    echo
 
-	printf '  %s=%s Idênticos   : %d\n' \
-		"$green" "$reset" "$count_identical"
+    printf '  %s=%s Idênticos   : %d\n' \
+        "$green" "$reset" "$count_identical"
 
-	printf '  %s+%s Novos       : %d\n' \
-		"$cyan" "$reset" "$count_new"
+    printf '  %s+%s Novos       : %d\n' \
+        "$cyan" "$reset" "$count_new"
 
-	printf '  %s↻%s Atualizados : %d\n' \
-		"$yellow" "$reset" "$count_updated"
+    printf '  %s↻%s Atualizados : %d\n' \
+        "$yellow" "$reset" "$count_updated"
 
-	printf '  %s↳%s Backups     : %d\n' \
-		"$magenta" "$reset" "$count_backup"
+    printf '  %s↳%s Backups     : %d\n' \
+        "$magenta" "$reset" "$count_backup"
 
-	if ((count_dirs > 0)); then
-		printf '  %s+%s Diretórios  : %d\n' \
-			"$blue" "$reset" "$count_dirs"
-	fi
+    if (( count_dirs > 0 )); then
+        printf '  %s+%s Diretórios  : %d\n' \
+            "$blue" "$reset" "$count_dirs"
+    fi
 
-	if ((count_errors > 0)); then
-		printf '  %s!%s Conflitos   : %d\n' \
-			"$red" "$reset" "$count_errors"
-	fi
+    if (( count_errors > 0 )); then
+        printf '  %s!%s Conflitos   : %d\n' \
+            "$red" "$reset" "$count_errors"
+    fi
 
-	if ((count_backup > 0)); then
-		echo
+    if (( count_backup > 0 )); then
+        echo
 
-		printf '%sBackup:%s\n' \
-			"$white" "$reset"
+        printf '%sBackup:%s\n' \
+            "$white" "$reset"
 
-		printf '  %s%s%s\n' \
-			"$magenta" "$backup" "$reset"
-	fi
+        printf '  %s%s%s\n' \
+            "$magenta" "$backup" "$reset"
+    fi
 
-	echo
+    echo
+}
+
+# -----------------------------------------------------------------------------
+# Ajusta dono do diretório de backup como um todo (somente com --user)
+#
+# backup_item() só ajusta o dono do item copiado para dentro do backup,
+# não das pastas intermediárias criadas por "mkdir -p" (essas continuam
+# pertencendo a quem executou o script, ou seja, root). Este passo
+# corrige o diretório de backup inteiro, de uma vez, no final.
+# -----------------------------------------------------------------------------
+
+fix_backup_ownership() {
+    if [[ ! -d "$backup" ]]; then
+        return 0
+    fi
+
+    if ! chown -R "$target_uid:$target_gid" "$backup"; then
+        printf '%s✗ ERRO:%s falha ao ajustar dono do backup: %s\n' \
+            "${red}${bold}" "$reset" "$backup" >&2
+        printf 'Corrija manualmente: %ssudo chown -R %s:%s %s%s\n' \
+            "$green" "$target_uid" "$target_gid" "$backup" "$reset" >&2
+        exit 1
+    fi
 }
 
 # -----------------------------------------------------------------------------
@@ -651,19 +674,25 @@ parse_args "$@"
 # já que não há como exibir a pergunta de confirmação.
 # -----------------------------------------------------------------------------
 
-if ((quiet == 1)); then
-	force=1
-	exec 1>/dev/null
+if (( quiet == 1 )); then
+    force=1
+    exec 1>/dev/null
 fi
 
 resolve_dest
 validate
 confirm
 sync_skel
+
+if [[ -n "$target_user" ]]; then
+    fix_backup_ownership
+fi
+
 summary
 
-if ((count_errors > 0)); then
-	exit 1
+if (( count_errors > 0 )); then
+    exit 1
 fi
 
 exit 0
+
