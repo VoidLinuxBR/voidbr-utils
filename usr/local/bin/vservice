@@ -6,8 +6,8 @@
 #  Wrapper para o sv
 #  Created: 18.09.2022 15:10:00 -04
 #  Altered: sex 06 fev 2026 04:24:23 -04
-#  Updated: qui 30 abr 2026 07:30:00 -04
-#  Version: 1.3.6
+#  Updated: dom 09 ago 2026 22:19:06 -04
+#  Version: 1.4.1
 #
 #  Copyright (c) 2026-2026, Vilmar Catafesta <vcatafesta@gmail.com>
 #  Assembled By Vilmar Catafesta for the ChiliLinux project.
@@ -20,22 +20,26 @@ SV_DIR="/etc/sv"
 ACTIVE_DIR="/var/service"
 LOG_FILE="/var/log/vservice.log"
 
+# --quiet / -q: suprime saída normal (msg/warn/info, status e stdout do sv).
+# Erros (err) continuam sendo exibidos em stderr mesmo em modo silencioso.
+QUIET=0
+
 # Serviços críticos protegidos contra parada acidental
 PROTECTED_SERVICES=("dbus" "udevd" "socklog-unix" "nanoklogd" "agetty-tty1")
 
 # ─────────────────────────────
 # Cores
 # ─────────────────────────────
-RED='\033[1;31m'
-GREEN='\033[1;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[1;34m'
-RESET='\033[0m'
+red='\033[1;31m'
+green='\033[1;32m'
+yellow='\033[1;33m'
+blue='\033[1;34m'
+reset='\033[0m'
 
-msg() { echo -e "${GREEN}✔${RESET} $*"; }
-warn() { echo -e "${YELLOW}⚠${RESET} $*"; }
-err() { echo -e "${RED}✘${RESET} $*" >&2; }
-info() { echo -e "${BLUE}➜${RESET} $*"; }
+msg() { ((QUIET)) && return 0; echo -e "${green}✔${reset} $*"; }
+warn() { ((QUIET)) && return 0; echo -e "${yellow}⚠${reset} $*"; }
+err() { echo -e "${red}✘${reset} $*" >&2; }
+info() { ((QUIET)) && return 0; echo -e "${blue}➜${reset} $*"; }
 
 # ─────────────────────────────
 # Auditoria e Logs
@@ -76,10 +80,11 @@ check_exists() {
 }
 
 suggest_service() {
+	((QUIET)) && return 0
 	local typed="$1"
 	local match
 	match=$(ls "$SV_DIR" | grep -m1 "$typed")
-	[[ -n "$match" ]] && info "Você quis dizer: ${YELLOW}$match${RESET}?"
+	[[ -n "$match" ]] && info "Você quis dizer: ${yellow}$match${reset}?"
 }
 
 is_protected() {
@@ -96,22 +101,23 @@ wait_for_service() {
 	local count=0
 	local timeout=14 # 14 * 0.5s = 7s máximo
 
-	echo -ne "${BLUE}Aguardando inicialização de ${YELLOW}$s${BLUE}... ${RESET}"
+	((QUIET)) || echo -ne "${blue}Aguardando inicialização de ${yellow}$s${blue}... ${reset}"
 
 	while [ $count -lt $timeout ]; do
 		# Verifica se o sv status contém "run" e tem um PID numérico ativo
 		if sv status "$s" 2>/dev/null | grep -qP 'run:.*\(pid \d+\)'; then
-			echo -e "${GREEN}OK${RESET}"
+			((QUIET)) || echo -e "${green}OK${reset}"
 			return 0
 		fi
 		sleep 0.5
 		((count++))
 	done
-	echo -e "${RED}TIMEOUT (Verifique os logs)${RESET}"
+	((QUIET)) || echo -e "${red}TIMEOUT (Verifique os logs)${reset}"
 	return 1
 }
 
 show_status() {
+	((QUIET)) && return 0
 	local SERVICE="$1"
 	if command -v vsv >/dev/null; then
 		vsv | grep -i "$SERVICE"
@@ -189,7 +195,11 @@ do_sv_command() {
 	fi
 
 	info "sv $cmd $s"
-	sv "$cmd" "$s"
+	if ((QUIET)); then
+		sv "$cmd" "$s" >/dev/null
+	else
+		sv "$cmd" "$s"
+	fi
 	sh_log "COMMAND" "$cmd em $s"
 
 	# Se for comando de subida, usa a espera inteligente
@@ -201,20 +211,23 @@ do_sv_command() {
 }
 
 usage() {
-	echo -e "${BLUE}vservice${RESET} — gerenciador de serviços (${YELLOW}runit${RESET})"
+	echo -e "${blue}vservice${reset} — gerenciador de serviços (${yellow}runit${reset})"
 	echo
-	echo -e "${GREEN}Uso:${RESET}"
-	echo -e "  ${BLUE}vservice${RESET} ${YELLOW}{comando}${RESET} ${GREEN}[serviço1] [serviço2] ...${RESET}"
+	echo -e "${green}Uso:${reset}"
+	echo -e "  ${blue}vservice${reset} ${yellow}{comando}${reset} ${green}[serviço1] [serviço2] ...${reset} ${green}[--quiet|-q]${reset}"
 	echo
-	echo -e "${GREEN}Comandos:${RESET}"
-	echo -e "  ${YELLOW}enable, add${RESET}    — habilita o(s) serviço(s)"
-	echo -e "  ${YELLOW}disable${RESET}        — para o serviço (mantém link)"
-	echo -e "  ${YELLOW}remove, rm${RESET}     — para e remove o link do(s) serviço(s)"
-	echo -e "  ${YELLOW}start, st, up${RESET}  — inicia o(s) serviço(s)"
-	echo -e "  ${YELLOW}stop, down${RESET}     — para o(s) serviço(s)"
-	echo -e "  ${YELLOW}restart${RESET}        — reinicia o(s) serviço(s)"
-	echo -e "  ${YELLOW}status${RESET}         — status do(s) serviço(s)"
-	echo -e "  ${YELLOW}list${RESET}           — lista serviços ativos"
+	echo -e "${green}Comandos:${reset}"
+	echo -e "  ${yellow}enable, add${reset}    — habilita o(s) serviço(s)"
+	echo -e "  ${yellow}disable${reset}        — para o serviço (mantém link)"
+	echo -e "  ${yellow}remove, rm${reset}     — para e remove o link do(s) serviço(s)"
+	echo -e "  ${yellow}start, st, up${reset}  — inicia o(s) serviço(s)"
+	echo -e "  ${yellow}stop, down${reset}     — para o(s) serviço(s)"
+	echo -e "  ${yellow}restart${reset}        — reinicia o(s) serviço(s)"
+	echo -e "  ${yellow}status${reset}         — status do(s) serviço(s)"
+	echo -e "  ${yellow}list${reset}           — lista serviços ativos"
+	echo
+	echo -e "${green}Opções:${reset}"
+	echo -e "  ${yellow}--quiet, -q${reset}    — suprime a saída normal (erros ainda são exibidos)"
 	echo
 	exit 1
 }
@@ -223,19 +236,41 @@ usage() {
 # Execução Principal
 # ─────────────────────────────
 
+# Guarda os argumentos originais (com --quiet/-q) para repassar ao
+# sh_checkroot, já que ele faz "exec sudo bash $0 $@" e reinicia o
+# script do zero — se a flag já tivesse sido removida daqui, o
+# processo relançado como root nunca saberia que era pra ser quiet.
+ORIG_ARGS=("$@")
+
+# Extrai --quiet/-q de qualquer posição nos argumentos
+_args=()
+for _arg in "$@"; do
+	if [[ "$_arg" == "--quiet" || "$_arg" == "-q" ]]; then
+		QUIET=1
+	else
+		_args+=("$_arg")
+	fi
+done
+set -- "${_args[@]}"
+unset _arg _args
+
 [[ $# -lt 1 ]] && usage
 
 # Caso especial: list
 if [[ "$1" == "list" ]]; then
-	sh_checkroot "$@"
-	command -v vsv >/dev/null && vsv || sv status "$ACTIVE_DIR"/*
+	sh_checkroot "${ORIG_ARGS[@]}"
+	if ((QUIET)); then
+		command -v vsv >/dev/null && vsv >/dev/null || sv status "$ACTIVE_DIR"/* >/dev/null
+	else
+		command -v vsv >/dev/null && vsv || sv status "$ACTIVE_DIR"/*
+	fi
 	exit 0
 fi
 
 # Validação para comandos que exigem serviço
 [[ $# -lt 2 ]] && usage
 
-sh_checkroot "$@"
+sh_checkroot "${ORIG_ARGS[@]}"
 
 ACTION="$1"
 shift
@@ -258,5 +293,5 @@ for SERVICE in "$@"; do
 		usage
 		;;
 	esac
-	#echo -e "${BLUE}---${RESET}"
+	#echo -e "${blue}---${reset}"
 done

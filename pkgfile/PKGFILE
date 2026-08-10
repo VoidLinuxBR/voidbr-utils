@@ -11,7 +11,17 @@ license=('GPL3')
 url="https://github.com/voidlinuxbr/$pkgname"
 source=("git+${url}.git")
 md5sums=('SKIP')
-depends=("bash>=0" smartmontools umc pigz geoip geoipupdate dialog gettext)
+depends=(
+	"bash>=0"
+	smartmontools
+	umc
+	pigz
+	geoip
+	geoipupdate
+	dialog
+	gettext
+	pv
+)
 
 package() {
 	local dirs=("usr" "etc" "opt")
@@ -29,17 +39,17 @@ package() {
 }
 
 pre_install() {
-  log "Iniciando instalação"
+	log "Iniciando instalação"
 }
 
 post_install() {
-  log "Finalizando instalação"
+	log "Finalizando instalação"
 }
 
 pre_upgrade() {
-  log "Iniciando upgrade"
+	log "Iniciando upgrade"
 }
 
 post_upgrade() {
-  log "Finalizando upgrade"
+	log "Finalizando upgrade"
 }
