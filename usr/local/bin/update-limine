@@ -1,5 +1,7 @@
 #!/bin/sh
 
+echo "Gerando o arquivo de configuração do limine..."
+
 boot=/boot
 cfg="${boot}/limine.conf"
 
@@ -11,24 +13,35 @@ set -- "$boot"/vmlinuz-*
 
 [ -e "$1" ] || exit 0
 
+for kernel in $(printf '%s\n' "$@" | sort -Vr); do
+  version=${kernel##*/vmlinuz-}
+  initramfs="${boot}/initramfs-${version}.img"
+
+  [ -f "$initramfs" ] || continue
+  echo "Imagem Linux encontrada: $kernel"
+  echo "Imagem initrd encontrada: $initramfs"
+done
+
+echo "Adicionando entradas de menu"
+
 {
-	printf '%s\n' 'TIMEOUT: 3'
-	printf '%s\n' 'VERBOSE: no'
-	printf '\n'
+  printf '%s\n' 'TIMEOUT: 3'
+  printf '%s\n' 'VERBOSE: no'
+  printf '\n'
 
-	for kernel in $(printf '%s\n' "$@" | sort -Vr); do
-		version=${kernel##*/vmlinuz-}
-		initramfs="${boot}/initramfs-${version}.img"
+  for kernel in $(printf '%s\n' "$@" | sort -Vr); do
+    version=${kernel##*/vmlinuz-}
+    initramfs="${boot}/initramfs-${version}.img"
 
-		[ -f "$initramfs" ] || continue
+    [ -f "$initramfs" ] || continue
 
-		printf '/VoidBR (Kernel %s)\n' "$version"
-		printf '    PROTOCOL: linux\n'
-		printf '    PATH: boot():/vmlinuz-%s\n' "$version"
-		printf '    MODULE_PATH: boot():/initramfs-%s.img\n' "$version"
-		printf '    CMDLINE: root=UUID=%s rw loglevel=4\n' "$root_uuid"
-		printf '\n'
-	done
+    printf '/VoidBR (Kernel %s)\n' "$version"
+    printf '    PROTOCOL: linux\n'
+    printf '    PATH: boot():/vmlinuz-%s\n' "$version"
+    printf '    MODULE_PATH: boot():/initramfs-%s.img\n' "$version"
+    printf '    CMDLINE: root=UUID=%s rw loglevel=4\n' "$root_uuid"
+    printf '\n'
+  done
 } > "${cfg}.new"
 
 mv "${cfg}.new" "$cfg"
