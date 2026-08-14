@@ -1,0 +1,34 @@
+#!/bin/sh
+
+boot=/boot
+cfg="${boot}/limine.conf"
+
+root_uuid=$(findmnt -no UUID /)
+
+[ -n "$root_uuid" ] || exit 1
+
+set -- "$boot"/vmlinuz-*
+
+[ -e "$1" ] || exit 0
+
+{
+	printf '%s\n' 'TIMEOUT: 3'
+	printf '%s\n' 'VERBOSE: no'
+	printf '\n'
+
+	for kernel in $(printf '%s\n' "$@" | sort -Vr); do
+		version=${kernel##*/vmlinuz-}
+		initramfs="${boot}/initramfs-${version}.img"
+
+		[ -f "$initramfs" ] || continue
+
+		printf '/VoidBR (Kernel %s)\n' "$version"
+		printf '    PROTOCOL: linux\n'
+		printf '    PATH: boot():/vmlinuz-%s\n' "$version"
+		printf '    MODULE_PATH: boot():/initramfs-%s.img\n' "$version"
+		printf '    CMDLINE: root=UUID=%s rw loglevel=4\n' "$root_uuid"
+		printf '\n'
+	done
+} > "${cfg}.new"
+
+mv "${cfg}.new" "$cfg"
