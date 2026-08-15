@@ -3,7 +3,8 @@
 echo "Gerando o arquivo de configuração do limine..."
 
 boot=/boot
-cfg="${boot}/limine.conf"
+#cfg="${boot}/limine.conf"
+cfg="${boot}/efi/limine/limine.conf"
 
 root_uuid=$(findmnt -no UUID /)
 
