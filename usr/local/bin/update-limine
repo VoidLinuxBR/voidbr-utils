@@ -4,7 +4,9 @@ echo "Gerando o arquivo de configuração do limine..."
 
 boot=/boot
 #cfg="${boot}/limine.conf"
+#boot_limine="/"
 cfg="${boot}/efi/limine/limine.conf"
+boot_limine="/limine"
 
 root_uuid=$(findmnt -no UUID /)
 
@@ -38,8 +40,8 @@ echo "Adicionando entradas de menu"
 
     printf '/VoidBR (Kernel %s)\n' "$version"
     printf '    PROTOCOL: linux\n'
-    printf '    PATH: boot():/vmlinuz-%s\n' "$version"
-    printf '    MODULE_PATH: boot():/initramfs-%s.img\n' "$version"
+    printf '    PATH: boot():%s/vmlinuz-%s\n' "$boot_limine" "$version"
+    printf '    MODULE_PATH: boot():%s/initramfs-%s.img\n' "$boot_limine" "$version"
     printf '    CMDLINE: root=UUID=%s rw loglevel=4\n' "$root_uuid"
     printf '\n'
   done
