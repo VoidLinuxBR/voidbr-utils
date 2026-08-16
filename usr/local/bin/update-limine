@@ -1,5 +1,10 @@
 #!/bin/sh
 
+if [ "$(id -u)" -ne 0 ]; then
+    echo "Este script deve ser executado como root." >&2
+    exit 1
+fi
+
 echo "Gerando o arquivo de configuração do limine..."
 
 boot=/boot
@@ -22,9 +27,9 @@ for kernel in $(printf '%s\n' "$@" | sort -Vr); do
 
   [ -f "$initramfs" ] || continue
   echo "Imagem Linux encontrada: $kernel"
-  cp -a /boot/$kernel /boot/efi/limine/
+  cp -a $kernel /boot/efi/limine/
   echo "Imagem initrd encontrada: $initramfs"
-  cp -a /boot/$initramfs /boot/efi/limine/
+  cp -a $initramfs /boot/efi/limine/
 done
 
 echo "Adicionando entradas de menu"
