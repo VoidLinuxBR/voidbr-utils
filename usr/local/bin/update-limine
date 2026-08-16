@@ -22,7 +22,9 @@ for kernel in $(printf '%s\n' "$@" | sort -Vr); do
 
   [ -f "$initramfs" ] || continue
   echo "Imagem Linux encontrada: $kernel"
+  cp -a /boot/$kernel /boot/efi/limine/
   echo "Imagem initrd encontrada: $initramfs"
+  cp -a /boot/$initramfs /boot/efi/limine/
 done
 
 echo "Adicionando entradas de menu"
