@@ -55,6 +55,13 @@ echo "Adicionando entradas de menu"
     printf '    MODULE_PATH: boot():%s/initramfs-%s.img\n' "$boot_limine" "$version"
     printf '    CMDLINE: root=UUID=%s rw loglevel=4\n' "$root_uuid"
     printf '\n'
+
+    printf '/VoidBR Recover Mode (Kernel %s)\n' "$version"
+    printf '    PROTOCOL: linux\n'
+    printf '    PATH: boot():%s/vmlinuz-%s\n' "$boot_limine" "$version"
+    printf '    MODULE_PATH: boot():%s/initramfs-%s.img\n' "$boot_limine" "$version"
+    printf '    CMDLINE: root=UUID=%s rw loglevel=4 single\n' "$root_uuid"
+    printf '\n'
   done
 } > "${cfg}.new"
 
