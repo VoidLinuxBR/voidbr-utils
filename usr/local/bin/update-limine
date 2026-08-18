@@ -53,14 +53,17 @@ printf "${blue}==>${reset} Gerando o arquivo de configuração do limine...\n"
 boot=/boot
 #cfg="${boot}/limine.conf"
 #boot_limine="/"
-cfg="${boot}/efi/limine/limine.conf"
-boot_limine="/limine"
 dest="${boot}/efi/limine"
+cfg="${dest}/limine.conf"
+boot_limine="/limine"
 root_uuid=$(findmnt -no UUID /)
+
 [ -n "$root_uuid" ] || exit 1
 set -- "$boot"/vmlinuz-*
+
 [ -e "$1" ] || exit 0
 
+mkdir -p "$dest"
 sorted_kernels=$(printf '%s\n' "$@" | sort -Vr)
 
 # --- Limpa o destino primeiro ---
