@@ -1,25 +1,30 @@
 #!/usr/bin/env bash
 # -*- coding: utf-8 -*-
 # shellcheck shell=bash disable=SC1091,SC2039,SC2166,SC2034
+
 #
 #  voidbr-compress-png
 #  Created: sáb 18 jul 2026 22:33:13 -04
 #  Altered: sáb 18 jul 2026 22:33:13 -04
 #  Updated: sáb 18 jul 2026 22:33:13 -04
 #
+
 #  Copyright (c) 2019-2026, Vilmar Catafesta <vcatafesta@gmail.com>
 #  Copyright (c) 2019-2026, ChiliLinux Development Team <https://chililinux.com> <https://github.com/chililinux>
 #  Assembled By Vilmar Catafesta for the ChiliLinux project.
 #  All rights reserved.
+
 #
 #  Redistribution and use in source and binary forms, with or without
 #  modification, are permitted provided that the following conditions
 #  are met:
+#
 #  1. Redistributions of source code must retain the above copyright
 #     notice, this list of conditions and the following disclaimer.
 #  2. Redistributions in binary form must reproduce the above copyright
-#     notice, this list of conditions and the following disclaimer in the
-#     documentation and/or other materials provided with the distribution.
+#     notice, this list of conditions and the following disclaimer
+#     in the documentation and/or other materials provided with the
+#     distribution.
 #
 #  THIS SOFTWARE IS PROVIDED BY Vilmar Catafesta ''AS IS'' AND ANY EXPRESS OR
 #  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
@@ -32,6 +37,7 @@
 #  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 #  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ##############################################################################
+
 export LANGUAGE="${LANGUAGE:-pt_BR}"
 export TEXTDOMAINDIR=/usr/share/locale
 export TEXTDOMAIN=voidbr-compress-png
@@ -46,72 +52,69 @@ shopt -s extglob
 #system
 declare APP="${0##*/}"
 declare _VERSION_="0.07.18-20260718"
-declare APPDESC="$APP - Wraper for "
+declare APPDESC="$APP - Wrapper for PNG compression"
 declare distro="$(uname -n)"
+
+# Mapa: [comando]="pacote"
 declare -A PACKAGEDEP=(
   [gettext]=gettext
-  [dd]=coreutils
-  [hdparm]=hdparm
-  [fio]=fio
+  [pngquant]=pngquant
+  [oxipng]=oxipng
   [tput]=ncurses
 )
+
 # Mapa: [distro]="lista de pacotes"
 declare -A DISTRO_PKGS=(
-  ["void"]="gettext rsync parted curl xz lvm2"
-  ["void-live"]="gettext rsync parted curl xz lvm2"
-  ["voidlinux"]="gettext rsync parted curl xz lvm2"
-  ["chili"]="gettext rsync parted curl xz"
-  ["chililinux"]="gettext rsync parted curl xz"
-  ["arch"]="gettext rsync parted curl xz"
-  ["manjaro"]="gettext rsync parted curl xz"
-  ["debian"]="gettext-base rsync parted curl xz-utils"
+  ["voidbr"]="gettext pngquant oxipng"
+  ["void"]="gettext pngquant oxipng"
+  ["void-live"]="gettext pngquant oxipng"
+  ["voidlinux"]="gettext pngquant oxipng"
+  ["chili"]="gettext pngquant oxipng"
+  ["chililinux"]="gettext pngquant oxipng"
+  ["arch"]="gettext pngquant oxipng"
+  ["biglinux"]="gettext pngquant oxipng"
+  ["manjaro"]="gettext pngquant oxipng"
+  ["debian"]="gettext-base pngquant oxipng"
 )
+
 # Mapa: [distro]="comando de instalação"
 declare -A DISTRO_MGR=(
+  ["voidbr"]="xbps-install -Syf"
   ["void"]="xbps-install -Syf"
   ["void-live"]="xbps-install -Syf"
   ["voidlinux"]="xbps-install -Syf"
   ["chili"]="pacman -Sy --needed --noconfirm"
   ["chililinux"]="pacman -Sy --needed --noconfirm"
   ["arch"]="pacman -Sy --needed --noconfirm"
+  ["biglinux"]="pacman -Sy --needed --noconfirm"
   ["manjaro"]="pacman -Sy --needed --noconfirm"
   ["debian"]="apt-get install -y"
 )
-# Mapa: [distro]="lista de pacotes"
-declare -A DISTRO_PKGS=(
-  ["void"]="gettext rsync parted curl xz lvm2"
-  ["void-live"]="gettext rsync parted curl xz lvm2"
-  ["voidlinux"]="gettext rsync parted curl xz lvm2"
-  ["chili"]="gettext rsync parted curl xz"
-  ["chililinux"]="gettext rsync parted curl xz"
-  ["arch"]="gettext rsync parted curl xz"
-  ["biglinux"]="gettext rsync parted curl xz"
-  ["manjaro"]="gettext rsync parted curl xz"
-  ["debian"]="gettext-base rsync parted curl xz-utils"
-)
-# Mapa: [distro]="comando de instalação"
-declare -A DISTRO_MGR=(
-  ["void"]="xbps-install -Syf"
-  ["void-live"]="xbps-install -Syf"
-  ["voidlinux"]="xbps-install -Syf"
-  ["chili"]="pacman -Sy --needed --noconfirm"
-  ["chililinux"]="pacman -Sy --needed --noconfirm"
-  ["arch"]="pacman -Sy --needed --noconfirm"
-  ["viglinux"]="pacman -Sy --needed --noconfirm"
-  ["manjaro"]="pacman -Sy --needed --noconfirm"
-  ["debian"]="apt-get install -y"
-)
+
 declare dialogRcFile="$HOME/.dialogrc"
 
-cleanup() { rm -f "$dialogRcFile"; }
-#trap cleanup EXIT
-    MostraErro() { echo "erro: ${red}$1${reset} => comando: ${cyan}'$2'${reset} => result=${yellow}$3${reset}";}
-    trap 'MostraErro "${APP[$FUNCNAME][$LINENO]}" "$BASH_COMMAND" "$?"; exit 1' ERR
+cleanup() {
+  rm -f "$dialogRcFile"
+}
 
-sh_check_terminal() { [ ! -t 1 ] && use_color=false; }
+#trap cleanup EXIT
+
+MostraErro() {
+  local command="$1"
+  local result="$2"
+
+  echo "erro: ${red}${command}${reset} => result=${yellow}${result}${reset}"
+}
+
+trap 'rc=$?; MostraErro "$BASH_COMMAND" "$rc"; exit "$rc"' ERR
+
+sh_check_terminal() {
+  [ ! -t 1 ] && use_color=false
+}
 
 set_varcolors() {
   sh_check_terminal
+
   # does the terminal support true-color?
   if [[ -n "$(command -v "tput")" ]]; then
     #tput setaf 127 | cat -v  #capturar saida
@@ -209,13 +212,14 @@ unset_varcolors() {
   unset black red green yellow blue magenta cyan white gray orange purple violet
   unset light_red light_green light_yellow light_blue light_magenta light_cyan light_white
   unset preto vermelho verde amarelo azul roxo ciano branca cinza laranja roxa violeta
+
   TICK="${white}[${verde}✓${rst}${white}]${rst}"
   CROSS="${white}[${roxa}✗${rst}${white}]${rst}"
   INFO="${white}[${cinza}i${rst}${white}]${rst}"
 }
 
 sh_create_dialogrc() {
-  cat > "$dialogRcFile" <<EOF_DIALOGRC
+  cat >"$dialogRcFile" <<EOF_DIALOGRC
 screen_color = (white,black,off)
 dialog_color = (white,black,off)
 title_color = (green,black,on)
@@ -259,6 +263,7 @@ visit_items = off
 use_shadow = off
 use_colors = on
 EOF_DIALOGRC
+
   export DIALOGRC="$dialogRcFile"
 }
 
@@ -276,67 +281,78 @@ sh_setEnvironment() {
 }
 
 sh_checkroot() {
-  (( EUID != 0 )) && elevate_to_root "$@" || return 0
+  ((EUID != 0)) && elevate_to_root "$@" || return 0
 }
 
 elevate_to_root() {
   log_ok "This script must be run as root. Elevating privileges..."
   ccabec+='root [elevated]'
+
   # Tenta usar sudo primeiro (caso esteja configurado)
   if command -v sudo >/dev/null 2>&1; then
     exec sudo bash "$0" "$@"
   fi
+
   # Se sudo falhar, tenta su
   if command -v su >/dev/null 2>&1; then
     exec su -c "$0 $*"
   fi
+
   die "Error: Unable to elevate privileges. Run manually as root."
 }
 
-    replicate() {
-      local char="${1:-#}"
-      local nsize="${2:-$(tput cols)}"
-      # Gera linha com substituição direta sem forks extras
-      printf -v _line "%*s" "$nsize" ""
-      printf '%b\n' "${blue}${_line// /$char}${reset}"
-    }
+replicate() {
+  local char="${1:-#}"
+  local nsize="${2:-$(tput cols)}"
+
+  # Gera linha com substituição direta sem forks extras
+  printf -v _line "%*s" "$nsize" ""
+  printf '%b\n' "${blue}${_line// /$char}${reset}"
+}
 
 readconf() {
   local msg="$1"
   local color="${2:-${yellow}}"
 
   echo -n -e "$color"
+
   if [[ $LC_DEFAULT -eq 0 ]]; then
     read -r -p "$msg [N/s] :"
   else
     read -r -p "$msg [N/y] :"
   fi
+
   echo -n -e "$reset"
+
   case "${REPLY^}" in
-  [SY]) return 0 ;;
-  "") return 1 ;;
-  *) return 1 ;;
+    [SY]) return 0 ;;
+    "") return 1 ;;
+    *) return 1 ;;
   esac
 }
 
 debug() {
-# dialog
-  whiptail --fb  --clear --backtitle "[debug]$0" --title "[debug]$0" --yesno "${*}\n"  0 40
+  # dialog
+  whiptail --fb --clear --backtitle "[debug]$0" --title "[debug]$0" --yesno "${*}\n" 0 40
   local result="$?"
+
   ((result)) && exit "$result"
+
   return "$result"
 }
 
 # ===================================================================
 # Funções auxiliares
 # ===================================================================
+
 run_cmd() {
   local cmd="$*"
 
-  if [[ $DRYRUN -eq 1 ]]; then
+  if [[ ${DRYRUN:-0} -eq 1 ]]; then
     msg "${cyan}[DRY-RUN]${rst} ${cmd}"
   else
     echo -e "  [⚙  ] ${cyan}${cmd}${rst}"
+
     # Executa o comando, falha se houver erro
     # Redireciona stderr para /dev/null apenas para mkdir -p e ummount -R
     if [[ "$cmd" =~ ^mkdir\ -p ]] || [[ "$cmd" =~ ^umount\ -R ]]; then
@@ -360,7 +376,7 @@ sh_version() {
   cat <<-EOF-VERSION
   $(sh_copyright)
 
-        $(gettext "Este é um software livre: você é livre para alterá-lo e redistribuí-lo.")
+        $(gettext "Este é um software livre: você é livre para alterá-lo.")
         $(gettext "O $APP é disponibilizado para você sob a ${yellow}Licença MIT${black}, e")
         $(gettext "inclui software de código aberto sob uma variedade de outras licenças.")
         $(gettext "Você pode ler instruções sobre como baixar e criar para você mesmo")
@@ -370,6 +386,7 @@ EOF-VERSION
 }
 
 msg()          { echo -e "${INFO} ${*}${reset}"; }
+msg_info()     { echo -e "${INFO} ${*}${reset}"; }
 log_ok()       { echo -e "${TICK} ${*}${reset}"; }
 log_err()      { echo -e "${CROSS} ${*}${reset}"; }
 log_mid()      { echo -e "${MID} ${*}${reset}"; }
@@ -379,6 +396,7 @@ log_ok_tab()   { echo -e "  ${TICK} ${*}${reset}"; }
 log_err_tab()  { echo -e "  ${CROSS} ${*}${reset}"; }
 log_mid_tab()  { echo -e "  ${MID} ${*}${reset}"; }
 log_warn_tab() { echo -e "  ${WARN} ${*}${reset}"; }
+
 die() {
   echo -e "${CROSS} ${red}${*}${reset}"
   exit 1
@@ -396,18 +414,44 @@ detect_distro() {
     echo "unknown"
     return
   fi
+
   echo "$id"
 }
 
+install_packages() {
+  local distro="$1"
+  shift
+  local packages=("$@")
+  local cmd="${DISTRO_MGR[$distro]:-}"
+
+  [[ -n "$cmd" ]] || {
+    log_err "Distribuição não suportada: $distro"
+    return 1
+  }
+
+  [[ ${#packages[@]} -gt 0 ]] || return 0
+
+  msg_info "Distro detectada: ${cyan}${distro}${rst}"
+  msg_info "Instalando: ${cyan}${packages[*]}${rst}"
+
+  # shellcheck disable=SC2086
+  if ! $cmd "${packages[@]}"; then
+    log_err "Falha ao instalar os pacotes: ${packages[*]}"
+    return 1
+  fi
+
+  log_ok "Dependências instaladas."
+}
+
 sh_checkDependencies() {
-  local aBlock_files=()
+  local DISTRO
+  local -a missing=()
   local d
   local pkg
   local errorFound=false
-  declare -a missing
-  local DISTRO
   local cmsgNot
   local cmsgPkg
+
   DISTRO="$(detect_distro)"
   cmsgNot="$(gettext "Não foi possível encontrar o comando")"
   cmsgPkg="$(gettext "instalar pacote")"
@@ -415,44 +459,39 @@ sh_checkDependencies() {
   for d in "${!PACKAGEDEP[@]}"; do
     if ! command -v "$d" &>/dev/null; then
       pkg="${PACKAGEDEP[$d]}"
-        log_err "${red}Error${rst}: ${cmsgNot} $(printf "${cyan}%-15s${rst}\n" "$d") -> ${cmsgPkg} ${cyan}${pkg}${rst}"
-        missing+=("${pkg}")
-        errorFound=true
-    else
-      #log_msg "Check: ${cyan}$d"
-      :
+
+      log_err "${red}Error${rst}: ${cmsgNot} $(printf "${cyan}%-15s${rst}\n" "$d") -> ${cmsgPkg} ${cyan}${pkg}${rst}"
+
+      missing+=("${pkg}")
+      errorFound=true
     fi
   done
 
-  if $errorFound; then
+  if "$errorFound"; then
     replicate '='
+
     echo "${yellow}             $(gettext "IMPOSSÍVEL CONTINUAR")"
     echo "${black}$(gettext "Este script precisa dos comandos listados acima")"
     echo "${black}$(gettext "Instale-os e/ou verifique se eles estão em seu") ${red}\$PATH${reset}"
+
     replicate '='
 
-    local cmd="${DISTRO_MGR[$DISTRO]}"
-    #local pkgs="${DISTRO_PKGS[$DISTRO]}"
-    local pkgs="${missing[@]}"
+    if [[ -z "${DISTRO_MGR[$DISTRO]:-}" ]]; then
+      die "Distribuição não suportada: $DISTRO"
+    fi
 
-    msg_info "Distro detectada: ${cyan}$DISTRO${rst}"
     if readconf "$(gettext "Instalar dependências base agora?")"; then
       echo -e "${blue}::${rst} $(gettext "Preparando ambiente para") ${green}${DISTRO}${reset}..."
-      # Execução dinâmica: $cmd (gerenciador) + $pkgs (lista de pacotes)
-      if ! $cmd $pkgs; then
-        echo
-        echo -e "${red}$(gettext "Erro Crítico:")${rst} $(gettext "A instalação dos pacotes básicos falhou.")"
-        exit 1
-      fi
-        echo
-        echo -e "${green}$(gettext "Sucesso:")${reset} $(gettext "Dependências instaladas.")"
-      fi
+
+      install_packages "$DISTRO" "${missing[@]}" || exit 1
+    else
+      exit 1
     fi
+  fi
 }
 
-
 has_command() {
-  command -v "$1" >/dev/null && return 0 || return 1
+  command -v "$1" >/dev/null 2>&1
 }
 
 # configure ambiente
@@ -462,7 +501,7 @@ set_varcolors
 ##########################################################################################################
 
 usage() {
-cat << EOF
+  cat <<EOF
 
 ${cyan}Uso:${reset}
     ${0##*/} <arquivo.png> [arquivo2.png ...]
@@ -479,45 +518,85 @@ ${cyan}Descrição:${reset}
     • Sobrescreve o arquivo original
 
 EOF
-exit "${1:-0}"
+
+  exit "${1:-0}"
 }
 
 ################################################################################
 
 [[ $# -gt 0 ]] || usage 1
 
-if ! has_command pngquant; then
-  vinstall pngquant
-fi
+# Verifica as ferramentas necessárias.
+# Caso estejam ausentes, tenta instalá-las.
+for command in pngquant oxipng; do
+  if ! has_command "$command"; then
+    DISTRO="$(detect_distro)"
 
-if ! has_command oxipng; then
-  vinstall oxipng
-fi
+    [[ -n "${DISTRO_MGR[$DISTRO]:-}" ]] || \
+      die "Comando '$command' não encontrado e distribuição '$DISTRO' não suportada."
 
-for file in "$@"; do
-    if [[ ! -f "$file" ]]; then
-        printf "${red}Arquivo não encontrado:${reset} %s\n" "$file"
-        continue
+    if ! readconf "$(gettext "O comando '$command' não foi encontrado. Instalar agora?")"; then
+      die "Dependência ausente: $command"
     fi
 
-    [[ "${file,,}" == *.png ]] || {
-        printf "${yellow}Ignorando:${reset} %s (não é PNG)\n" "$file"
-        continue
-    }
+    install_packages "$DISTRO" "${PACKAGEDEP[$command]}" || exit 1
 
-    printf "${cyan}Otimizando:${reset} %s\n" "$file"
+    has_command "$command" || \
+      die "O comando '$command' continua indisponível após a instalação."
+  fi
+done
 
-    tmp="${file%.png}-fs8.png"
+for file in "$@"; do
+  if [[ ! -f "$file" ]]; then
+    printf "${red}Arquivo não encontrado:${reset} %s\n" "$file"
+    continue
+  fi
 
-    pngquant \
-        --quality=95-100 \
-        --force \
-        --output "$tmp" \
-        "$file"
+  [[ "${file,,}" == *.png ]] || {
+    printf "${yellow}Ignorando:${reset} %s (não é PNG)\n" "$file"
+    continue
+  }
 
-    oxipng -o max -q "$tmp"
+  printf "${cyan}Otimizando:${reset} %s\n" "$file"
 
-    mv -f "$tmp" "$file"
+  # Usa somente o nome do arquivo para o temporário.
+  # Isso permite trabalhar corretamente com:
+  #   arquivo.png
+  #   imagens/arquivo.png
+  #   /home/user/imagens/arquivo.png
+  filename="${file##*/}"
+  tmp="/tmp/${filename%.png}-fs8.png"
 
-    printf "${green}✔ Concluído:${reset} %s\n" "$file"
+  # Remove temporário anterior, caso exista.
+  rm -f "$tmp"
+
+  if ! pngquant \
+    --quality=80-95 \
+    --force \
+    --output "$tmp" \
+    "$file"; then
+
+    printf "${red}Erro:${reset} pngquant falhou para %s\n" "$file"
+    rm -f "$tmp"
+    continue
+  fi
+
+  if [[ ! -f "$tmp" ]]; then
+    printf "${red}Erro:${reset} pngquant não criou o arquivo temporário: %s\n" "$tmp"
+    continue
+  fi
+
+  if ! oxipng -o max -q "$tmp"; then
+    printf "${red}Erro:${reset} oxipng falhou para %s\n" "$file"
+    rm -f "$tmp"
+    continue
+  fi
+
+  if ! mv -f "$tmp" "$file"; then
+    printf "${red}Erro:${reset} não foi possível substituir %s\n" "$file"
+    rm -f "$tmp"
+    continue
+  fi
+
+  printf "${green}✔ Concluído:${reset} %s\n" "$file"
 done
