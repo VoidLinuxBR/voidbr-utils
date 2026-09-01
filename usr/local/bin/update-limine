@@ -203,13 +203,6 @@ printf "${blue}==>${reset} Adicionando entradas de menu...\n"
   echo '/Executar Memtest86+ (teste de RAM)'
   echo '  protocol: multiboot1'
   echo '  path: boot():/boot/memtest.bin'
-  echo
-  echo '/ Reiniciar computador'
-  echo '  PROTOCOL: reboot'
-  echo
-  echo '/ Desligar computador'
-  echo '  PROTOCOL: halt'        
-  echo
 
 } > "${cfg}.new"
 mv "${cfg}.new" "$cfg"
