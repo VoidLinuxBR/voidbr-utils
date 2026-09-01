@@ -157,6 +157,8 @@ printf '%s' "$copy_list" | while IFS=';' read -r kernel initramfs; do
   fi
 done || exit 1
 
+cp -a /boot/memtest.bin "$dest"/ || true
+
 printf "${blue}==>${reset} Adicionando entradas de menu...\n"
 {
   echo '# VoidBR Limine theme'
@@ -201,7 +203,7 @@ printf "${blue}==>${reset} Adicionando entradas de menu...\n"
   echo '  entry: Windows Boot Manager'
   echo
   echo '/Executar Memtest86+ (teste de RAM)'
-  echo '  protocol: multiboot1'
+  echo '  protocol: linux'
   echo '  path: boot():/boot/memtest.bin'
 
 } > "${cfg}.new"
