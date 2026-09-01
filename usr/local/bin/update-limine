@@ -157,7 +157,9 @@ printf '%s' "$copy_list" | while IFS=';' read -r kernel initramfs; do
   fi
 done || exit 1
 
-cp -a /boot/memtest.bin "$dest"/ || true
+if [ -f /boot/memtest.bin ]; then
+  cp -a /boot/memtest.bin "$dest"/ || true
+fi
 
 printf "${blue}==>${reset} Adicionando entradas de menu...\n"
 {
