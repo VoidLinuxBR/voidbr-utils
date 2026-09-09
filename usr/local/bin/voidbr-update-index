@@ -247,11 +247,11 @@ voidbr_archive_old_isos() {
 
 			[[ "$iso" == "$latest" ]] && continue
 
-			mv -f \
-				"$ISO_BASE_DIR/current/$iso" \
-				"$ISO_BASE_DIR/old/$iso"
+      mv -f "$ISO_BASE_DIR/current/${iso}" "$ISO_BASE_DIR/old/${iso}"
+      msg "${BLUE}[MOVE]${RESET} ${GREEN}${iso}${RESET} ${CYAN}->${RESET} old/"
+      mv -f "$ISO_BASE_DIR/current/${iso}.md5" "$ISO_BASE_DIR/old/${iso}.md5"
+      msg "${BLUE}[MOVE]${RESET} ${GREEN}${iso}.md5${RESET} ${CYAN}->${RESET} old/"
 
-			msg "${BLUE}[MOVE]${RESET} ${GREEN}${iso}${RESET} ${CYAN}->${RESET} old/"
 		done < <(
 			find "$ISO_BASE_DIR/current" -maxdepth 1 \
 				-name "voidbr-live-${flavor}-x86_64-*.iso" \
