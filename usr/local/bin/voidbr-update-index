@@ -267,6 +267,14 @@ voidbr_archive_old_isos() {
 
       mv -f "$ISO_DIR/${iso}" "$ISO_BASE_DIR/old/${iso}"
       msg "${BLUE}[MOVE]${RESET} ${GREEN}${iso}${RESET} ${CYAN}->${RESET} old/"
+
+      if [[ -f "$ISO_BASE_DIR/md5/${iso}.md5" ]]; then
+        mv -f "$ISO_BASE_DIR/md5/${iso}.md5" \
+          "$ISO_BASE_DIR/old/${iso}.md5"
+
+        msg "${BLUE}[MOVE]${RESET} ${GREEN}${iso}.md5${RESET} ${CYAN}->${RESET} old/"
+      fi
+
     done < <(
       find "$ISO_DIR" -maxdepth 1 \
         -type f \
@@ -274,13 +282,6 @@ voidbr_archive_old_isos() {
         -printf '%f\n'
     )
 
-  done
-
-  for iso in "$ISO_DIR"/*.md5; do
-    [[ -f "$iso" ]] || continue
-
-    mv -f "$iso" "$ISO_BASE_DIR/old/${iso##*/}"
-    msg "${BLUE}[MOVE]${RESET} ${GREEN}${iso##*/}${RESET} ${CYAN}->${RESET} old/"
   done
 
   msg "${GREEN}Feito!${RESET}"
