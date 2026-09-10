@@ -17,7 +17,6 @@ RESET='\e[0m'
 set_varcolors() {
   # does the terminal support true-color?
   if [[ -n "$(command -v "tput")" ]]; then
-    #tput setaf 127 | cat -v  #capturar saida
     : "${RED=$(tput bold)$(tput setaf 196)}"
     : "${GREEN=$(tput bold)$(tput setaf 2)}"
     : "${YELLOW=$(tput bold)$(tput setaf 3)}"
@@ -73,7 +72,7 @@ set_varcolors() {
     : "${roxa=$(tput setab 125)}"
     : "${violeta=$(tput setab 61)}"
 
-    : "${COL_NC='\e[0m'}" # No Color
+    : "${COL_NC='\e[0m'}"
     : "${COL_LIGHT_GREEN='\e[1;32m'}"
     : "${COL_LIGHT_RED='\e[1;31m'}"
     : "${DONE="${COL_LIGHT_GREEN} done!${COL_NC}"}"
@@ -100,6 +99,7 @@ log_ok_tab()   { echo -e "  ${TICK} ${*}${reset}"; }
 log_err_tab()  { echo -e "  ${CROSS} ${*}${reset}"; }
 log_mid_tab()  { echo -e "  ${MID} ${*}${reset}"; }
 log_warn_tab() { echo -e "  ${WARN} ${*}${reset}"; }
+
 die() {
   echo -e "${CROSS} ${red}${*}${reset}"
   exit 1
@@ -112,14 +112,15 @@ sh_checkroot() {
 elevate_to_root() {
   msg "This script must be run as root. Elevating privileges..."
   ccabec+='root [elevated]'
-  # Tenta usar sudo primeiro (caso esteja configurado)
+
   if command -v sudo >/dev/null 2>&1; then
     exec sudo bash "$0" "$@"
   fi
-  # Se sudo falhar, tenta su
+
   if command -v su >/dev/null 2>&1; then
     exec su -c "$0 $*"
   fi
+
   die "Error: Unable to elevate privileges. Run manually as root."
 }
 
@@ -127,140 +128,156 @@ set_varcolors
 sh_checkroot "$@"
 
 [[ -d "$ISO_DIR" ]] || {
-	msg "${red}Erro:${RESET} diretório não encontrado: ${yellow}$ISO_DIR${reset}"
-	exit 1
+  msg "${red}Erro:${RESET} diretório não encontrado: ${yellow}$ISO_DIR${reset}"
+  exit 1
 }
 
 voidbr_update_index_html() {
-	[[ -f "$INDEX" ]] || {
-		msg "${red}Erro:${reset} arquivo não encontrado: ${yellow}$INDEX${reset}"
-		exit 1
-	}
+  [[ -f "$INDEX" ]] || {
+    msg "${red}Erro:${RESET} arquivo não encontrado: ${yellow}$INDEX${reset}"
+    exit 1
+  }
 
-	cp -a "$INDEX" "$INDEX.bak"
+  cp -a "$INDEX" "$INDEX.bak"
 
-	msg "${CYAN}==============================================${RESET}"
-	msg "${CYAN}     Atualizador de links do index.html das ISOs VoidBR${RESET}"
-	msg "${CYAN}==============================================${RESET}"
+  msg "${CYAN}==============================================${RESET}"
+  msg "${CYAN}     Atualizador de links do index.html das ISOs VoidBR${RESET}"
+  msg "${CYAN}==============================================${RESET}"
 
-	update_iso() {
-		local flavor="$1"
-		local latest
+  update_iso() {
+    local flavor="$1"
+    local latest
 
-		latest=$(
-			find "$ISO_DIR" -maxdepth 1 \
-				-name "voidbr-live-${flavor}-x86_64-*.iso" \
-				-printf '%f\n' |
-				sort -V |
-				tail -n1
-		)
+    latest=$(
+      find "$ISO_DIR" -maxdepth 1 \
+        -name "voidbr-live-${flavor}-x86_64-*.iso" \
+        -printf '%f\n' |
+        sort -V |
+        tail -n1
+    )
 
-		if [[ -z "$latest" ]]; then
-			msg "${YELLOW}[SKIP]${RESET} ${flavor}: nenhuma ISO encontrada."
-			return
-		fi
+    if [[ -z "$latest" ]]; then
+      msg "${YELLOW}[SKIP]${RESET} ${flavor}: nenhuma ISO encontrada."
+      return
+    fi
 
-		msg "${BLUE}[INFO]${RESET} ${flavor}: ${GREEN}${latest}${RESET}"
+    msg "${BLUE}[INFO]${RESET} ${flavor}: ${GREEN}${latest}${RESET}"
 
-		sed -Ei \
-			"s#iso/voidbr-live-${flavor}-x86_64-[^\"]*\.iso#iso/current/${latest}#g" \
-			"$INDEX"
-		sed -Ei \
-			"s#iso/current/voidbr-live-${flavor}-x86_64-[^\"]*\.iso#iso/current/${latest}#g" \
-			"$INDEX"
+    sed -Ei \
+      "s#iso/voidbr-live-${flavor}-x86_64-[^\"]*\.iso#iso/current/${latest}#g" \
+      "$INDEX"
 
-	}
+    sed -Ei \
+      "s#iso/current/voidbr-live-${flavor}-x86_64-[^\"]*\.iso#iso/current/${latest}#g" \
+      "$INDEX"
+  }
 
-	for flavor in \
-		base \
-		xfce \
-		gnome \
-		plasma \
-		cinnamon \
-		mate \
-		sway \
-		hyprland; do
-		update_iso "$flavor"
-	done
+  for flavor in \
+    base \
+    xfce \
+    gnome \
+    plasma \
+    cinnamon \
+    mate \
+    sway \
+    hyprland; do
+    update_iso "$flavor"
+  done
 
-	msg ""
-	msg "${GREEN}✔ ${INDEX} atualizado com sucesso.${RESET}"
-	msg "${CYAN}Backup:${RESET} ${INDEX}.bak"
-	msg "Feito!"
-	echo
+  msg ""
+  msg "${GREEN}✔ ${INDEX} atualizado com sucesso.${RESET}"
+  msg "${CYAN}Backup:${RESET} ${INDEX}.bak"
+  msg "Feito!"
+  echo
 }
 
 voidbr_update_iso_links() {
-	local flavor latest link
+  local flavor latest link
 
-	msg "${CYAN}==============================================${RESET}"
-	msg "${CYAN}     Atualizador de links das ISOs VoidBR${RESET}"
-	msg "${CYAN}==============================================${RESET}"
+  msg "${CYAN}==============================================${RESET}"
+  msg "${CYAN}     Atualizador de links das ISOs VoidBR${RESET}"
+  msg "${CYAN}==============================================${RESET}"
 
-	for flavor in $(find "$ISO_DIR" -maxdepth 1 -name 'voidbr-live-*-x86_64-*.iso' |
-		sed -E 's#.*/voidbr-live-([^-]+)-x86_64-.*#\1#' |
-		sort -u); do
+  for flavor in $(
+    find "$ISO_DIR" -maxdepth 1 \
+      -type f \
+      -name 'voidbr-live-*-x86_64-*.iso' \
+      -printf '%f\n' |
+      sed -E 's/^voidbr-live-([^-]+)-x86_64-.*$/\1/' |
+      sort -u
+  ); do
 
-		latest=$(
-			find "$ISO_DIR" -maxdepth 1 \
-				-name "voidbr-live-${flavor}-x86_64-*.iso" \
-				-printf '%f\n' |
-				sort -V |
-				tail -n1
-		)
+    latest=$(
+      find "$ISO_DIR" -maxdepth 1 \
+        -type f \
+        -name "voidbr-live-${flavor}-x86_64-*.iso" \
+        -printf '%f\n' |
+        sort -V |
+        tail -n1
+    )
 
-		[[ -n "$latest" ]] || continue
+    [[ -n "$latest" ]] || continue
 
-		link="voidbr-live-${flavor}-current.iso"
+    link="voidbr-live-${flavor}-current.iso"
 
-		ln -sfn "current/$latest" "$ISO_BASE_DIR/$link"
-		msg "${BLUE}[LINK]${RESET} ${link} ${CYAN}->${RESET} ${GREEN}${latest}${RESET}"
-	done
-	msg "Feito!"
+    ln -sfn "current/$latest" "$ISO_BASE_DIR/$link"
+    msg "${BLUE}[LINK]${RESET} ${link} ${CYAN}->${RESET} ${GREEN}${latest}${RESET}"
+  done
+
+  msg "Feito!"
 }
 
 voidbr_archive_old_isos() {
-	local flavor latest iso
+  local flavor latest iso
 
-	mkdir -p "$ISO_BASE_DIR/old"
+  mkdir -p "$ISO_BASE_DIR/old"
 
-	msg "${CYAN}==============================================${RESET}"
-	msg "${CYAN}     Movendo ISOs antigas para ${ISO_BASE_DIR}/old/${RESET}"
-	msg "${CYAN}==============================================${RESET}"
+  msg "${CYAN}==============================================${RESET}"
+  msg "${CYAN}     Movendo ISOs antigas para ${ISO_BASE_DIR}/old/${RESET}"
+  msg "${CYAN}==============================================${RESET}"
 
-	for flavor in $(find "$ISO_BASE_DIR/current" -maxdepth 1 -name 'voidbr-live-*-x86_64-*.iso' |
-		sed -E 's#.*/voidbr-live-([^-]+)-x86_64-.*#\1#' |
-		sort -u); do
+  for flavor in $(
+    find "$ISO_DIR" -maxdepth 1 \
+      -type f \
+      -name 'voidbr-live-*-x86_64-*.iso' \
+      -printf '%f\n' |
+      sed -E 's/^voidbr-live-([^-]+)-x86_64-.*$/\1/' |
+      sort -u
+  ); do
 
-		latest=$(
-			find "$ISO_BASE_DIR/current" -maxdepth 1 \
-				-name "voidbr-live-${flavor}-x86_64-*.iso" \
-				-printf '%f\n' |
-				sort -V |
-				tail -n1
-		)
+    latest=$(
+      find "$ISO_DIR" -maxdepth 1 \
+        -type f \
+        -name "voidbr-live-${flavor}-x86_64-*.iso" \
+        -printf '%f\n' |
+        sort -V |
+        tail -n1
+    )
 
-		[[ -n "$latest" ]] || continue
+    [[ -n "$latest" ]] || continue
 
-		while IFS= read -r iso; do
-			iso="${iso##*/}"
+    while IFS= read -r iso; do
+      [[ "$iso" == "$latest" ]] && continue
 
-			[[ "$iso" == "$latest" ]] && continue
-
-      mv -f "$ISO_BASE_DIR/current/${iso}" "$ISO_BASE_DIR/old/${iso}"
+      mv -f "$ISO_DIR/${iso}" "$ISO_BASE_DIR/old/${iso}"
       msg "${BLUE}[MOVE]${RESET} ${GREEN}${iso}${RESET} ${CYAN}->${RESET} old/"
-      mv -f "$ISO_BASE_DIR/current/${iso}.md5" "$ISO_BASE_DIR/old/${iso}.md5"
-      msg "${BLUE}[MOVE]${RESET} ${GREEN}${iso}.md5${RESET} ${CYAN}->${RESET} old/"
+    done < <(
+      find "$ISO_DIR" -maxdepth 1 \
+        -type f \
+        -name "voidbr-live-${flavor}-x86_64-*.iso" \
+        -printf '%f\n'
+    )
 
-		done < <(
-			find "$ISO_BASE_DIR/current" -maxdepth 1 \
-				-name "voidbr-live-${flavor}-x86_64-*.iso" \
-				-printf '%f\n'
-		)
+  done
 
-	done
+  for iso in "$ISO_DIR"/*.md5; do
+    [[ -f "$iso" ]] || continue
 
-	msg "${GREEN}Feito!${RESET}"
+    mv -f "$iso" "$ISO_BASE_DIR/old/${iso##*/}"
+    msg "${BLUE}[MOVE]${RESET} ${GREEN}${iso##*/}${RESET} ${CYAN}->${RESET} old/"
+  done
+
+  msg "${GREEN}Feito!${RESET}"
 }
 
 voidbr_update_index_html
