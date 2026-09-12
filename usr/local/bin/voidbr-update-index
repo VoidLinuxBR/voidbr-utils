@@ -1,9 +1,3 @@
-
-
-
-
-
-
 #!/usr/bin/env bash
 
 set -euo pipefail
@@ -156,10 +150,11 @@ voidbr_update_index_html() {
 
     latest=$(
       find "$ISO_DIR" -maxdepth 1 \
+        -type f \
         -name "voidbr-live-${flavor}-x86_64-*.iso" \
         -printf '%f\n' |
-        sort -V |
-        tail -n1
+      sort -V |
+      tail -n1
     )
 
     if [[ -z "$latest" ]]; then
@@ -178,15 +173,14 @@ voidbr_update_index_html() {
       "$INDEX"
   }
 
-  for flavor in \
-    base \
-    xfce \
-    gnome \
-    plasma \
-    cinnamon \
-    mate \
-    sway \
-    hyprland; do
+  for flavor in $(
+    find "$ISO_DIR" -maxdepth 1 \
+      -type f \
+      -name 'voidbr-live-*-x86_64-*.iso' \
+      -printf '%f\n' |
+    sed -E 's/^voidbr-live-(.*)-x86_64-[0-9].*$/\1/' |
+    sort -u
+  ); do
     update_iso "$flavor"
   done
 
@@ -209,8 +203,8 @@ voidbr_update_iso_links() {
       -type f \
       -name 'voidbr-live-*-x86_64-*.iso' \
       -printf '%f\n' |
-      sed -E 's/^voidbr-live-([^-]+)-x86_64-.*$/\1/' |
-      sort -u
+    sed -E 's/^voidbr-live-(.*)-x86_64-[0-9].*$/\1/' |
+    sort -u
   ); do
 
     latest=$(
@@ -218,8 +212,8 @@ voidbr_update_iso_links() {
         -type f \
         -name "voidbr-live-${flavor}-x86_64-*.iso" \
         -printf '%f\n' |
-        sort -V |
-        tail -n1
+      sort -V |
+      tail -n1
     )
 
     [[ -n "$latest" ]] || continue
@@ -231,6 +225,25 @@ voidbr_update_iso_links() {
   done
 
   msg "Feito!"
+}
+
+voidbr_move_new_md5() {
+  local md5
+
+  mkdir -p "$ISO_BASE_DIR/md5"
+
+  msg "${CYAN}==============================================${RESET}"
+  msg "${CYAN}     Movendo novos MD5 para ${ISO_BASE_DIR}/md5/${RESET}"
+  msg "${CYAN}==============================================${RESET}"
+
+  for md5 in "$ISO_DIR"/*.md5; do
+    [[ -f "$md5" ]] || continue
+
+    mv -f "$md5" "$ISO_BASE_DIR/md5/"
+    msg "${BLUE}[MOVE]${RESET} ${GREEN}${md5##*/}${RESET} ${CYAN}->${RESET} md5/"
+  done
+
+  msg "${GREEN}Feito!${RESET}"
 }
 
 voidbr_archive_old_isos() {
@@ -247,8 +260,8 @@ voidbr_archive_old_isos() {
       -type f \
       -name 'voidbr-live-*-x86_64-*.iso' \
       -printf '%f\n' |
-      sed -E 's/^voidbr-live-([^-]+)-x86_64-.*$/\1/' |
-      sort -u
+    sed -E 's/^voidbr-live-(.*)-x86_64-[0-9].*$/\1/' |
+    sort -u
   ); do
 
     latest=$(
@@ -256,8 +269,8 @@ voidbr_archive_old_isos() {
         -type f \
         -name "voidbr-live-${flavor}-x86_64-*.iso" \
         -printf '%f\n' |
-        sort -V |
-        tail -n1
+      sort -V |
+      tail -n1
     )
 
     [[ -n "$latest" ]] || continue
@@ -269,7 +282,8 @@ voidbr_archive_old_isos() {
       msg "${BLUE}[MOVE]${RESET} ${GREEN}${iso}${RESET} ${CYAN}->${RESET} old/"
 
       if [[ -f "$ISO_BASE_DIR/md5/${iso}.md5" ]]; then
-        mv -f "$ISO_BASE_DIR/md5/${iso}.md5" \
+        mv -f \
+          "$ISO_BASE_DIR/md5/${iso}.md5" \
           "$ISO_BASE_DIR/old/${iso}.md5"
 
         msg "${BLUE}[MOVE]${RESET} ${GREEN}${iso}.md5${RESET} ${CYAN}->${RESET} old/"
@@ -289,4 +303,5 @@ voidbr_archive_old_isos() {
 
 voidbr_update_index_html
 voidbr_update_iso_links
+voidbr_move_new_md5
 voidbr_archive_old_isos
