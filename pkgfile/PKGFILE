@@ -16,8 +16,8 @@ depends=(
 	smartmontools
 	umc
 	pigz
-	geoip
-	geoipupdate
+#	geoip
+#	geoipupdate
 	dialog
 	gettext
 	pv
