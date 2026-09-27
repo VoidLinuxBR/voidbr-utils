@@ -457,13 +457,23 @@ sh_checkroot "$@"
 ##########################################################################################################
 
 run_cmd '
+  rm -f .dialogrc
+  rm -f .dircolors
+  rm -f .tmux.conf
+  rm -f .git-prompt.sh
+  rm -f .inputrc
+  rm -f .vimrc
+  rm -f .Xauthority
+  rm -f .xsession-errors
+  rm -f .xsession-errors.old
   rm -f .bash*
   rm -f .ps*
   rm -f .fzf*
-#  rm -rf .cache
+  rm -f .face
+  rm -rf .cache
   rm -rf .dbus
   rm -rf .ssh
-  rm -rf .config/autostart
+#  rm -rf .config/autostart
   rm -rf .config/xfce4
   rm -rf .config/mozilla
   rm -rf .config/octoxbps
@@ -488,25 +498,30 @@ run_cmd '
   rm -rf "Público"
   rm -rf "share"
   rm -rf "share"
-  rm -rf Vídeos
+  rm -rf "Vídeos"
   rm -rf .vim
-  rm -rf .config/gtk-3.0
-  rm -rf .config/gtk-4.0
-  rm -rf .config/pipewire
   rm -f .local/share/recently-used.xbel
+  rm -f .config/gtkrc
+  rm -f .config/gtkrc-2.0
   rm -f .config/kdeglobals.bak
   rm -f .config/user-dirs.dirs
   rm -f .config/user-dirs.locale
-  rm -f .config/gtkrc
-  rm -f .config/gtkrc-2.0
-  rm -f .dialogrc
-  rm -f .dircolors
-  rm -f .tmux.conf
-  rm -f .git-prompt.sh
-  rm -f .inputrc
-  rm -f .vimrc
-  rm -f .Xauthority
-  rm -f .xsession-errors
-  rm -f .xsession-errors.old
+  rm -rf .config/gtk-3.0
+  rm -rf .config/gtk-4.0
+  rm -rf .config/pipewire
+  rm -rf .pki
+  rm -rf .conky
+  rm -rf .themes
+  rm -rf .local/etc
+  rm -rf .local/share/vlc
+  rm -rf .local/share/sddm
+  rm -f .local/share/user-places*
+  rm -rf .local/share/Mousepad
+  rm -rf .local/share/gvfs-metadata
+  rm -rf .local/share/evolution
+  rm -rf .config/vlc
+  rm -rf .config/qt5ct
+  rm -rf .config/qt6ct
+
 
 '
