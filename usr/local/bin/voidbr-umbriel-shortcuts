@@ -1,0 +1,166 @@
+#!/usr/bin/env python3
+import gettext
+import gi
+
+gi.require_version("Gtk", "4.0")
+from gi.repository import Gtk, Gdk
+
+APPNAME = "umbriel-cheatsheet"
+LOCALEDIR = "/usr/share/locale"
+
+gettext.bindtextdomain(APPNAME, LOCALEDIR)
+gettext.textdomain(APPNAME)
+_ = gettext.gettext
+
+SHORTCUTS = [
+    (_("Aplicativos"), [
+        ("Mod", _("Abrir o lançador de aplicativos do Noctalia")),
+        ("Mod + Return", _("Abrir o terminal foot")),
+        ("Print", _("Capturar a tela")),
+        ("Shift + Print", _("Capturar a tela inteira")),
+    ]),
+    (_("Foco"), [
+        ("Mod + J", _("Mover o foco para baixo")),
+        ("Mod + J", _("Mover o foco para baixo")),
+        ("Mod + F1", _("Focar a próxima janela")),
+        ("Mod + H", _("Mover o foco para a esquerda")),
+        ("Mod + K", _("Mover o foco para cima")),
+        ("Mod + L", _("Mover o foco para a direita")),
+        ("Mod + Wheel Up", _("Alternar o foco entre janelas flutuantes")),
+    ]),
+    (_("Mover e redimensionar"), [
+        ("Mod + ,", _("Mover a janela para a coluna à esquerda")),
+        ("Mod + .", _("Mover a janela para a coluna à direita")),
+        ("Mod + R", _("Alternar a extensão principal da coluna")),
+        ("Mod + Shift + ↓", _("Mover a janela para baixo")),
+        ("Mod + Shift + ←", _("Mover a coluna para a esquerda")),
+        ("Mod + Shift + R", _("Alternar a extensão principal da coluna (inverso)")),
+        ("Mod + Shift + →", _("Mover a coluna para a direita")),
+        ("Mod + Shift + ↑", _("Mover a janela para cima")),
+    ]),
+    (_("Janelas"), [
+        ("Mod + Ctrl + F", _("Alternar maximização da janela")),
+        ("Mod + F", _("Alternar tela cheia")),
+        ("Mod + M", _("Maximizar a janela até as bordas")),
+        ("Mod + P", _("Fixar ou desafixar a janela")),
+        ("Mod + Q", _("Fechar a janela")),
+        ("Mod + T", _("Alternar janela flutuante")),
+    ]),
+    (_("Área temporária"), [
+        ("Mod + Ctrl + Space", _("Restaurar janela da área temporária")),
+        ("Mod + Shift + Space", _("Mover janela para a área temporária")),
+        ("Mod + Space", _("Mostrar ou ocultar a área temporária")),
+        ("Mod + Tab", _("Focar a próxima janela da área temporária")),
+    ]),
+    (_("Áreas de trabalho"), [
+        ("Mod + 1…9", _("Alternar para a área de trabalho de 1 a 9")),
+        ("Mod + Shift + 1…9", _("Mover janela para a área de trabalho de 1 a 9")),
+    ]),
+    (_("Visão geral"), [
+        ("Mod + O", _("Mostrar ou ocultar a visão geral")),
+    ]),
+    (_("Sistema"), [
+        ("Mod + Escape", _("Encerrar a sessão")),
+        ("Mod + Shift + Escape", _("Ativar ou desativar a inibição de atalhos")),
+        ("Mod + ?", _("Mostrar ou ocultar este guia de atalhos")),
+        ("Mod + /", _("Atalho adicional")),
+    ]),
+]
+
+CSS = b"""
+window { background: #211f22; color: #ded7e2; }
+.cheatsheet { background: #211f22; border: 1px solid #b9a9bf; border-radius: 10px; padding: 22px 24px 18px 24px; }
+.title { font-family: monospace; font-size: 16px; font-weight: bold; color: #d8c9dc; margin-bottom: 10px; }
+.section { font-family: monospace; font-size: 12px; font-weight: bold; color: #cfc4d2; margin-top: 5px; margin-bottom: 1px; }
+.key { font-family: monospace; font-size: 11px; color: #e0d3e8; background: #39343c; padding: 1px 5px; }
+.desc { font-family: monospace; font-size: 11px; color: #e0d9e1; }
+.footer { font-family: monospace; font-size: 11px; color: #cfc4d2; margin-top: 10px; }
+"""
+
+class Win(Gtk.ApplicationWindow):
+    def __init__(self, app):
+        super().__init__(application=app, title=_("Atalhos do Umbriel"))
+        self.set_default_size(860, 610)
+        self.set_resizable(False)
+
+        provider = Gtk.CssProvider()
+        provider.load_from_data(CSS)
+        Gtk.StyleContext.add_provider_for_display(
+            Gdk.Display.get_default(), provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
+
+        root = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+        root.add_css_class("cheatsheet")
+
+        title = Gtk.Label(label=_("Atalhos do Umbriel"), xalign=0)
+        title.add_css_class("title")
+        root.append(title)
+
+        grid = Gtk.Grid()
+        grid.set_column_spacing(28)
+        grid.set_column_homogeneous(True)
+
+        left = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=7)
+        right = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=7)
+
+        for title_text, rows in SHORTCUTS[:3]:
+            left.append(self.make_section(title_text, rows))
+        for title_text, rows in SHORTCUTS[3:]:
+            right.append(self.make_section(title_text, rows))
+
+        grid.attach(left, 0, 0, 1, 1)
+        grid.attach(right, 1, 0, 1, 1)
+        root.append(grid)
+
+        footer = Gtk.Label(
+            label=_("Mod = Super · pressione qualquer tecla para fechar"),
+            xalign=0
+        )
+        footer.add_css_class("footer")
+        root.append(footer)
+        self.set_child(root)
+
+        keys = Gtk.EventControllerKey()
+        keys.connect("key-pressed", self.on_key_pressed)
+        self.add_controller(keys)
+
+        click = Gtk.GestureClick()
+        click.connect("released", lambda *_: self.close())
+        self.add_controller(click)
+
+    @staticmethod
+    def make_section(title, rows):
+        section = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=1)
+        heading = Gtk.Label(label=title, xalign=0)
+        heading.add_css_class("section")
+        section.append(heading)
+
+        for key, description in rows:
+            row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+            key_label = Gtk.Label(label=key, xalign=0)
+            key_label.add_css_class("key")
+            key_label.set_width_chars(max(8, len(key)))
+            desc_label = Gtk.Label(label=description, xalign=0)
+            desc_label.add_css_class("desc")
+            desc_label.set_hexpand(True)
+            row.append(key_label)
+            row.append(desc_label)
+            section.append(row)
+        return section
+
+    def on_key_pressed(self, controller, keyval, keycode, state):
+        self.close()
+        return True
+
+
+class App(Gtk.Application):
+    def __init__(self):
+        super().__init__(application_id="org.voidbr.umbriel-cheatsheet")
+
+    def do_activate(self):
+        Win(self).present()
+
+
+if __name__ == "__main__":
+    App().run()
