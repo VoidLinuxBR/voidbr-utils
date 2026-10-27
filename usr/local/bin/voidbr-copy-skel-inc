@@ -12,6 +12,7 @@ set -e
 # - com --user, deve ser executado como root
 # - arquivos idênticos são ignorados
 # - arquivos diferentes são salvos em backup antes da substituição
+#   (com --only-new, arquivos existentes nunca são alterados)
 # - arquivos novos são copiados
 # - symlinks são comparados pelo destino
 # - arquivos copiados de /etc/skel passam a pertencer ao usuário de destino
@@ -21,6 +22,7 @@ skel="/etc/skel"
 target_user=""
 force=0
 quiet=0
+only_new=0
 
 # -----------------------------------------------------------------------------
 # Cores
@@ -61,6 +63,7 @@ count_updated=0
 count_identical=0
 count_backup=0
 count_dirs=0
+count_kept=0
 count_errors=0
 
 # -----------------------------------------------------------------------------
@@ -96,6 +99,7 @@ ${white}Comportamento:${reset}
   ${yellow}↻${reset}  Diferente     → backup + atualização
   ${magenta}↳${reset}  Backup        → original preservado
   ${red}!${reset}  Conflito      → nenhuma alteração
+  ${blue}~${reset}  Mantido       → diferente, preservado (--only-new)
 
 ${yellow}${bold}ATENÇÃO:${reset}
   Arquivos diferentes existentes no HOME serão ${red}${bold}SUBSTITUÍDOS${reset}
@@ -110,6 +114,8 @@ ${yellow}${bold}ATENÇÃO:${reset}
 ${white}Opções:${reset}
   ${green}--user USUARIO${reset}   Sincroniza com o HOME do USUARIO informado.
                     ${dim}Requer que o script seja executado como root.${reset}
+  ${green}--only-new${reset}       Copia somente arquivos que não existem no HOME.
+                    ${dim}Arquivos existentes nunca são alterados.${reset}
   ${green}--force${reset}          Não pede confirmação antes de sincronizar.
   ${green}-q, --quiet${reset}      Não exibe nada, exceto erros. Implica --force.
   ${green}-h, --help${reset}       Exibe esta ajuda.
@@ -119,6 +125,7 @@ ${white}Exemplos:${reset}
   ${green}sudo $(basename "$0") --user joao${reset}
   ${green}$(basename "$0") --force${reset}
   ${green}$(basename "$0") --quiet${reset}
+  ${green}sudo $(basename "$0") --user joao --only-new --quiet${reset}
 
 EOF
 }
@@ -142,6 +149,11 @@ parse_args() {
 
             --force)
                 force=1
+                shift
+                ;;
+
+            --only-new)
+                only_new=1
                 shift
                 ;;
 
@@ -288,11 +300,19 @@ confirm() {
 
     echo
 
-    printf '  Somente arquivos %snovos%s ou %sdiferentes%s serão copiados.\n' \
-        "$cyan" "$reset" "$yellow" "$reset"
+    if (( only_new == 1 )); then
+        printf '  Somente arquivos %snovos%s serão copiados.\n' \
+            "$cyan" "$reset"
 
-    printf '  Arquivos diferentes serão %spreservados em backup%s.\n' \
-        "$magenta" "$reset"
+        printf '  Arquivos existentes %snão serão alterados%s.\n' \
+            "$blue" "$reset"
+    else
+        printf '  Somente arquivos %snovos%s ou %sdiferentes%s serão copiados.\n' \
+            "$cyan" "$reset" "$yellow" "$reset"
+
+        printf '  Arquivos diferentes serão %spreservados em backup%s.\n' \
+            "$magenta" "$reset"
+    fi
 
     echo
 
@@ -405,6 +425,17 @@ process_file() {
             return
         fi
 
+        if (( only_new == 1 )); then
+
+            ((count_kept++)) || true
+
+            printf '  %s~%s %-12s %s%s%s\n' \
+                "$blue" "$reset" \
+                "mantido" "$dim" "$rel" "$reset"
+
+            return
+        fi
+
         backup_item "$dst" "$rel"
 
         copy_to_home "$src" "$dst"
@@ -479,6 +510,17 @@ process_link() {
             printf '  %s=%s %-12s %s%s%s\n' \
                 "$green" "$reset" \
                 "idêntico" "$dim" "$rel" "$reset"
+
+            return
+        fi
+
+        if (( only_new == 1 )); then
+
+            ((count_kept++)) || true
+
+            printf '  %s~%s %-12s %s%s%s\n' \
+                "$blue" "$reset" \
+                "mantido" "$dim" "$rel" "$reset"
 
             return
         fi
@@ -613,6 +655,11 @@ summary() {
 
     printf '  %s↳%s Backups     : %d\n' \
         "$magenta" "$reset" "$count_backup"
+
+    if (( count_kept > 0 )); then
+        printf '  %s~%s Mantidos    : %d\n' \
+            "$blue" "$reset" "$count_kept"
+    fi
 
     if (( count_dirs > 0 )); then
         printf '  %s+%s Diretórios  : %d\n' \
