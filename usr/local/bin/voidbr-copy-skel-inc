@@ -64,7 +64,21 @@ count_identical=0
 count_backup=0
 count_dirs=0
 count_kept=0
+count_renamed=0
 count_errors=0
+
+# -----------------------------------------------------------------------------
+# Arquivos renomeados no /etc/skel
+#
+# "nome antigo|nome novo", relativos ao HOME. Antes de sincronizar, o nome
+# antigo que estiver no HOME é renomeado para o novo (mantendo o conteúdo do
+# usuário) ou, se o novo já existir, removido (com backup). Evita, por exemplo,
+# dois autostarts do Plank subindo juntos.
+# -----------------------------------------------------------------------------
+
+renamed=(
+    ".config/autostart/Plank Dock.desktop|.config/autostart/plank.desktop"
+)
 
 # -----------------------------------------------------------------------------
 # Usage
@@ -100,6 +114,7 @@ ${white}Comportamento:${reset}
   ${magenta}↳${reset}  Backup        → original preservado
   ${red}!${reset}  Conflito      → nenhuma alteração
   ${blue}~${reset}  Mantido       → diferente, preservado (--only-new)
+  ${blue}»${reset}  Renomeado     → nome antigo do skel passa para o novo
 
 ${yellow}${bold}ATENÇÃO:${reset}
   Arquivos diferentes existentes no HOME serão ${red}${bold}SUBSTITUÍDOS${reset}
@@ -595,6 +610,48 @@ process_dir() {
 }
 
 # -----------------------------------------------------------------------------
+# Renomeados (ver array "renamed")
+# -----------------------------------------------------------------------------
+
+migrate_renamed() {
+    local item
+    local old_rel
+    local new_rel
+    local old_dst
+    local new_dst
+
+    for item in "${renamed[@]}"; do
+        old_rel="${item%%|*}"
+        new_rel="${item#*|}"
+        old_dst="$dest/$old_rel"
+        new_dst="$dest/$new_rel"
+
+        # só migra arquivo comum, e só se o skel já trouxer o nome novo
+        [[ -f "$old_dst" && ! -L "$old_dst" ]] || continue
+        [[ -e "$skel/$new_rel" ]] || continue
+
+        if [[ -e "$new_dst" || -L "$new_dst" ]]; then
+            backup_item "$old_dst" "$old_rel"
+            rm -f "$old_dst"
+
+            printf '  %s-%s %-12s %s\n' \
+                "$magenta" "$reset" \
+                "removido" "$old_rel"
+        else
+            mkdir -p "$(dirname "$new_dst")"
+            mv "$old_dst" "$new_dst"
+
+            printf '  %s»%s %-12s %s %s→ %s%s\n' \
+                "$blue" "$reset" \
+                "renomeado" "$old_rel" \
+                "$dim" "$new_rel" "$reset"
+        fi
+
+        ((count_renamed++)) || true
+    done
+}
+
+# -----------------------------------------------------------------------------
 # Sincronização
 # -----------------------------------------------------------------------------
 
@@ -608,6 +665,8 @@ sync_skel() {
         "$cyan" "$reset" "$bold" "$reset"
 
     echo
+
+    migrate_renamed
 
     while IFS= read -r -d '' src; do
 
@@ -659,6 +718,11 @@ summary() {
     if (( count_kept > 0 )); then
         printf '  %s~%s Mantidos    : %d\n' \
             "$blue" "$reset" "$count_kept"
+    fi
+
+    if (( count_renamed > 0 )); then
+        printf '  %s»%s Renomeados  : %d\n' \
+            "$blue" "$reset" "$count_renamed"
     fi
 
     if (( count_dirs > 0 )); then
