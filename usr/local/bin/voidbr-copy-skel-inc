@@ -81,6 +81,23 @@ renamed=(
 )
 
 # -----------------------------------------------------------------------------
+# Atalhos do instalador
+#
+# O voidbr-base-config traz o atalho do instalador em /etc/skel para o live.
+# Fora do live (sistema já instalado) ele não é copiado, e o que estiver no
+# HOME é removido: o xbps recoloca o arquivo no /etc/skel a cada atualização
+# do voidbr-base-config, e a cópia do skel o traria de volta para a área de
+# trabalho.
+# -----------------------------------------------------------------------------
+
+installer_links=(
+    "Área de trabalho/void-install.desktop"
+    "Área de trabalho/voidbr-install.desktop"
+    "Desktop/void-install.desktop"
+    "Desktop/voidbr-install.desktop"
+)
+
+# -----------------------------------------------------------------------------
 # Usage
 # -----------------------------------------------------------------------------
 
@@ -652,6 +669,39 @@ migrate_renamed() {
 }
 
 # -----------------------------------------------------------------------------
+# Atalhos do instalador (ver array "installer_links")
+# -----------------------------------------------------------------------------
+
+is_live() {
+    [[ -d /run/initramfs/live ]]
+}
+
+is_installer_link() {
+    local rel="$1"
+    local item
+
+    for item in "${installer_links[@]}"; do
+        [[ "$rel" == "$item" ]] && return 0
+    done
+    return 1
+}
+
+remove_installer_links() {
+    local rel
+
+    is_live && return 0
+
+    for rel in "${installer_links[@]}"; do
+        [[ -e "$dest/$rel" || -L "$dest/$rel" ]] || continue
+        rm -f "$dest/$rel"
+
+        printf '  %s-%s %-12s %s\n' \
+            "$magenta" "$reset" \
+            "removido" "$rel"
+    done
+}
+
+# -----------------------------------------------------------------------------
 # Sincronização
 # -----------------------------------------------------------------------------
 
@@ -667,10 +717,16 @@ sync_skel() {
     echo
 
     migrate_renamed
+    remove_installer_links
 
     while IFS= read -r -d '' src; do
 
         rel="${src#"$skel"/}"
+
+        # fora do live, o atalho do instalador não vai para o HOME
+        if ! is_live && is_installer_link "$rel"; then
+            continue
+        fi
 
         if [[ -L "$src" ]]; then
             process_link "$src" "$rel"

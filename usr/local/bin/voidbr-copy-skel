@@ -383,6 +383,19 @@ echo
 )
 
 # -----------------------------------------------------------------------------
+# Atalho do instalador: só faz sentido no live. Fora dele (sistema instalado),
+# remove o que veio do /etc/skel (o voidbr-base-config o recoloca lá a cada
+# atualização).
+# -----------------------------------------------------------------------------
+
+if [[ ! -d /run/initramfs/live ]]; then
+    for rel in "Área de trabalho/void-install.desktop" "Área de trabalho/voidbr-install.desktop" \
+        "Desktop/void-install.desktop" "Desktop/voidbr-install.desktop"; do
+        rm -f "$dest/$rel"
+    done
+fi
+
+# -----------------------------------------------------------------------------
 # Ajuste de dono (somente com --user)
 # -----------------------------------------------------------------------------
 
