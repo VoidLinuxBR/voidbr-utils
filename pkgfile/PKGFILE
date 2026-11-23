@@ -15,6 +15,7 @@ md5sums=('SKIP')
 depends=(
 	"bash>=0"
 	smartmontools
+	voidbr-voidbrctl
 	umc
 	pigz
 #	geoip
