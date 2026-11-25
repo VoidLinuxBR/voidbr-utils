@@ -1,0 +1,778 @@
+#!/usr/bin/env bash
+# -*- coding: utf-8 -*-
+# shellcheck shell=bash disable=SC1091,SC2034,SC2059
+#
+#  voidbr-gpu-config
+#  Detecta a GPU (Intel/AMD) e configura a aceleração de vídeo (VA-API)
+#  no sistema e nos navegadores (Firefox, Google Chrome, Brave)
+#  Void Linux / VoidBR focused
+#  Created: qua 25 nov 2026 15:25:23 -04
+#  Altered: qua 25 nov 2026 15:25:23 -04
+#  Updated: qua 25 nov 2026 15:25:23 -04
+#
+#  Copyright (c) 2019-2026, Vilmar Catafesta <vcatafesta@gmail.com>
+#  Copyright (c) 2019-2026, VoidBR Development Team <https://github.com/voidlinuxbr>
+#  All rights reserved.
+#
+#  Redistribution and use in source and binary forms, with or without
+#  modification, are permitted provided that the following conditions
+#  are met:
+#  1. Redistributions of source code must retain the above copyright
+#     notice, this list of conditions and the following disclaimer.
+#  2. Redistributions in binary form must reproduce the above copyright
+#     notice, this list of conditions and the following disclaimer in the
+#     documentation and/or other materials provided with the distribution.
+#
+#  THIS SOFTWARE IS PROVIDED BY Vilmar Catafesta ''AS IS'' AND ANY EXPRESS OR
+#  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+#  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+#  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+#  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+#  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+#  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+#  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+#  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+#  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+##############################################################################
+export LANGUAGE="${LANGUAGE:-pt_BR}"
+export TEXTDOMAINDIR=/usr/share/locale
+export TEXTDOMAIN=voidbr-gpu-config
+
+shopt -s nullglob
+
+# sem gettext instalado: devolve o texto original (pt_BR)
+command -v gettext >/dev/null 2>&1 || gettext() { printf '%s' "$1"; }
+
+#system
+declare APP="${0##*/}"
+declare _VERSION_="0.01.00-20261125"
+declare APPDESC
+APPDESC="$(gettext "Detecta a GPU e configura a aceleração de vídeo (VA-API)")"
+declare TUTORIAL_URL="https://github.com/VoidLinuxBR/tutoriais/blob/main/GPU/tutorial-void-gpu-antiga-intel.md"
+declare TELEGRAM_URL="https://t.me/voidlinux_br"
+
+# caminhos (podem ser sobrescritos por variável de ambiente para testes)
+: "${DRM_DIR:=/sys/class/drm}"
+: "${STATE_DIR:=/var/lib/voidbr-gpu-config}"
+: "${PROFILE_FILE:=/etc/profile.d/voidbr-gpu-config.sh}"
+: "${XORG_CONF:=/etc/X11/xorg.conf.d/20-voidbr-gpu-config.conf}"
+: "${DEV_DIR:=/dev/dri}"
+: "${APPS_DIR:=/usr/share/applications}"
+
+declare MARK_BEGIN="// BEGIN voidbr-gpu-config"
+declare MARK_END="// END voidbr-gpu-config"
+declare DESKTOP_MARK="X-VoidBR-GPU-Config=true"
+
+declare -i DRYRUN=0 ASSUME_YES=0
+declare BACKUP_DIR="" MANIFEST=""
+declare TARGET_USER="" TARGET_HOME=""
+
+# resultado da detecção (GPU principal)
+declare gpu_vendor="" gpu_devid="" gpu_kdriver="" gpu_render="" gpu_name=""
+declare gpu_family="" gpu_group="" gpu_codecs="" gpu_va_candidates="" gpu_va_driver=""
+declare -a gpu_pkgs=()
+declare -i gpu_count=0
+
+#=============================================================================
+# cores / mensagens
+#=============================================================================
+set_varcolors() {
+	if [[ -t 1 ]] && command -v tput >/dev/null 2>&1 && tput colors &>/dev/null; then
+		reset=$(tput sgr0)
+		bold=$(tput bold)
+		red=$(tput bold)$(tput setaf 196)
+		green=$(tput bold)$(tput setaf 2)
+		yellow=$(tput bold)$(tput setaf 3)
+		blue=$(tput setaf 27)
+		cyan=$(tput setaf 6)
+		orange=$(tput setaf 202)
+		gray=$(tput setaf 8)
+		white=$(tput setaf 15)
+	else
+		reset="" bold="" red="" green="" yellow="" blue="" cyan="" orange="" gray="" white=""
+	fi
+	tick="${white}[${green}✓${white}]${reset}"
+	cross="${white}[${red}✗${white}]${reset}"
+	warn_sign="${white}[${yellow}⚠${white}]${reset}"
+	info_sign="${white}[${cyan}➜${white}]${reset}"
+}
+
+msg() { echo -e "${info_sign} ${*}${reset}"; }
+log_ok() { echo -e "${tick} ${*}${reset}"; }
+log_err() { echo -e "${cross} ${*}${reset}"; }
+log_warn() { echo -e "${warn_sign} ${yellow}${*}${reset}"; }
+title() { echo -e "\n${bold}${blue}== ${*} ==${reset}"; }
+die() {
+	log_err "${red}${*}"
+	exit 1
+}
+
+readconf() {
+	((ASSUME_YES)) && return 0
+	local REPLY
+	read -r -p "${yellow}${1} [$(gettext "S/n")]: ${reset}"
+	[[ -z "$REPLY" || "${REPLY^}" == [SY] ]]
+}
+
+run_cmd() {
+	if ((DRYRUN)); then
+		echo -e "  ${cyan}[DRY-RUN]${reset} $*"
+		return 0
+	fi
+	echo -e "  ${gray}[⚙] $*${reset}"
+	"$@" || log_warn "$(printf "$(gettext "Falha ao executar: %s")" "$*")"
+}
+
+sh_version() {
+	cat <<-EOF
+		${bold}${cyan}${APP} v${_VERSION_}${reset}
+		${APPDESC}
+		${orange}Copyright (c) 2019-2026,${reset} Vilmar Catafesta <vcatafesta@gmail.com>
+		${orange}Copyright (c) 2019-2026,${reset} VoidBR Development Team <https://github.com/voidlinuxbr>
+	EOF
+}
+
+sh_usage() {
+	cat <<-EOF
+		$(sh_version)
+
+		${bold}$(gettext "Uso:")${reset} ${APP} [$(gettext "opção")]
+
+		  ${green}-c, --check${reset}     $(gettext "Diagnostica a GPU e mostra o que seria feito (padrão, não altera nada)")
+		  ${green}-a, --apply${reset}     $(gettext "Instala os pacotes e aplica a configuração (requer root)")
+		  ${green}-r, --revert${reset}    $(gettext "Desfaz a última configuração aplicada (requer root)")
+		  ${green}-m, --menu${reset}      $(gettext "Diagnostica e pergunta se deve aplicar (usado pelo atalho do menu)")
+		  ${green}-n, --dry-run${reset}   $(gettext "Com --apply/--revert: só mostra os comandos, sem executar")
+		  ${green}-y, --yes${reset}       $(gettext "Não pergunta nada, assume \"sim\"")
+		  ${green}-u, --user${reset} $(gettext "NOME")  $(gettext "Usuário cujos navegadores serão configurados")
+		                  $(gettext "(padrão: quem chamou o sudo/doas)")
+		  ${green}-V, --version${reset}   $(gettext "Mostra a versão")
+		  ${green}-h, --help${reset}      $(gettext "Mostra esta ajuda")
+
+		$(printf "$(gettext "Dúvidas? Rode '%s --check' e poste a saída no grupo: %s")" "${APP}" "${cyan}${TELEGRAM_URL}${reset}")
+		$(gettext "Tutorial:") ${TUTORIAL_URL}
+	EOF
+}
+
+#=============================================================================
+# utilitários
+#=============================================================================
+sh_checkroot() {
+	((DRYRUN)) && return 0
+	if ((EUID != 0)); then
+		msg "$(gettext "Este modo precisa de root. Elevando privilégios...")"
+		if command -v sudo >/dev/null 2>&1; then
+			exec sudo -- bash "$0" "${ORIG_ARGS[@]}"
+		elif command -v doas >/dev/null 2>&1; then
+			exec doas bash "$0" "${ORIG_ARGS[@]}"
+		fi
+		die "$(gettext "Não foi possível obter root. Rode como root.")"
+	fi
+}
+
+pkg_installed() { xbps-query -p pkgver "$1" &>/dev/null; }
+
+detect_target_user() {
+	[[ -z "$TARGET_USER" ]] && TARGET_USER="${SUDO_USER:-${DOAS_USER:-}}"
+	[[ -z "$TARGET_USER" && $EUID -ne 0 ]] && TARGET_USER="$(id -un)"
+	[[ -z "$TARGET_USER" ]] && TARGET_USER="$(logname 2>/dev/null || true)"
+	[[ "$TARGET_USER" == "root" ]] && TARGET_USER=""
+	if [[ -n "$TARGET_USER" ]]; then
+		TARGET_HOME="$(getent passwd "$TARGET_USER" | cut -d: -f6)"
+		[[ -d "$TARGET_HOME" ]] || TARGET_HOME=""
+	fi
+}
+
+session_type() {
+	if [[ -n "${XDG_SESSION_TYPE:-}" ]]; then
+		echo "$XDG_SESSION_TYPE"
+	elif [[ -n "${WAYLAND_DISPLAY:-}" ]]; then
+		echo "wayland"
+	elif [[ -n "${DISPLAY:-}" ]]; then
+		echo "x11"
+	else
+		echo "desconhecida"
+	fi
+}
+
+#=============================================================================
+# detecção da GPU
+#=============================================================================
+
+# Classifica GPU Intel pelo PCI device ID.
+# Define: gpu_family gpu_group gpu_codecs gpu_va_candidates gpu_pkgs
+classify_intel() {
+	local id="${1,,}"
+	id="${id#0x}"
+	gpu_pkgs=(mesa-dri libva-utils intel-gpu-tools)
+	case "$id" in
+	2772 | 27a2 | 27ae | 2972 | 2982 | 2992 | 29a2 | 29b2 | 29c2 | 29d2 | 2a02 | 2a12 | a001 | a011)
+		gpu_family="GMA 950/3000/3100/X3100/3150"
+		gpu_group="gma"
+		gpu_codecs="$(gettext "nenhum")"
+		gpu_va_candidates=""
+		gpu_pkgs=(mesa-dri)
+		;;
+	2a42 | 2e02 | 2e12 | 2e22 | 2e32 | 2e42 | 2e92)
+		gpu_family="GMA X4500 (G4x)"
+		gpu_group="gma"
+		gpu_codecs="MPEG-2"
+		gpu_va_candidates="i965"
+		gpu_pkgs+=(libva-intel-driver)
+		;;
+	0042 | 0046)
+		gpu_family="HD Graphics (Ironlake, Core 1ª gen)"
+		gpu_group="i965"
+		gpu_codecs="MPEG-2 H.264 VC-1"
+		gpu_va_candidates="i965"
+		gpu_pkgs+=(libva-intel-driver)
+		;;
+	010[26a] | 011[26] | 012[26])
+		gpu_family="HD 2000/3000 (Sandy Bridge, Core 2ª gen)"
+		gpu_group="i965"
+		gpu_codecs="MPEG-2 H.264 VC-1"
+		gpu_va_candidates="i965"
+		gpu_pkgs+=(libva-intel-driver)
+		;;
+	015[26a] | 016[26a])
+		gpu_family="HD 2500/4000 (Ivy Bridge, Core 3ª gen)"
+		gpu_group="i965"
+		gpu_codecs="MPEG-2 H.264 VC-1 JPEG"
+		gpu_va_candidates="i965"
+		gpu_pkgs+=(libva-intel-driver)
+		;;
+	0f3[0-3])
+		gpu_family="HD Graphics (Bay Trail)"
+		gpu_group="i965"
+		gpu_codecs="MPEG-2 H.264 VC-1 JPEG"
+		gpu_va_candidates="i965"
+		gpu_pkgs+=(libva-intel-driver)
+		;;
+	04[0-2]? | 0a[0-2]? | 0c[0-2]? | 0d[0-2]?)
+		gpu_family="HD 4200-5200 (Haswell, Core 4ª gen)"
+		gpu_group="i965"
+		gpu_codecs="MPEG-2 H.264 VC-1 JPEG"
+		gpu_va_candidates="i965"
+		gpu_pkgs+=(libva-intel-driver)
+		;;
+	16??)
+		gpu_family="HD 5300-6300 (Broadwell, Core 5ª gen)"
+		gpu_group="ihd"
+		gpu_codecs="MPEG-2 H.264 VC-1 JPEG VP8"
+		gpu_va_candidates="iHD i965"
+		gpu_pkgs+=(intel-media-driver libva-intel-driver)
+		;;
+	*)
+		gpu_family="$(gettext "Intel Gen9 ou mais nova (Skylake+)")"
+		gpu_group="ihd"
+		gpu_codecs="$(gettext "H.264 HEVC VP9 (AV1 a partir da 11ª geração), conforme o modelo")"
+		gpu_va_candidates="iHD"
+		gpu_pkgs+=(intel-media-driver)
+		;;
+	esac
+}
+
+classify_amd() {
+	local kdrv="$1"
+	gpu_pkgs=(mesa-dri mesa-vaapi libva-utils radeontop)
+	if [[ "$kdrv" == "amdgpu" ]]; then
+		gpu_family="AMD Radeon (driver amdgpu)"
+		gpu_va_candidates="radeonsi"
+		gpu_codecs="$(gettext "H.264 HEVC VP9/AV1 conforme a geração (UVD/VCN)")"
+	else
+		gpu_family="AMD/ATI Radeon (driver radeon)"
+		gpu_va_candidates="r600 radeonsi"
+		gpu_codecs="$(gettext "MPEG-2 H.264 VC-1 (UVD), conforme o modelo")"
+	fi
+	gpu_group="amd"
+}
+
+# Percorre /sys/class/drm/card*/ e escolhe a GPU principal
+# (a primeira Intel/AMD encontrada; em sistemas híbridos avisa).
+detect_gpu() {
+	local card dev vendor devid kdrv render name
+	local -A seen=()
+	local -a found=()
+
+	for card in "$DRM_DIR"/card[0-9]*; do
+		[[ "${card##*/}" == *-* ]] && continue # ignora conectores (card0-HDMI-A-1)
+		dev="$card/device"
+		[[ -r "$dev/vendor" ]] || continue
+		local realdev
+		realdev="$(readlink -f "$dev")"
+		[[ -n "${seen[$realdev]:-}" ]] && continue
+		seen[$realdev]=1
+
+		vendor="$(<"$dev/vendor")"
+		devid="$(<"$dev/device")"
+		kdrv=""
+		[[ -e "$dev/driver" ]] && kdrv="$(basename "$(readlink -f "$dev/driver")")"
+		render=""
+		local r
+		for r in "$dev"/drm/renderD*; do render="$DEV_DIR/${r##*/}"; break; done
+
+		case "${vendor,,}" in
+		0x8086 | 0x1002) found+=("${vendor,,}|${devid,,}|$kdrv|$render") ;;
+		0x10de) log_warn "$(printf "$(gettext "GPU NVIDIA detectada (%s) — não suportada por este script, ignorada.")" "${devid}")" ;;
+		esac
+	done
+
+	gpu_count=${#found[@]}
+	((gpu_count)) || return 1
+	((gpu_count > 1)) && log_warn "$(printf "$(gettext "Mais de uma GPU Intel/AMD detectada (híbrido). Usando a primeira: %s")" "${found[0]%%|*}")"
+
+	IFS='|' read -r gpu_vendor gpu_devid gpu_kdriver gpu_render <<<"${found[0]}"
+	if command -v lspci >/dev/null 2>&1; then
+		name="$(lspci -d "${gpu_vendor#0x}:${gpu_devid#0x}" 2>/dev/null | head -n1 | cut -d: -f3-)"
+		gpu_name="${name# }"
+	fi
+
+	case "$gpu_vendor" in
+	0x8086) classify_intel "$gpu_devid" ;;
+	0x1002) classify_amd "$gpu_kdriver" ;;
+	esac
+	return 0
+}
+
+# Testa um driver VA-API com vainfo direto no DRM (não precisa de sessão gráfica).
+# Saída: lista de perfis com VAEntrypointVLD (decodificação)
+vainfo_test() {
+	local drv="$1"
+	command -v vainfo >/dev/null 2>&1 || return 2
+	[[ -n "$gpu_render" && -e "$gpu_render" ]] || return 3
+	LIBVA_DRIVER_NAME="$drv" vainfo --display drm --device "$gpu_render" 2>/dev/null |
+		awk '/VAEntrypointVLD/ {gsub(/[ \t]+/," "); sub(/^ /,""); split($0,a," :"); print a[1]}'
+}
+
+# Escolhe o primeiro candidato que realmente decodifica algo
+pick_va_driver() {
+	local drv out
+	gpu_va_driver=""
+	for drv in $gpu_va_candidates; do
+		out="$(vainfo_test "$drv")" || true
+		if [[ -n "$out" ]]; then
+			gpu_va_driver="$drv"
+			return 0
+		fi
+	done
+	# sem vainfo/pacotes ainda: assume o primeiro candidato
+	gpu_va_driver="${gpu_va_candidates%% *}"
+	return 1
+}
+
+# Converte a lista de perfis VA em codecs legíveis
+profiles_to_codecs() {
+	awk '
+		/MPEG2/ {c["MPEG-2"]=1} /H264/ {c["H.264"]=1} /VC1/ {c["VC-1"]=1}
+		/JPEG/ {c["JPEG"]=1} /VP8/ {c["VP8"]=1} /VP9/ {c["VP9"]=1}
+		/HEVC/ {c["HEVC"]=1} /AV1/ {c["AV1"]=1}
+		END {for (k in c) printf "%s ", k}'
+}
+
+#=============================================================================
+# diagnóstico (--check)
+#=============================================================================
+firefox_profiles() {
+	local base p
+	[[ -n "$TARGET_HOME" ]] || return 0
+	for base in "$TARGET_HOME/.mozilla/firefox" "$TARGET_HOME/.config/mozilla/firefox"; do
+		[[ -r "$base/profiles.ini" ]] || continue
+		for p in "$base"/*/; do
+			[[ -e "$p/prefs.js" ]] && echo "${p%/}"
+		done
+	done
+}
+
+has_h264_only_codecs() { [[ "$gpu_codecs" != *VP9* && "$gpu_codecs" != *AV1* ]]; }
+
+do_check() {
+	title "GPU"
+	if ! detect_gpu; then
+		log_err "$(printf "$(gettext "Nenhuma GPU Intel/AMD encontrada em %s.")" "$DRM_DIR")"
+		return 1
+	fi
+	log_ok "$(gettext "Modelo")        : ${bold}${gpu_name:-$(gettext "desconhecido")}${reset} [${gpu_vendor#0x}:${gpu_devid#0x}]"
+	log_ok "$(gettext "Família")       : ${gpu_family}"
+	if [[ -n "$gpu_kdriver" ]]; then
+		log_ok "$(gettext "Driver kernel") : ${gpu_kdriver}"
+	else
+		log_warn "$(gettext "Driver kernel") : $(gettext "nenhum carregado")"
+	fi
+	msg "Render node   : ${gpu_render:-$(gettext "nenhum")}"
+	msg "$(gettext "Sessão")        : $(session_type)"
+	msg "$(gettext "Codecs HW")     : ${gpu_codecs}"
+
+	title "$(gettext "Pacotes")"
+	local p missing=()
+	for p in "${gpu_pkgs[@]}"; do
+		if pkg_installed "$p"; then log_ok "$p"; else
+			log_warn "$p ($(gettext "não instalado"))"
+			missing+=("$p")
+		fi
+	done
+	if pkg_installed xf86-video-intel; then
+		log_warn "$(gettext "xf86-video-intel instalado (obsoleto; recomenda-se o modesetting)")"
+	fi
+
+	title "VA-API"
+	if [[ -z "$gpu_va_candidates" ]]; then
+		log_warn "$(gettext "Esta GPU não tem decodificação de vídeo por hardware útil.")"
+	else
+		local profiles
+		if pick_va_driver; then
+			profiles="$(vainfo_test "$gpu_va_driver")"
+			log_ok "$(gettext "Driver VA-API funcionando") : ${bold}${gpu_va_driver}${reset}"
+			log_ok "$(gettext "Decodifica em hardware")    : $(profiles_to_codecs <<<"$profiles")"
+		else
+			log_warn "$(printf "$(gettext "VA-API ainda não funciona (driver recomendado: %s)")" "${gpu_va_driver}")"
+		fi
+		local cur="${LIBVA_DRIVER_NAME:-}"
+		[[ -r "$PROFILE_FILE" ]] && cur="$(sed -n 's/^export LIBVA_DRIVER_NAME=//p' "$PROFILE_FILE")"
+		if [[ "$cur" == "$gpu_va_driver" ]]; then
+			log_ok "LIBVA_DRIVER_NAME=${cur}"
+		else
+			log_warn "LIBVA_DRIVER_NAME=${cur:-<$(gettext "não definido")>} ($(gettext "recomendado"): ${gpu_va_driver})"
+		fi
+	fi
+
+	title "$(gettext "Usuário")"
+	if [[ -n "$TARGET_USER" ]]; then
+		if id -nG "$TARGET_USER" 2>/dev/null | grep -qw video; then
+			log_ok "$(printf "$(gettext "%s está no grupo video")" "$TARGET_USER")"
+		else
+			log_warn "$(printf "$(gettext "%s NÃO está no grupo video")" "$TARGET_USER")"
+		fi
+	else
+		log_warn "$(gettext "Usuário alvo não identificado (use --user NOME)")"
+	fi
+
+	title "$(gettext "Navegadores")"
+	local prof ffound=0
+	while read -r prof; do
+		[[ -n "$prof" ]] || continue
+		ffound=1
+		local v
+		v="$(gettext "padrão")"
+		grep -qs "$MARK_BEGIN" "$prof/user.js" && v="$(printf "$(gettext "configurado pelo %s")" "$APP")"
+		grep -qs 'media.ffmpeg.vaapi.enabled", false' "$prof/user.js" && v="${red}$(gettext "VA-API DESATIVADO no user.js")${reset}"
+		msg "Firefox ${prof##*/}: $v"
+	done < <(firefox_profiles)
+	((ffound)) || msg "Firefox: $(gettext "nenhum perfil encontrado")"
+	local b
+	for b in google-chrome brave-browser; do
+		if [[ -n "$TARGET_HOME" && -e "$TARGET_HOME/.local/share/applications/$b.desktop" ]] &&
+			grep -qs "$DESKTOP_MARK" "$TARGET_HOME/.local/share/applications/$b.desktop"; then
+			msg "$b: $(printf "$(gettext "configurado pelo %s")" "$APP")"
+		elif [[ -e "$APPS_DIR/$b.desktop" ]]; then
+			msg "$b: $(gettext "instalado, sem flags de VA-API")"
+		fi
+	done
+
+	title "$(gettext "Recomendação")"
+	case "$gpu_group" in
+	gma)
+		msg "$(gettext "Perfil estabilidade: modesetting + DRI2 (X11) e aceleração do Firefox desligada.")"
+		;;
+	*)
+		msg "$(printf "$(gettext "Perfil VA-API: driver %s, aceleração ligada nos navegadores.")" "${gpu_va_driver}")"
+		has_h264_only_codecs &&
+			log_warn "$(gettext "A GPU não decodifica VP9/AV1: use no navegador uma extensão que force H.264 no YouTube (ex.: h264ify / enhanced-h264ify).")"
+		;;
+	esac
+	((${#missing[@]})) && msg "$(printf "$(gettext "Pacotes a instalar: %s")" "${missing[*]}")"
+	msg "$(gettext "Para aplicar:") ${green}sudo ${APP} --apply${reset}"
+	echo
+	msg "$(gettext "Precisa de ajuda? Poste esta saída no grupo:") ${cyan}${TELEGRAM_URL}${reset}"
+}
+
+#=============================================================================
+# backup / manifest
+#=============================================================================
+backup_init() {
+	BACKUP_DIR="$STATE_DIR/backup-$(date +%Y%m%d-%H%M%S)"
+	MANIFEST="$BACKUP_DIR/manifest"
+	((DRYRUN)) && return 0
+	mkdir -p "$BACKUP_DIR"
+	: >"$MANIFEST"
+	ln -sfn "$BACKUP_DIR" "$STATE_DIR/last"
+}
+
+# Antes de criar/alterar um arquivo: M = modificado (copia), C = criado
+backup_file() {
+	local f="$1"
+	((DRYRUN)) && return 0
+	grep -qxF -e "M $f" -e "C $f" "$MANIFEST" 2>/dev/null && return 0
+	if [[ -e "$f" ]]; then
+		mkdir -p "$BACKUP_DIR/files$(dirname "$f")"
+		cp -a "$f" "$BACKUP_DIR/files$f"
+		echo "M $f" >>"$MANIFEST"
+	else
+		echo "C $f" >>"$MANIFEST"
+	fi
+}
+
+manifest_add() { ((DRYRUN)) || echo "$*" >>"$MANIFEST"; }
+
+write_file() {
+	local f="$1" owner="${2:-}"
+	if ((DRYRUN)); then
+		echo -e "  ${cyan}[DRY-RUN]${reset} $(printf "$(gettext "escrever %s:")" "$f")"
+		sed 's/^/      /'
+		return 0
+	fi
+	backup_file "$f"
+	mkdir -p "$(dirname "$f")"
+	cat >"$f"
+	[[ -n "$owner" ]] && chown "$owner:" "$f" 2>/dev/null
+	echo -e "  ${gray}[⚙] $(printf "$(gettext "escrito: %s")" "$f")${reset}"
+}
+
+#=============================================================================
+# aplicação (--apply)
+#=============================================================================
+apply_packages() {
+	local p missing=()
+	for p in "${gpu_pkgs[@]}"; do pkg_installed "$p" || missing+=("$p"); done
+	if ((${#missing[@]})); then
+		msg "$(printf "$(gettext "Instalando: %s")" "${missing[*]}")"
+		run_cmd xbps-install -Sy "${missing[@]}"
+	else
+		log_ok "$(gettext "Pacotes já instalados.")"
+	fi
+	if pkg_installed xf86-video-intel; then
+		if readconf "$(gettext "Remover o xf86-video-intel (obsoleto, recomenda-se o modesetting)?")"; then
+			manifest_add "R xf86-video-intel"
+			run_cmd xbps-remove -y xf86-video-intel
+		fi
+	fi
+}
+
+apply_env() {
+	[[ -n "$gpu_va_driver" ]] || return 0
+	msg "$(printf "$(gettext "Definindo LIBVA_DRIVER_NAME=%s para todo o sistema")" "${gpu_va_driver}")"
+	write_file "$PROFILE_FILE" <<-EOF
+		# Gerado por ${APP} v${_VERSION_} em $(date '+%F %T')
+		# GPU: ${gpu_family} [${gpu_vendor#0x}:${gpu_devid#0x}]
+		export LIBVA_DRIVER_NAME=${gpu_va_driver}
+	EOF
+}
+
+apply_groups() {
+	[[ -n "$TARGET_USER" ]] || return 0
+	local g
+	for g in video render; do
+		getent group "$g" >/dev/null || continue
+		if ! id -nG "$TARGET_USER" 2>/dev/null | grep -qw "$g"; then
+			msg "$(printf "$(gettext "Adicionando %s ao grupo %s")" "$TARGET_USER" "$g")"
+			manifest_add "G $TARGET_USER $g"
+			run_cmd usermod -aG "$g" "$TARGET_USER"
+		fi
+	done
+}
+
+apply_xorg_gma() {
+	[[ -x /usr/bin/Xorg || -x /usr/libexec/Xorg ]] || {
+		msg "$(gettext "Xorg não instalado: ajuste de DRI2 não é necessário.")"
+		return 0
+	}
+	msg "$(gettext "GMA: forçando modesetting + DRI2 no Xorg")"
+	write_file "$XORG_CONF" <<-'EOF'
+		# Gerado por voidbr-gpu-config (perfil estabilidade GMA)
+		Section "Device"
+		    Identifier "Intel Graphics"
+		    Driver "modesetting"
+		    Option "DRI" "2"
+		EndSection
+	EOF
+	log_warn "$(gettext "Se usa XFCE, desative o compositor:") xfconf-query -c xfwm4 -p /general/use_compositing -s false"
+}
+
+firefox_block() {
+	echo "$MARK_BEGIN v${_VERSION_}"
+	if [[ "$gpu_group" == "gma" ]]; then
+		cat <<-'EOF'
+			user_pref("layers.acceleration.disabled", true);
+			user_pref("gfx.webrender.force-disabled", true);
+			user_pref("gfx.xrender.enabled", true);
+			user_pref("media.ffmpeg.vaapi.enabled", false);
+		EOF
+	else
+		cat <<-'EOF'
+			user_pref("media.ffmpeg.vaapi.enabled", true);
+			user_pref("media.hardware-video-decoding.enabled", true);
+			user_pref("media.hardware-video-decoding.force-enabled", true);
+		EOF
+	fi
+	echo "$MARK_END"
+}
+
+apply_firefox() {
+	local prof uj tmp
+	while read -r prof; do
+		[[ -n "$prof" ]] || continue
+		uj="$prof/user.js"
+		msg "$(printf "$(gettext "Firefox: configurando perfil %s")" "${prof##*/}")"
+		if ((DRYRUN)); then
+			firefox_block | sed "s|^|      [DRY-RUN] $uj: |"
+			continue
+		fi
+		backup_file "$uj"
+		tmp="$(mktemp)"
+		if [[ -e "$uj" ]]; then
+			# remove bloco antigo e comenta prefs de vídeo/aceleração soltas (ex.: tutorial antigo)
+			sed -E -e "\#^${MARK_BEGIN}#,\#^${MARK_END}#d" \
+				-e 's#^(user_pref\("(media\.ffmpeg\.vaapi\.enabled|media\.hardware-video-decoding\.[a-z-]+|layers\.acceleration\.disabled|gfx\.webrender\.force-disabled)".*)#// [voidbr-gpu-config] \1#' \
+				"$uj" >"$tmp"
+		fi
+		firefox_block >>"$tmp"
+		install -m 0644 -o "$TARGET_USER" "$tmp" "$uj" 2>/dev/null || cp "$tmp" "$uj"
+		rm -f "$tmp"
+	done < <(firefox_profiles)
+	log_warn "$(gettext "Feche e abra o Firefox. Confira em about:support → Mídia.")"
+}
+
+chromium_flags() {
+	local feats="AcceleratedVideoDecodeLinuxGL,AcceleratedVideoDecodeLinuxZeroCopyGL"
+	[[ "$gpu_va_driver" == "i965" ]] && feats+=",VaapiIgnoreDriverChecks"
+	echo "--enable-features=${feats}"
+}
+
+# Chrome/Brave: atalho .desktop do usuário com as flags + arquivo *-flags.conf
+apply_chromium() {
+	[[ -n "$TARGET_HOME" ]] || return 0
+	[[ "$gpu_group" == "gma" ]] && return 0
+	local flags b src dst conf
+	flags="$(chromium_flags)"
+	for b in google-chrome:chrome brave-browser:brave; do
+		src="$APPS_DIR/${b%%:*}.desktop"
+		[[ -e "$src" ]] || continue
+		dst="$TARGET_HOME/.local/share/applications/${b%%:*}.desktop"
+		conf="$TARGET_HOME/.config/${b##*:}-flags.conf"
+		msg "${b%:*}: $(printf "$(gettext "adicionando %s")" "$flags")"
+		{
+			sed -E "s#^(Exec=[^ ]+)#\1 ${flags}#" "$src"
+			echo "$DESKTOP_MARK"
+		} | write_file "$dst" "$TARGET_USER"
+		echo "$flags" | write_file "$conf" "$TARGET_USER"
+	done
+}
+
+do_apply() {
+	sh_checkroot
+	detect_gpu || die "$(gettext "Nenhuma GPU Intel/AMD encontrada.")"
+	title "$(printf "$(gettext "Aplicando configuração para: %s")" "${gpu_family}")"
+	[[ -n "$gpu_name" ]] && msg "$gpu_name"
+	readconf "$(gettext "Continuar?")" || die "$(gettext "Cancelado.")"
+
+	backup_init
+	apply_packages
+	if [[ -n "$gpu_va_candidates" ]]; then
+		pick_va_driver || log_warn "$(printf "$(gettext "vainfo ainda não confirmou o driver; usando %s")" "${gpu_va_driver}")"
+	fi
+	[[ "$gpu_group" == "gma" ]] && apply_xorg_gma
+	apply_env
+	apply_groups
+	apply_firefox
+	apply_chromium
+
+	title "$(gettext "Verificação")"
+	if [[ -n "$gpu_va_driver" ]] && ((!DRYRUN)); then
+		local profiles
+		profiles="$(vainfo_test "$gpu_va_driver")"
+		if [[ -n "$profiles" ]]; then
+			log_ok "$(printf "$(gettext "VA-API ok com %s:")" "${gpu_va_driver}") $(profiles_to_codecs <<<"$profiles")"
+		else
+			log_err "$(gettext "vainfo não confirmou decodificação por hardware.")"
+			msg "$(printf "$(gettext "Poste a saída de '%s --check' no grupo: %s")" "${APP}" "${TELEGRAM_URL}")"
+		fi
+	fi
+	[[ "$gpu_group" != "gma" ]] && has_h264_only_codecs &&
+		log_warn "$(gettext "Instale no navegador uma extensão que force H.264 no YouTube (a GPU não faz VP9/AV1).")"
+	((DRYRUN)) || msg "$(printf "$(gettext "Backup em: %s (desfazer: sudo %s --revert)")" "${BACKUP_DIR}" "${APP}")"
+	log_ok "$(gettext "Concluído. Saia e entre de novo na sessão para valer.")"
+}
+
+#=============================================================================
+# reversão (--revert)
+#=============================================================================
+do_revert() {
+	sh_checkroot
+	local last="$STATE_DIR/last" line op a b
+	[[ -r "$last/manifest" ]] || die "$(printf "$(gettext "Nenhum backup encontrado em %s.")" "$STATE_DIR")"
+	title "$(gettext "Desfazendo") $(readlink -f "$last")"
+	readconf "$(gettext "Restaurar a configuração anterior?")" || die "$(gettext "Cancelado.")"
+	tac "$last/manifest" | while read -r op a b; do
+		case "$op" in
+		M) run_cmd cp -a "$last/files$a" "$a" ;;
+		C) run_cmd rm -f "$a" ;;
+		G) run_cmd gpasswd -d "$a" "$b" ;;
+		R) log_warn "$(gettext "xf86-video-intel foi removido; reinstale se quiser:") xbps-install xf86-video-intel" ;;
+		esac
+	done
+	((DRYRUN)) || rm -f "$last"
+	log_ok "$(gettext "Configuração revertida. Os pacotes instalados foram mantidos.")"
+}
+
+#=============================================================================
+# menu (usado pelo atalho .desktop)
+#=============================================================================
+do_menu() {
+	do_check
+	echo
+	if [[ -n "$gpu_family" ]] && readconf "$(gettext "Aplicar a configuração recomendada agora?")"; then
+		if ((EUID == 0)); then
+			do_apply
+		elif command -v sudo >/dev/null 2>&1; then
+			sudo -- bash "$0" --apply --user "$TARGET_USER"
+		elif command -v doas >/dev/null 2>&1; then
+			doas bash "$0" --apply --user "$TARGET_USER"
+		else
+			log_err "$(gettext "sudo/doas não encontrado. Rode como root:") ${APP} --apply"
+		fi
+	fi
+	echo
+	read -r -p "$(gettext "Pressione ENTER para sair...")" _
+}
+
+#=============================================================================
+# main
+#=============================================================================
+main() {
+	ORIG_ARGS=("$@")
+	set_varcolors
+	local mode="check"
+	while (($#)); do
+		case "$1" in
+		-c | --check) mode="check" ;;
+		-a | --apply) mode="apply" ;;
+		-r | --revert) mode="revert" ;;
+		-m | --menu) mode="menu" ;;
+		-n | --dry-run) DRYRUN=1 ;;
+		-y | --yes) ASSUME_YES=1 ;;
+		-u | --user)
+			TARGET_USER="${2:-}"
+			shift
+			;;
+		-V | --version)
+			sh_version
+			exit 0
+			;;
+		-h | --help)
+			sh_usage
+			exit 0
+			;;
+		*) die "$(printf "$(gettext "Opção inválida: %s (veja --help)")" "$1")" ;;
+		esac
+		shift
+	done
+	detect_target_user
+	case "$mode" in
+	check) do_check ;;
+	apply) do_apply ;;
+	revert) do_revert ;;
+	menu) do_menu ;;
+	esac
+}
+
+declare -a ORIG_ARGS=()
+main "$@"

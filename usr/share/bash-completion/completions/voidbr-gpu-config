@@ -1,0 +1,25 @@
+# bash completion for voidbr-gpu-config
+
+_voidbr_gpu_config_completion() {
+    local cur prev opts
+
+    COMPREPLY=()
+
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+
+    opts="-c --check -a --apply -r --revert -m --menu -n --dry-run -y --yes -u --user -V --version -h --help"
+
+    # --user: completa com usuários comuns (UID >= 1000)
+    case "$prev" in
+    -u | --user)
+        COMPREPLY=( $(compgen -W "$(awk -F: '$3 >= 1000 && $3 < 65534 {print $1}' /etc/passwd)" -- "$cur") )
+        return 0
+        ;;
+    esac
+
+    COMPREPLY=( $(compgen -W "$opts" -- "$cur") )
+    return 0
+}
+
+complete -F _voidbr_gpu_config_completion voidbr-gpu-config

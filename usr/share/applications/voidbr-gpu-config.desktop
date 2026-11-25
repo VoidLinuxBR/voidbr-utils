@@ -1,0 +1,15 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=VoidBR GPU Config
+GenericName=VoidBR GPU Config
+Comment=Detecta a GPU (Intel/AMD) e configura a aceleração de vídeo (VA-API)
+Comment[en]=Detects the GPU (Intel/AMD) and configures video acceleration (VA-API)
+Exec=voidbr-gpu-config --menu
+TryExec=/usr/local/bin/voidbr-gpu-config
+Terminal=true
+Icon=video-display
+Categories=DesktopSettings;Utility;Accessories;X-XFCE-SettingsDialog;X-XFCE-HardwareSettings;X-VoidBR-Apps;
+Keywords=gpu;vaapi;intel;amd;video;aceleração;driver;
+StartupNotify=true
+Hidden=false
